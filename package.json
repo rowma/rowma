@@ -1,0 +1,41 @@
+{
+  "name": "connection_manager",
+  "version": "1.0.0",
+  "description": "A WebSocket server for Rowma to collect local robot connections",
+  "main": "dist/index.js",
+  "repository": "https://github.com/rowma",
+  "author": "asmsuechan",
+  "license": "MIT",
+  "scripts": {
+    "dev:watch": "ts-node-dev src/index.ts",
+    "clean": "rimraf dist/*",
+    "tsc": "tsc",
+    "build": "npm-run-all clean tsc",
+    "start": "node .",
+    "lint": "eslint 'src/**/*.ts' --fix",
+    "prettier": "prettier --write 'src/**/*.ts'",
+    "check": "npm-run-all prettier lint"
+  },
+  "dependencies": {
+    "@types/socket.io": "^2.1.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "lodash": "^4.17.15",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
+    "socketio-wildcard": "^2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^12.11.7",
+    "@typescript-eslint/eslint-plugin": "^2.6.0",
+    "@typescript-eslint/parser": "^2.6.0",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "1.18.2",
+    "ts-node": "^8.4.1",
+    "ts-node-dev": "^1.0.0-pre.43",
+    "typescript": "^3.6.4"
+  }
+}
