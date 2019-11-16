@@ -50,7 +50,7 @@ app.get("/robots", (req, res) => {
   res.end();
 });
 
-io.of("/conn_device").on("connection", socket => {
+io.of("/rowma").on("connection", socket => {
   // From ROS
   socket.on("register_robot", (payload: string, ack: Function = _.noop) =>
     registerRobot(db, socket, payload, ack)
