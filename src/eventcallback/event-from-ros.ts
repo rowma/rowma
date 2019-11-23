@@ -3,7 +3,10 @@ import WSResponse from "../response";
 
 import DatabaseInterface from "../db/database-interface";
 
+import { authenticate } from "../auth";
+
 import _ from "lodash";
+import genUuid from "uuid";
 
 const createSuccessResponse = (data = ""): WSResponse => {
   return new WSResponse("success", data, "");
@@ -13,13 +16,21 @@ const createErrorResponse = (error = ""): WSResponse => {
   return new WSResponse("failed", "", error);
 };
 
+function sleep(time) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, time);
+    });
+}
+
 // TODO: Create Payload type
-const registerRobot = (
+const registerRobot = async (
   db: DatabaseInterface,
   socket: any,
   payload: string,
   ack: any
-): void => {
+): Promise<any> => {
   if (!payload) {
     const msg = "Payload must be included.";
     const response = createErrorResponse(msg);
@@ -28,12 +39,45 @@ const registerRobot = (
   }
 
   const parsedPayload = JSON.parse(payload);
+
+  // generate uuid
+  let uuid = genUuid();
+  const payloadUuid = parsedPayload["uuid"]
+  if (payloadUuid) {
+    const robot = db.findRobotByUuid(payloadUuid)
+    if (robot) {
+      const msg = "The UUID is already in use";
+      const response = createErrorResponse(msg);
+      socket.emit("err", response);
+      return;
+    } else {
+      uuid = payloadUuid;
+    }
+  }
+  socket.emit("robot_registered", { uuid });
+
+  let projectName = "default";
+  // Authenticat api_key from rowma_ros
+  const apiKey = parsedPayload["api_key"]
+  if (apiKey) {
+    const authResult = await authenticate(apiKey)
+    if (authResult.success) {
+      projectName = authResult.projectName
+    } else {
+      const msg = "Wrong API_KEY";
+      const response = createErrorResponse(msg);
+      socket.emit("err", response);
+      return;
+    }
+  }
+
   const robot = new Robot(
-    parsedPayload["uuid"],
+    uuid,
     socket.id,
     parsedPayload["launch_commands"],
     parsedPayload["rosnodes"],
-    parsedPayload["rosrun_commands"]
+    parsedPayload["rosrun_commands"],
+    projectName
   );
   db.saveRobot(robot);
   console.log("registered: ", db.getAllRobots());
