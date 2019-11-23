@@ -16,14 +16,6 @@ const createErrorResponse = (error = ""): WSResponse => {
   return new WSResponse("failed", "", error);
 };
 
-function sleep(time) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve();
-        }, time);
-    });
-}
-
 // TODO: Create Payload type
 const registerRobot = async (
   db: DatabaseInterface,
@@ -42,9 +34,9 @@ const registerRobot = async (
 
   // generate uuid
   let uuid = genUuid();
-  const payloadUuid = parsedPayload["uuid"]
+  const payloadUuid = parsedPayload["uuid"];
   if (payloadUuid) {
-    const robot = db.findRobotByUuid(payloadUuid)
+    const robot = db.findRobotByUuid(payloadUuid);
     if (robot) {
       const msg = "The UUID is already in use";
       const response = createErrorResponse(msg);
@@ -58,11 +50,11 @@ const registerRobot = async (
 
   let projectName = "default";
   // Authenticat api_key from rowma_ros
-  const apiKey = parsedPayload["api_key"]
+  const apiKey = parsedPayload["api_key"];
   if (apiKey) {
-    const authResult = await authenticate(apiKey)
+    const authResult = await authenticate(apiKey);
     if (authResult.success) {
-      projectName = authResult.projectName
+      projectName = authResult.projectName;
     } else {
       const msg = "Wrong API_KEY";
       const response = createErrorResponse(msg);

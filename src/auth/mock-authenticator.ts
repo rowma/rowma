@@ -1,14 +1,14 @@
-const http = require('http');
+import http from "http";
 
 const server = http.createServer((req, res) => {
-  let postData = '';
-  req.on('data', (chunk) => {
+  let postData = "";
+  req.on("data", chunk => {
     postData += chunk;
   });
 
-  req.on("end", function(){
+  req.on("end", function() {
     res.writeHead(200, { "Content-Type": "application/json" });
-    const response = { "projectName": "test" }
+    const response = { projectName: "test" };
     res.end(JSON.stringify(response));
   });
 });
