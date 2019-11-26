@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import socketio from "socket.io";
 import _ from "lodash";
+import socketioJwt from "socketio-jwt";
 
 const app = express();
 const server = require("http").Server(app);
@@ -50,7 +51,7 @@ app.get("/robots", (req, res) => {
   res.end();
 });
 
-io.of("/rowma").on("connection", socket => {
+const eventHandlers = (socket) => {
   // From ROS
   socket.on("register_robot", (payload: string, ack: Function = _.noop) =>
     registerRobot(db, socket, payload, ack)
@@ -79,7 +80,34 @@ io.of("/rowma").on("connection", socket => {
   socket.on("kill_rosnodes", (payload: string, ack: Function = _.noop) =>
     killRosnode(db, socket, payload, ack)
   );
-});
+}
+
+// TODO: Add team concept to this project
+// const authenticate = async (id: string, teamName: string) {
+//   const authenticator = process.env.AUTHENTICATOR || '';
+//   return await axios.get(`$authenticator}?id=${id}&team=${teamName}`);
+//   // { success: true/false }
+// }
+
+if (process.env.AUTH_METHOD === 'auth0') {
+  const secret = process.env.PUBKEY_AUTH0 || '';
+  const cert = Buffer.from(secret, 'base64');
+  io.of("/rowma").on('connection', socketioJwt.authorize({
+    secret: cert,
+    timeout: 15000,
+    algorithms: ['RS256']
+  })).on('authenticated', (socket) => {
+    // Need more authentication. If the member who sent a request is not a member of the project,
+    // it has to be denied. However, it means more time is needed. I speculate the time is 200-300ms.
+    // get the team name from console.log(socket.handshake.query)
+    console.log(socket.decoded_token.sub)
+    eventHandlers(socket)
+  });
+} else {
+  io.of("/rowma").on("connection", socket => {
+    eventHandlers(socket)
+  })
+}
 
 // Note: https://blog.fullstacktraining.com/cannot-redeclare-block-scoped-variable-name/
 export {};

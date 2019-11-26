@@ -14,6 +14,12 @@ const createErrorResponse = (error = ""): WSResponse => {
   return new WSResponse("failed", "", error);
 };
 
+// const authorization = (id: string, teamName: string, action: string) => {
+//   const authorizator = process.env.AUTHORIZATOR || '';
+//   return await axios.get(`$authorizator}?id=${id}&team=${teamName}&action=${action}`);
+//   // { success: true/false }
+// }
+
 const registerDevice = (
   db: DatabaseInterface,
   socket: any,
@@ -80,6 +86,13 @@ const delegate = (
 ): void => {
   const robotUuid = _.get(payload, "robotUuid");
   const robot = db.findRobotByUuid(robotUuid);
+
+  if (!robot) {
+    const msg = "robot not found.";
+    const response = createErrorResponse(msg);
+    if (ack) ack(response);
+    return;
+  }
 
   socket.to(robot.socketId).emit("rostopic", _.get(payload, "msg"));
 
