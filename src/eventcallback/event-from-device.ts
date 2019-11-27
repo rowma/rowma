@@ -14,19 +14,18 @@ const createErrorResponse = (error = ""): WSResponse => {
   return new WSResponse("failed", "", error);
 };
 
-// const authorization = (id: string, teamName: string, action: string) => {
-//   const authorizator = process.env.AUTHORIZATOR || '';
-//   return await axios.get(`$authorizator}?id=${id}&team=${teamName}&action=${action}`);
-//   // { success: true/false }
-// }
-
 const registerDevice = (
   db: DatabaseInterface,
   socket: any,
   payload: string,
   ack: any
 ): void => {
-  if (!payload) return;
+  if (!payload) {
+    const msg = "Payload must be included.";
+    const response = createErrorResponse(msg);
+    if (ack) ack(response);
+    return;
+  }
   const robotUuid = _.get(payload, "robotUuid");
   const robot = db.findRobotByUuid(robotUuid);
 

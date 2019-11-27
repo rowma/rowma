@@ -3,7 +3,7 @@ import WSResponse from "../response";
 
 import DatabaseInterface from "../db/database-interface";
 
-import { authenticate } from "../auth";
+import { authenticateRobot } from "../auth";
 
 import _ from "lodash";
 import genUuid from "uuid";
@@ -52,8 +52,8 @@ const registerRobot = async (
   // Authenticat api_key from rowma_ros
   const apiKey = parsedPayload["api_key"];
   if (apiKey) {
-    const authResult = await authenticate(apiKey);
-    if (authResult.success) {
+    const authResult = await authenticateRobot(apiKey);
+    if (authResult.auth) {
       projectName = authResult.projectName;
     } else {
       const msg = "Wrong API_KEY";
