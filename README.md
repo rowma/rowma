@@ -33,3 +33,9 @@ $ docker run -p 80:80 rowma -d
 
 ## Contribution
 Feel free to open issues anytime!
+
+## TODO
+* Log related things
+* More error handlings
+* Testing
+* Change payload type from string to object

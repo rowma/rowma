@@ -68,7 +68,7 @@ const eventHandlers = (socket) => {
   );
 
   // From Device
-  socket.on("register_device", (payload: string, ack: Function = _.noop) =>
+  socket.on("register_device", (payload: object, ack: Function = _.noop) =>
     registerDevice(db, socket, payload, ack)
   );
   socket.on("run_launch", (payload: string, ack: Function = _.noop) =>

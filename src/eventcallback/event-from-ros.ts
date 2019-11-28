@@ -1,3 +1,6 @@
+// The role of this file is Controller in MVC architecture. These functions are responsible
+// for response (ack() function). So keep in your mind that when I write code.
+
 import Robot from "../entity/robot";
 import WSResponse from "../response";
 
