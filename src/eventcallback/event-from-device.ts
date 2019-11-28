@@ -45,7 +45,7 @@ const registerDevice = (
 const runLaunch = (
   db: DatabaseInterface,
   socket: any,
-  payload: any,
+  payload: object,
   ack: any
 ): void => {
   const robotUuid = _.get(payload, "uuid");
@@ -53,7 +53,7 @@ const runLaunch = (
 
   socket
     .to(robot.socketId)
-    .emit("run_launch", { socketId: robot.socketId, command: payload.command });
+    .emit("run_launch", { socketId: robot.socketId, command: _.get(payload, 'command') });
 
   const response = createSuccessResponse();
   ack(response);
@@ -62,7 +62,7 @@ const runLaunch = (
 const runRosrun = (
   db: DatabaseInterface,
   socket: any,
-  payload: any,
+  payload: object,
   ack: any
 ): void => {
   const robotUuid = _.get(payload, "uuid");
@@ -71,8 +71,8 @@ const runRosrun = (
 
   socket.to(robot.socketId).emit("run_rosrun", {
     socketId: robot.socketId,
-    command: payload.command,
-    args: payload.args
+    command: _.get(payload, 'command'),
+    args: _.get(payload, 'args')
   });
 
   const response = createSuccessResponse();
@@ -83,7 +83,7 @@ const runRosrun = (
 const delegate = (
   db: DatabaseInterface,
   socket: any,
-  payload: string,
+  payload: object,
   ack: any
 ): void => {
   const robotUuid = _.get(payload, "robotUuid");
@@ -105,7 +105,7 @@ const delegate = (
 const killRosnode = (
   db: DatabaseInterface,
   socket: any,
-  payload: string,
+  payload: object,
   ack: any
 ): void => {
   const robotUuid = _.get(payload, "uuid");

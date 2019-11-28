@@ -23,7 +23,7 @@ const createErrorResponse = (error = ""): WSResponse => {
 const registerRobot = async (
   db: DatabaseInterface,
   socket: any,
-  payload: string,
+  payload: object,
   ack: any
 ): Promise<any> => {
   if (!payload) {
@@ -33,11 +33,9 @@ const registerRobot = async (
     return;
   }
 
-  const parsedPayload = JSON.parse(payload);
-
   // generate uuid
   let uuid = genUuid();
-  const payloadUuid = parsedPayload["uuid"];
+  const payloadUuid = payload["uuid"];
   if (payloadUuid) {
     const robot = db.findRobotByUuid(payloadUuid);
     if (robot) {
@@ -53,7 +51,7 @@ const registerRobot = async (
 
   let projectName = "default";
   // Authenticat api_key from rowma_ros
-  const apiKey = parsedPayload["api_key"];
+  const apiKey = payload["api_key"];
   if (apiKey) {
     const authResult = await authenticateRobot(apiKey);
     if (authResult.auth) {
@@ -69,9 +67,9 @@ const registerRobot = async (
   const robot = new Robot(
     uuid,
     socket.id,
-    parsedPayload["launch_commands"],
-    parsedPayload["rosnodes"],
-    parsedPayload["rosrun_commands"],
+    payload["launch_commands"],
+    payload["rosnodes"],
+    payload["rosrun_commands"],
     projectName
   );
   db.saveRobot(robot);
@@ -80,15 +78,14 @@ const registerRobot = async (
 
 const updateRosnodes = (
   db: DatabaseInterface,
-  payload: string,
+  payload: object,
   ack: any
 ): void => {
   if (!payload) return;
-  const parsedPayload = JSON.parse(payload);
-  const robotUuid = _.get(parsedPayload, "uuid");
+  const robotUuid = _.get(payload, "uuid");
   const robot = db.findRobotByUuid(robotUuid);
-  console.log(parsedPayload);
-  const rosnodes = _.get(parsedPayload, "rosnodes") || [];
+  console.log(payload);
+  const rosnodes = _.get(payload, "rosnodes") || [];
   db.updateRobotRosnodes(robotUuid, rosnodes);
 
   console.log("registered: ", db.getAllRobots());
@@ -97,14 +94,13 @@ const updateRosnodes = (
 const topicFromRos = (
   db: DatabaseInterface,
   socket: any,
-  payload: string,
+  payload: object,
   ack: any
 ): void => {
-  const parsedPayload = JSON.parse(payload);
-  const robotUuid = _.get(parsedPayload, "robotUuid");
+  const robotUuid = _.get(payload, "robotUuid");
   const devices = db.getAllDevicesByRobotUuid(robotUuid);
   _.each(devices, device => {
-    _.each(_.get(parsedPayload, "deviceUuids"), payloadDeviceUuid => {
+    _.each(_.get(payload, "deviceUuids"), payloadDeviceUuid => {
       if (device.uuid == payloadDeviceUuid) {
         socket.to(device.socketId).emit("topic_to_device", payload);
       }
