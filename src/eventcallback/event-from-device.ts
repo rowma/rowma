@@ -1,3 +1,6 @@
+// The role of this file is Controller in MVC architecture. These functions are responsible
+// for response (ack() function). So keep in your mind that when I write code.
+
 import Robot from "../entity/robot";
 import Device from "../entity/device";
 import WSResponse from "../response";
@@ -17,7 +20,7 @@ const createErrorResponse = (error = ""): WSResponse => {
 const registerDevice = (
   db: DatabaseInterface,
   socket: any,
-  payload: string,
+  payload: object,
   ack: any
 ): void => {
   if (!payload) {
