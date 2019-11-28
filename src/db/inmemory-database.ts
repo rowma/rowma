@@ -2,8 +2,8 @@ import _ from "lodash";
 
 import DatabaseInterface from "./database-interface";
 
-import Robot from "../domain/robot";
-import Device from "../domain/device";
+import Robot from "../entity/robot";
+import Device from "../entity/device";
 
 export default class InmemoryDatabase implements DatabaseInterface {
   robotInmemoryDatabase: Array<Robot>;

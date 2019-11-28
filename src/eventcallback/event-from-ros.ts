@@ -1,4 +1,4 @@
-import Robot from "../domain/robot";
+import Robot from "../entity/robot";
 import WSResponse from "../response";
 
 import DatabaseInterface from "../db/database-interface";

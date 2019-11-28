@@ -8,8 +8,8 @@ const app = express();
 const server = require("http").Server(app);
 const io = socketio(server);
 
-import Robot from "./domain/robot";
-import Device from "./domain/device";
+import Robot from "./entity/robot";
+import Device from "./entity/device";
 import WSResponse from "./response";
 
 import {
