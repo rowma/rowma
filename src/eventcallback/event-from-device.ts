@@ -23,7 +23,7 @@ const registerDevice = (
   payload: object,
   ack: any
 ): void => {
-  if (!payload) {
+  if (_.isEmpty(payload)) {
     const msg = "Payload must be included.";
     const response = createErrorResponse(msg);
     if (ack) ack(response);
@@ -32,7 +32,12 @@ const registerDevice = (
   const robotUuid = _.get(payload, "robotUuid");
   const robot = db.findRobotByUuid(robotUuid);
 
-  if (!robot) return; // TODO some handling
+  if (!robot) { // TODO some handling
+    const msg = "The robot is not found.";
+    const response = createErrorResponse(msg);
+    if (ack) ack(response);
+    return;
+  }
   const device = new Device(payload["deviceUuid"], socket.id, robot.uuid);
   db.saveDevice(device);
 
