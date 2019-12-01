@@ -38,4 +38,3 @@ Feel free to open issues anytime!
 * Log related things
 * More error handlings
 * Testing
-* Change payload type from string to object

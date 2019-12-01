@@ -2,7 +2,11 @@
 // for response (ack() function). So keep in your mind that when I write code.
 
 import Robot from "../entity/robot";
-import WSResponse from "../response";
+
+import {
+  createSuccessResponse,
+  createErrorResponse
+} from "../lib/response";
 
 import DatabaseInterface from "../db/database-interface";
 
@@ -10,14 +14,6 @@ import { authenticateRobot } from "../auth";
 
 import _ from "lodash";
 import genUuid from "uuid";
-
-const createSuccessResponse = (data = ""): WSResponse => {
-  return new WSResponse("success", data, "");
-};
-
-const createErrorResponse = (error = ""): WSResponse => {
-  return new WSResponse("failed", "", error);
-};
 
 // TODO: Create Payload type
 const registerRobot = async (

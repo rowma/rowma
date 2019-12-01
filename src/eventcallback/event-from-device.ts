@@ -3,19 +3,15 @@
 
 import Robot from "../entity/robot";
 import Device from "../entity/device";
-import WSResponse from "../response";
+
+import {
+  createSuccessResponse,
+  createErrorResponse
+} from "../lib/response";
 
 import DatabaseInterface from "../db/database-interface";
 
 import _ from "lodash";
-
-const createSuccessResponse = (data = ""): WSResponse => {
-  return new WSResponse("success", data, "");
-};
-
-const createErrorResponse = (error = ""): WSResponse => {
-  return new WSResponse("failed", "", error);
-};
 
 const registerDevice = (
   db: DatabaseInterface,
@@ -55,6 +51,13 @@ const runLaunch = (
 ): void => {
   const robotUuid = _.get(payload, "uuid");
   const robot = db.findRobotByUuid(robotUuid);
+
+  if (!robot) {
+    const msg = "The robot is not found.";
+    const response = createErrorResponse(msg);
+    if (ack) ack(response);
+    return;
+  }
 
   socket
     .to(robot.socketId)

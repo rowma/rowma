@@ -1,14 +1,25 @@
 import {
-  registerDevice
+  registerDevice,
+  runLaunch
 } from "../src/eventcallback/event-from-device";
 
 import inmemoryDb from "../src/db/inmemory-database";
 import Robot from "../src/entity/robot";
 import Device from "../src/entity/device";
-import WSResponse from "../src/response";
+
+import {
+  createSuccessResponse,
+  createErrorResponse
+} from "../src/lib/response";
+
+import MockSocket from "./mock-socket";
 
 import assert from 'assert';
 import sinon from "sinon";
+
+const createMockSocket = (): MockSocket => {
+  return new MockSocket();
+}
 
 const robot1 = new Robot("abc-robot", "socket-robot", [], [], [], "test")
 
@@ -20,10 +31,11 @@ describe('event-from-device', () => {
       const deviceInmemoryDatabase: Array<Device> = [];
       const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
 
-      const socket = { id: "socket-id" }
+      const socket = createMockSocket();
+      socket.setId("socket-id");
       const payload = { robotUuid: "abc-robot", deviceUuid: "abc-device" }
       const ack = sinon.fake();
-      const response = new WSResponse("success", "", "");
+      const response = createSuccessResponse();
 
       // Act
       registerDevice(db, socket, payload, ack)
@@ -41,10 +53,11 @@ describe('event-from-device', () => {
       const deviceInmemoryDatabase: Array<Device> = [];
       const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
 
-      const socket = { id: "socket-id" }
+      const socket = createMockSocket();
+      socket.setId("socket-id");
       const payload = {};
       const ack = sinon.fake();
-      const response = new WSResponse("failed", "", "Payload must be included.");
+      const response = createErrorResponse("Payload must be included.");
 
       // Act
       registerDevice(db, socket, payload, ack)
@@ -62,11 +75,12 @@ describe('event-from-device', () => {
       const deviceInmemoryDatabase: Array<Device> = [];
       const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
 
-      const socket = { id: "socket-id" }
+      const socket = createMockSocket();
+      socket.setId("socket-id");
       const payload = { deviceUuid: "abc-device" }
       const ack = sinon.fake();
 
-      const response = new WSResponse("failed", "", "The robot is not found.");
+      const response = createErrorResponse("The robot is not found.")
 
       // Act
       registerDevice(db, socket, payload, ack)
@@ -84,10 +98,11 @@ describe('event-from-device', () => {
       const deviceInmemoryDatabase: Array<Device> = [];
       const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
 
-      const socket = { id: "socket-id" }
+      const socket = createMockSocket();
+      socket.setId("socket-id");
       const payload = { robotUuid: "abc-robot-wrong", deviceUuid: "abc-device" }
       const ack = sinon.fake();
-      const response = new WSResponse("failed", "", "The robot is not found.");
+      const response = createErrorResponse("The robot is not found.");
 
       // Act
       registerDevice(db, socket, payload, ack)
@@ -104,16 +119,18 @@ describe('event-from-device', () => {
       const deviceInmemoryDatabase: Array<Device> = [];
       const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
 
-      const socket1 = { id: "socket-id-1" }
+      const socket1 = createMockSocket();
+      socket1.setId("socket-id-1");
       const payload1 = { robotUuid: "abc-robot", deviceUuid: "abc-device-1" }
 
-      const socket2 = { id: "socket-id-2" }
+      const socket2 = createMockSocket();
+      socket2.setId("socket-id-2");
       const payload2 = { robotUuid: "abc-robot", deviceUuid: "abc-device-2" }
 
       const ack1 = sinon.fake();
       const ack2 = sinon.fake();
 
-      const response = new WSResponse("success", "", "");
+      const response = createSuccessResponse();
 
       // Act
       registerDevice(db, socket1, payload1, ack1)
@@ -127,6 +144,52 @@ describe('event-from-device', () => {
 
       assert(ack1.calledWith(response))
       assert(ack2.calledWith(response))
+    });
+  });
+
+  describe('#runLaunch()', () => {
+    it('should emit with a payload', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = { uuid: "abc-robot", command: "pkg command" }
+      const ack = sinon.fake();
+      socket.emit = sinon.fake();
+
+      const response = createSuccessResponse();
+
+      // Act
+      runLaunch(db, socket, payload, ack)
+
+      // Assert
+      assert.equal(socket.emit.callCount, 1);
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+
+    it('should not emit', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = { uuid: "abc-robot-2", command: "pkg command" }
+      const ack = sinon.fake();
+      const response = createErrorResponse("The robot is not found.")
+
+      // Act
+      runLaunch(db, socket, payload, ack)
+
+      // Assert
+      assert.equal(socket.emit.callCount, undefined)
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
     });
   });
 });
