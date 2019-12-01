@@ -17,8 +17,4 @@ export default class MockSocket {
   to(socketId: string) {
     return this;
   }
-
-  // emit(eventName: string, payload: object) {
-  //   return this;
-  // }
 }

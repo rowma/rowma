@@ -1,6 +1,8 @@
 import {
   registerDevice,
-  runLaunch
+  runLaunch,
+  runRosrun,
+  delegate
 } from "../src/eventcallback/event-from-device";
 
 import inmemoryDb from "../src/db/inmemory-database";
@@ -171,7 +173,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not emit', () => {
+    it('should not emit when the uuid is wrong', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -188,6 +190,164 @@ describe('event-from-device', () => {
 
       // Assert
       assert.equal(socket.emit.callCount, undefined)
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+
+    it('should not emit when the payload is empty', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = {};
+      const ack = sinon.fake();
+      const response = createErrorResponse("Payload must be included.");
+
+      // Act
+      runLaunch(db, socket, payload, ack)
+
+      // Assert
+      assert.equal(deviceInmemoryDatabase.length, 0);
+
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+  });
+
+  describe('#runRosrun()', () => {
+    it('should emit with a payload', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = { uuid: "abc-robot", command: "pkg command" }
+      const ack = sinon.fake();
+      socket.emit = sinon.fake();
+
+      const response = createSuccessResponse();
+
+      // Act
+      runRosrun(db, socket, payload, ack)
+
+      // Assert
+      assert.equal(socket.emit.callCount, 1);
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+
+    it('should not emit when the uuid is wrong', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = { uuid: "abc-robot-2", command: "pkg command" }
+      const ack = sinon.fake();
+      const response = createErrorResponse("The robot is not found.")
+
+      // Act
+      runRosrun(db, socket, payload, ack)
+
+      // Assert
+      assert.equal(socket.emit.callCount, undefined)
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+
+    it('should not emit when the payload is empty', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = {};
+      const ack = sinon.fake();
+      const response = createErrorResponse("Payload must be included.");
+
+      // Act
+      runRosrun(db, socket, payload, ack)
+
+      // Assert
+      assert.equal(deviceInmemoryDatabase.length, 0);
+
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+  });
+
+  describe('#delegate()', () => {
+    it('should emit with a payload', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = { robotUuid: "abc-robot", msg: "msg" }
+      const ack = sinon.fake();
+      socket.emit = sinon.fake();
+
+      const response = createSuccessResponse();
+
+      // Act
+      delegate(db, socket, payload, ack)
+
+      // Assert
+      // assert.equal(socket.emit.callCount, 1);
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+
+    it('should not emit when the uuid is wrong', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = { robotUuid: "abc-robot-2", msg: "msg" }
+      const ack = sinon.fake();
+      const response = createErrorResponse("The robot is not found.")
+
+      // Act
+      delegate(db, socket, payload, ack)
+
+      // Assert
+      assert.equal(socket.emit.callCount, undefined)
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+
+    it('should not emit when the payload is empty', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = {};
+      const ack = sinon.fake();
+      const response = createErrorResponse("Payload must be included.");
+
+      // Act
+      delegate(db, socket, payload, ack)
+
+      // Assert
+      assert.equal(deviceInmemoryDatabase.length, 0);
+
       assert.equal(ack.callCount, 1);
       assert(ack.calledWith(response))
     });

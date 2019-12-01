@@ -13,6 +13,9 @@ import DatabaseInterface from "../db/database-interface";
 
 import _ from "lodash";
 
+const ROBOT_NOT_FOUND_MSG = "The robot is not found."
+const PAYLOAD_NOT_FOUND_MSG = "Payload must be included."
+
 const registerDevice = (
   db: DatabaseInterface,
   socket: any,
@@ -20,8 +23,7 @@ const registerDevice = (
   ack: any
 ): void => {
   if (_.isEmpty(payload)) {
-    const msg = "Payload must be included.";
-    const response = createErrorResponse(msg);
+    const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
@@ -29,8 +31,7 @@ const registerDevice = (
   const robot = db.findRobotByUuid(robotUuid);
 
   if (!robot) { // TODO some handling
-    const msg = "The robot is not found.";
-    const response = createErrorResponse(msg);
+    const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
@@ -49,12 +50,17 @@ const runLaunch = (
   payload: object,
   ack: any
 ): void => {
+  if (_.isEmpty(payload)) {
+    const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
+
   const robotUuid = _.get(payload, "uuid");
   const robot = db.findRobotByUuid(robotUuid);
 
   if (!robot) {
-    const msg = "The robot is not found.";
-    const response = createErrorResponse(msg);
+    const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
@@ -73,9 +79,20 @@ const runRosrun = (
   payload: object,
   ack: any
 ): void => {
+  if (_.isEmpty(payload)) {
+    const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
+
   const robotUuid = _.get(payload, "uuid");
   const robot = db.findRobotByUuid(robotUuid);
-  console.log(payload);
+
+  if (!robot) {
+    const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
 
   socket.to(robot.socketId).emit("run_rosrun", {
     socketId: robot.socketId,
@@ -94,12 +111,18 @@ const delegate = (
   payload: object,
   ack: any
 ): void => {
+  if (_.isEmpty(payload)) {
+    const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
+
+  // TODO: Change the key name from robotUuid to uuid
   const robotUuid = _.get(payload, "robotUuid");
   const robot = db.findRobotByUuid(robotUuid);
 
   if (!robot) {
-    const msg = "robot not found.";
-    const response = createErrorResponse(msg);
+    const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
@@ -116,8 +139,20 @@ const killRosnode = (
   payload: object,
   ack: any
 ): void => {
+  if (_.isEmpty(payload)) {
+    const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
+
   const robotUuid = _.get(payload, "uuid");
   const robot = db.findRobotByUuid(robotUuid);
+
+  if (!robot) {
+    const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
 
   socket.to(robot.socketId).emit("kill_rosnodes", {
     socketId: robot.socketId,
