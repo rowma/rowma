@@ -2,7 +2,8 @@ import {
   registerDevice,
   runLaunch,
   runRosrun,
-  delegate
+  delegate,
+  killRosnode
 } from "../src/eventcallback/event-from-device";
 
 import inmemoryDb from "../src/db/inmemory-database";
@@ -344,6 +345,74 @@ describe('event-from-device', () => {
 
       // Act
       delegate(db, socket, payload, ack)
+
+      // Assert
+      assert.equal(deviceInmemoryDatabase.length, 0);
+
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+  });
+
+  describe('#killRosnode()', () => {
+    it('should emit with a payload', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = { uuid: "abc-robot", rosnodes: ["/test"] }
+      const ack = sinon.fake();
+      socket.emit = sinon.fake();
+
+      const response = createSuccessResponse();
+
+      // Act
+      killRosnode(db, socket, payload, ack)
+
+      // Assert
+      // assert.equal(socket.emit.callCount, 1);
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+
+    it('should not emit when the uuid is wrong', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = { uuid: "abc-robot-2", rosnodes: ["/test"] }
+      const ack = sinon.fake();
+      const response = createErrorResponse("The robot is not found.")
+
+      // Act
+      killRosnode(db, socket, payload, ack)
+
+      // Assert
+      assert.equal(socket.emit.callCount, undefined)
+      assert.equal(ack.callCount, 1);
+      assert(ack.calledWith(response))
+    });
+
+    it('should not emit when the payload is empty', () => {
+      // Arrange
+      const robotInmemoryDatabase: Array<Robot> = [robot1];
+      const deviceInmemoryDatabase: Array<Device> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+
+      const socket = createMockSocket();
+      socket.setId("socket-id");
+      const payload = {};
+      const ack = sinon.fake();
+      const response = createErrorResponse("Payload must be included.");
+
+      // Act
+      killRosnode(db, socket, payload, ack)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
