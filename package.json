@@ -16,7 +16,7 @@
     "lint": "eslint 'src/**/*.ts' --fix",
     "prettier": "prettier --write 'src/**/*.ts'",
     "check": "npm-run-all prettier lint",
-    "test:coverage": "istanbul cover --print both _mocha -- dist/tests/*.js",
+    "test:coverage": "tsc && istanbul cover --print both _mocha -- dist/tests/*.js",
     "coveralls": "coveralls"
   },
   "dependencies": {
