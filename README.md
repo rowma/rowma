@@ -1,4 +1,7 @@
 # ConnectionManager
+[![Coverage Status](https://coveralls.io/repos/github/asmsuechan/rowma_connection_manager/badge.svg?branch=master)](https://coveralls.io/github/asmsuechan/rowma_connection_manager?branch=master)
+[![Build Status](https://travis-ci.com/asmsuechan/rowma_connection_manager.svg?branch=master)](https://travis-ci.com/asmsuechan/rowma_connection_manager)
+
 ConnectionManager is a WebSocket server for rowma.
 
 I host a ConnectionManager at `http://18.176.1.219`, it is used by default.
