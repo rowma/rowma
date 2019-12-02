@@ -17,26 +17,15 @@
     "check": "npm-run-all prettier lint",
     "test": "mocha -r ts-node/register tests/**/*.test.ts",
     "coveralls": "coveralls",
-    "test:coverage": "nyc npm t"
+    "test:coverage": "nyc mocha -r ts-node/register tests/**/*.test.ts"
   },
   "nyc": {
-    "include": [
-      "tests/**/*.ts"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
     "reporter": [
-      "json",
-      "html",
       "text",
-      "text-summary"
-    ],
-    "sourceMap": true,
-    "all": true
+      "lcov"
+    ]
   },
   "dependencies": {
     "@types/mocha": "^5.2.7",
@@ -55,6 +44,7 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^0.1.3",
     "@types/node": "^12.11.7",
     "@typescript-eslint/eslint-plugin": "^2.6.0",
     "@typescript-eslint/parser": "^2.6.0",
