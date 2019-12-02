@@ -12,11 +12,11 @@
     "tsc": "tsc",
     "build": "npm-run-all clean tsc",
     "start": "node .",
-    "test": "tsc && mocha dist/tests",
     "lint": "eslint 'src/**/*.ts' --fix",
     "prettier": "prettier --write 'src/**/*.ts'",
     "check": "npm-run-all prettier lint",
-    "test:coverage": "tsc && istanbul cover --print both _mocha -- dist/tests/*.js",
+    "test:coverage": "istanbul cover --print both _mocha -- tests/**/*.test.ts --require ts-node/register",
+    "test": "mocha -r ts-node/register tests/**/*.test.ts",
     "coveralls": "coveralls"
   },
   "dependencies": {
