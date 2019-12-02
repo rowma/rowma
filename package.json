@@ -15,11 +15,9 @@
     "lint": "eslint 'src/**/*.ts' --fix",
     "prettier": "prettier --write 'src/**/*.ts'",
     "check": "npm-run-all prettier lint",
-    "test:coverage": "istanbul cover --print both _mocha -- tests/**/*.test.ts --require ts-node/register",
-    "test:cov": "istanbul cover _mocha tests/**/*.test.ts --require ts-node/register",
     "test": "mocha -r ts-node/register tests/**/*.test.ts",
     "coveralls": "coveralls",
-    "cover": "nyc npm t"
+    "test:coverage": "nyc npm t"
   },
   "nyc": {
     "include": [
