@@ -55,28 +55,28 @@ app.get("/robots", (req, res) => {
 
 const eventHandlers = (socket) => {
   // From ROS
-  socket.on("register_robot", (payload: string, ack: Function = _.noop) =>
+  socket.on("register_robot", (payload: any, ack: Function = _.noop) =>
     registerRobot(db, socket, payload, ack)
   );
-  socket.on("update_rosnodes", (payload: string, ack: Function = _.noop) =>
+  socket.on("update_rosnodes", (payload: any, ack: Function = _.noop) =>
     updateRosnodes(db, payload, ack)
   );
   socket.on("disconnect", () => db.removeRobot(socket.id));
-  socket.on("topic_from_ros", (payload: string, ack: Function = _.noop) =>
+  socket.on("topic_from_ros", (payload: any, ack: Function = _.noop) =>
     topicFromRos(db, socket, payload, ack)
   );
 
   // From Device
-  socket.on("register_device", (payload: string, ack: Function = _.noop) =>
+  socket.on("register_device", (payload: any, ack: Function = _.noop) =>
     registerDevice(db, socket, payload, ack)
   );
-  socket.on("run_launch", (payload: string, ack: Function = _.noop) =>
+  socket.on("run_launch", (payload: any, ack: Function = _.noop) =>
     runLaunch(db, socket, payload, ack)
   );
-  socket.on("run_rosrun", (payload: string, ack: Function = _.noop) =>
+  socket.on("run_rosrun", (payload: any, ack: Function = _.noop) =>
     runRosrun(db, socket, payload, ack)
   );
-  socket.on("delegate", (payload: string, ack: Function = _.noop) => {
+  socket.on("delegate", (payload: any, ack: Function = _.noop) => {
     // const { auth } = authorizeDevice(socket.decoded_token.sub, socket.handshake.query.projectName, "delegate");
     // if (!auth) {
     //   const msg = "You are not authorized.";
@@ -86,7 +86,7 @@ const eventHandlers = (socket) => {
     // }
     delegate(db, socket, payload, ack)
   });
-  socket.on("kill_rosnodes", (payload: string, ack: Function = _.noop) =>
+  socket.on("kill_rosnodes", (payload: any, ack: Function = _.noop) =>
     killRosnode(db, socket, payload, ack)
   );
 }
@@ -121,41 +121,7 @@ if (process.env.AUTH_METHOD === 'auth0') {
   });
 } else {
   io.of("/rowma").on("connection", socket => {
-    // From ROS
-    socket.on("register_robot", (payload: string, ack: Function = _.noop) =>
-      registerRobot(db, socket, payload, ack)
-    );
-    socket.on("update_rosnodes", (payload: string, ack: Function = _.noop) =>
-      updateRosnodes(db, payload, ack)
-    );
-    socket.on("disconnect", () => db.removeRobot(socket.id));
-    socket.on("topic_from_ros", (payload: string, ack: Function = _.noop) =>
-      topicFromRos(db, socket, payload, ack)
-    );
-
-    // From Device
-    socket.on("register_device", (payload: string, ack: Function = _.noop) =>
-      registerDevice(db, socket, payload, ack)
-    );
-    socket.on("run_launch", (payload: string, ack: Function = _.noop) =>
-      runLaunch(db, socket, payload, ack)
-    );
-    socket.on("run_rosrun", (payload: string, ack: Function = _.noop) =>
-      runRosrun(db, socket, payload, ack)
-    );
-    socket.on("delegate", (payload: string, ack: Function = _.noop) => {
-      // const { auth } = authorizeDevice(socket.decoded_token.sub, socket.handshake.query.projectName, "delegate");
-      // if (!auth) {
-      //   const msg = "You are not authorized.";
-      //   const response = createErrorResponse(msg);
-      //   if (ack) ack(response);
-      //   return;
-      // }
-      delegate(db, socket, payload, ack)
-    });
-    socket.on("kill_rosnodes", (payload: string, ack: Function = _.noop) =>
-      killRosnode(db, socket, payload, ack)
-    );
+    eventHandlers(socket);
   })
 }
 
