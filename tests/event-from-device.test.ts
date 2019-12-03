@@ -36,7 +36,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { robotUuid: "abc-robot", deviceUuid: "abc-device" }
+      const payload = JSON.stringify({ robotUuid: "abc-robot", deviceUuid: "abc-device" })
       const ack = sinon.fake();
       const response = createSuccessResponse();
 
@@ -58,7 +58,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = {};
+      const payload = JSON.stringify({});
       const ack = sinon.fake();
       const response = createErrorResponse("Payload must be included.");
 
@@ -80,7 +80,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { deviceUuid: "abc-device" }
+      const payload = JSON.stringify({ deviceUuid: "abc-device" })
       const ack = sinon.fake();
 
       const response = createErrorResponse("The robot is not found.")
@@ -103,7 +103,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { robotUuid: "abc-robot-wrong", deviceUuid: "abc-device" }
+      const payload = JSON.stringify({ robotUuid: "abc-robot-wrong", deviceUuid: "abc-device" })
       const ack = sinon.fake();
       const response = createErrorResponse("The robot is not found.");
 
@@ -124,11 +124,11 @@ describe('event-from-device', () => {
 
       const socket1 = createMockSocket();
       socket1.setId("socket-id-1");
-      const payload1 = { robotUuid: "abc-robot", deviceUuid: "abc-device-1" }
+      const payload1 = JSON.stringify({ robotUuid: "abc-robot", deviceUuid: "abc-device-1" })
 
       const socket2 = createMockSocket();
       socket2.setId("socket-id-2");
-      const payload2 = { robotUuid: "abc-robot", deviceUuid: "abc-device-2" }
+      const payload2 = JSON.stringify({ robotUuid: "abc-robot", deviceUuid: "abc-device-2" })
 
       const ack1 = sinon.fake();
       const ack2 = sinon.fake();
@@ -159,7 +159,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot", command: "pkg command" }
+      const payload = JSON.stringify({ uuid: "abc-robot", command: "pkg command" })
       const ack = sinon.fake();
       socket.emit = sinon.fake();
 
@@ -182,7 +182,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot-2", command: "pkg command" }
+      const payload = JSON.stringify({ uuid: "abc-robot-2", command: "pkg command" })
       const ack = sinon.fake();
       const response = createErrorResponse("The robot is not found.")
 
@@ -203,7 +203,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = {};
+      const payload = JSON.stringify({});
       const ack = sinon.fake();
       const response = createErrorResponse("Payload must be included.");
 
@@ -227,7 +227,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot", command: "pkg command" }
+      const payload = JSON.stringify({ uuid: "abc-robot", command: "pkg command" })
       const ack = sinon.fake();
       socket.emit = sinon.fake();
 
@@ -250,7 +250,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot-2", command: "pkg command" }
+      const payload = JSON.stringify({ uuid: "abc-robot-2", command: "pkg command" })
       const ack = sinon.fake();
       const response = createErrorResponse("The robot is not found.")
 
@@ -271,7 +271,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = {};
+      const payload = JSON.stringify({});
       const ack = sinon.fake();
       const response = createErrorResponse("Payload must be included.");
 
@@ -295,7 +295,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { robotUuid: "abc-robot", msg: "msg" }
+      const payload = JSON.stringify({ robotUuid: "abc-robot", msg: "msg" })
       const ack = sinon.fake();
       socket.emit = sinon.fake();
 
@@ -318,7 +318,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { robotUuid: "abc-robot-2", msg: "msg" }
+      const payload = JSON.stringify({ robotUuid: "abc-robot-2", msg: "msg" })
       const ack = sinon.fake();
       const response = createErrorResponse("The robot is not found.")
 
@@ -339,7 +339,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = {};
+      const payload = JSON.stringify({});
       const ack = sinon.fake();
       const response = createErrorResponse("Payload must be included.");
 
@@ -363,7 +363,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot", rosnodes: ["/test"] }
+      const payload = JSON.stringify({ uuid: "abc-robot", rosnodes: ["/test"] })
       const ack = sinon.fake();
       socket.emit = sinon.fake();
 
@@ -386,7 +386,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot-2", rosnodes: ["/test"] }
+      const payload = JSON.stringify({ uuid: "abc-robot-2", rosnodes: ["/test"] })
       const ack = sinon.fake();
       const response = createErrorResponse("The robot is not found.")
 
@@ -407,7 +407,7 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = {};
+      const payload = JSON.stringify({});
       const ack = sinon.fake();
       const response = createErrorResponse("Payload must be included.");
 
