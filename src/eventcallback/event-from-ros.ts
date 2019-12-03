@@ -19,10 +19,11 @@ import genUuid from "uuid";
 const registerRobot = async (
   db: DatabaseInterface,
   socket: any,
-  payload: object,
+  payload: string,
   ack: any
 ): Promise<any> => {
-  if (!payload) {
+  const parsedPayload = JSON.parse(payload);
+  if (!parsedPayload) {
     const msg = "Payload must be included.";
     const response = createErrorResponse(msg);
     if (ack) ack(response);
@@ -31,23 +32,23 @@ const registerRobot = async (
 
   // generate uuid
   let uuid = genUuid();
-  const payloadUuid = payload["uuid"];
-  if (payloadUuid) {
-    const robot = db.findRobotByUuid(payloadUuid);
+  const parsedPayloadUuid = parsedPayload["uuid"];
+  if (parsedPayloadUuid) {
+    const robot = db.findRobotByUuid(parsedPayloadUuid);
     if (robot) {
       const msg = "The UUID is already in use";
       const response = createErrorResponse(msg);
       socket.emit("err", response);
       return;
     } else {
-      uuid = payloadUuid;
+      uuid = parsedPayloadUuid;
     }
   }
   socket.emit("robot_registered", { uuid });
 
   let projectName = "default";
   // Authenticat api_key from rowma_ros
-  const apiKey = payload["api_key"];
+  const apiKey = parsedPayload["api_key"];
   if (apiKey) {
     const authResult = await authenticateRobot(apiKey);
     if (authResult.auth) {
@@ -63,9 +64,9 @@ const registerRobot = async (
   const robot = new Robot(
     uuid,
     socket.id,
-    payload["launch_commands"],
-    payload["rosnodes"],
-    payload["rosrun_commands"],
+    parsedPayload["launch_commands"],
+    parsedPayload["rosnodes"],
+    parsedPayload["rosrun_commands"],
     projectName
   );
   db.saveRobot(robot);
@@ -74,14 +75,14 @@ const registerRobot = async (
 
 const updateRosnodes = (
   db: DatabaseInterface,
-  payload: object,
+  payload: string,
   ack: any
 ): void => {
-  if (!payload) return;
-  const robotUuid = _.get(payload, "uuid");
+  const parsedPayload = JSON.parse(payload);
+  if (!parsedPayload) return;
+  const robotUuid = _.get(parsedPayload, "uuid");
   const robot = db.findRobotByUuid(robotUuid);
-  console.log(payload);
-  const rosnodes = _.get(payload, "rosnodes") || [];
+  const rosnodes = _.get(parsedPayload, "rosnodes") || [];
   db.updateRobotRosnodes(robotUuid, rosnodes);
 
   console.log("registered: ", db.getAllRobots());
@@ -90,15 +91,16 @@ const updateRosnodes = (
 const topicFromRos = (
   db: DatabaseInterface,
   socket: any,
-  payload: object,
+  payload: string,
   ack: any
 ): void => {
-  const robotUuid = _.get(payload, "robotUuid");
+  const parsedPayload = JSON.parse(payload);
+  const robotUuid = _.get(parsedPayload, "robotUuid");
   const devices = db.getAllDevicesByRobotUuid(robotUuid);
   _.each(devices, device => {
-    _.each(_.get(payload, "deviceUuids"), payloadDeviceUuid => {
-      if (device.uuid == payloadDeviceUuid) {
-        socket.to(device.socketId).emit("topic_to_device", payload);
+    _.each(_.get(parsedPayload, "deviceUuids"), parsedPayloadDeviceUuid => {
+      if (device.uuid == parsedPayloadDeviceUuid) {
+        socket.to(device.socketId).emit("topic_to_device", parsedPayload);
       }
     });
   });
