@@ -28,12 +28,17 @@ import {
 // import { authenticateDevice } from "./auth";
 // import { authorizeDevice } from "../auth";
 
-import inmemoryDb from "./db/inmemory-database";
+// import inmemoryDb from "./db/inmemory-database";
+// const robotInmemoryDatabase: Array<Robot> = [];
+// const deviceInmemoryDatabase: Array<Device> = [];
+// const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
 
-const robotInmemoryDatabase: Array<Robot> = [];
-const deviceInmemoryDatabase: Array<Device> = [];
-
-const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+import mongodb from "./db/mongodb";
+import * as mongodbConnection from './lib/mongo-connection';
+let db;
+mongodbConnection.connect().then(() => {
+  db = new mongodb(mongodbConnection);
+})
 
 server.listen(80);
 app.use(cors());

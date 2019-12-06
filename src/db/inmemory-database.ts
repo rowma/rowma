@@ -15,8 +15,10 @@ export default class InmemoryDatabase implements DatabaseInterface {
     this.deviceInmemoryDatabase = deviceDb;
   }
 
-  getAllRobots(): Array<Robot> {
-    return this.robotInmemoryDatabase;
+  getAllRobots(): Promise<Array<Robot>> {
+    return new Promise<Array<Robot>>((resolve, reject) => {
+      resolve(this.robotInmemoryDatabase);
+    })
   }
 
   getAllDevices(): Array<Device> {
