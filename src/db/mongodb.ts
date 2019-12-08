@@ -17,42 +17,38 @@ export default class Mongodb implements DatabaseInterface {
     return this.db.collections.robots.find().toArray()
   }
 
-  getAllDevices(): Array<Device> {
-    return this.db.collections.devices.find().toArray().then(res => {
-      return res
-    })
+  getAllDevices(): Promise<Array<Device>> {
+    return this.db.collections.devices.find().toArray()
   }
 
-  findRobotByUuid(uuid: string): Robot {
-    return this.db.collections.robots.findOne({uuid: uuid}).then(res => {
-      return res
-    })
+  findRobotByUuid(uuid: string): Promise<Robot> {
+    return this.db.collections.robots.findOne({uuid: uuid})
   }
 
-  saveRobot(robot: Robot): boolean {
-    return this.db.collections.robots.insertOne(robot).then(res => {
-      return res
-    })
-  }
-
-  removeRobot(socketId: string): boolean {
-    return true
-  }
-
-  saveDevice(device): boolean {
-    return this.db.collections.devices.insertOne(device).then(res => {
+  saveRobot(robot: Robot): Promise<boolean> {
+    return this.db.collections.robots.insertOne(robot).then(robot => {
       return true
+    }).catch(err => {
+      return false
     })
   }
 
-  getAllDevicesByRobotUuid(uuid: string): Array<Device> {
-    return this.db.collections.devicesrobots.find({robotUuid: uuid}).then(res => {
-      return res
+  removeRobot(socketId: string): Promise<boolean> {
+    return new Promise(resolve => resolve(true))
+  }
+
+  saveDevice(device): Promise<boolean> {
+    return this.db.collections.devices.insertOne(device).then(res => {
+      return new Promise(resolve => resolve(true))
     })
+  }
+
+  getAllDevicesByRobotUuid(uuid: string): Promise<Array<Device>> {
+    return this.db.collections.devicesrobots.find({robotUuid: uuid})
   }
 
   // TODO: Confirm if this method really work correctly
-  updateRobotRosnodes(uuid: string, rosnodes: Array<string>): boolean {
-    return true
+  updateRobotRosnodes(uuid: string, rosnodes: Array<string>): Promise<boolean> {
+    return new Promise(resolve => resolve(true))
   }
 }

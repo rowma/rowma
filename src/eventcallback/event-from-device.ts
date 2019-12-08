@@ -16,19 +16,19 @@ import _ from "lodash";
 const ROBOT_NOT_FOUND_MSG = "The robot is not found."
 const PAYLOAD_NOT_FOUND_MSG = "Payload must be included."
 
-const registerDevice = (
+const registerDevice = async (
   db: DatabaseInterface,
   socket: any,
   payload: any,
   ack: any
-): void => {
+): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
   const robotUuid = _.get(payload, "robotUuid");
-  const robot = db.findRobotByUuid(robotUuid);
+  const robot = await db.findRobotByUuid(robotUuid);
 
   if (!robot) { // TODO some handling
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
@@ -44,12 +44,12 @@ const registerDevice = (
   ack(response);
 };
 
-const runLaunch = (
+const runLaunch = async (
   db: DatabaseInterface,
   socket: any,
   payload: any,
   ack: any
-): void => {
+): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
     if (ack) ack(response);
@@ -57,7 +57,7 @@ const runLaunch = (
   }
 
   const robotUuid = _.get(payload, "uuid");
-  const robot = db.findRobotByUuid(robotUuid);
+  const robot = await db.findRobotByUuid(robotUuid);
 
   if (!robot) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
@@ -73,12 +73,12 @@ const runLaunch = (
   ack(response);
 };
 
-const runRosrun = (
+const runRosrun = async (
   db: DatabaseInterface,
   socket: any,
   payload: any,
   ack: any
-): void => {
+): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
     if (ack) ack(response);
@@ -86,7 +86,7 @@ const runRosrun = (
   }
 
   const robotUuid = _.get(payload, "uuid");
-  const robot = db.findRobotByUuid(robotUuid);
+  const robot = await db.findRobotByUuid(robotUuid);
 
   if (!robot) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
@@ -105,12 +105,12 @@ const runRosrun = (
 };
 
 // TODO: Change name
-const delegate = (
+const delegate = async (
   db: DatabaseInterface,
   socket: any,
   payload: any,
   ack: any
-): void => {
+): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
     if (ack) ack(response);
@@ -119,7 +119,7 @@ const delegate = (
 
   // TODO: Change the key name from robotUuid to uuid
   const robotUuid = _.get(payload, "robotUuid");
-  const robot = db.findRobotByUuid(robotUuid);
+  const robot = await db.findRobotByUuid(robotUuid);
 
   if (!robot) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
@@ -133,12 +133,12 @@ const delegate = (
   ack(response);
 };
 
-const killRosnode = (
+const killRosnode = async (
   db: DatabaseInterface,
   socket: any,
   payload: any,
   ack: any
-): void => {
+): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
     if (ack) ack(response);
@@ -146,7 +146,7 @@ const killRosnode = (
   }
 
   const robotUuid = _.get(payload, "uuid");
-  const robot = db.findRobotByUuid(robotUuid);
+  const robot = await db.findRobotByUuid(robotUuid);
 
   if (!robot) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);

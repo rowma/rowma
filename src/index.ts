@@ -49,9 +49,9 @@ app.get("/list_connections", (req, res) => {
   res.end();
 });
 
-app.get("/robots", (req, res) => {
+app.get("/robots", async (req, res) => {
   const robotUuid = _.get(req, "query.uuid");
-  const robot = db.findRobotByUuid(robotUuid);
+  const robot = await db.findRobotByUuid(robotUuid);
 
   res.writeHead(200);
   res.write(JSON.stringify(robot || {}));
@@ -103,7 +103,7 @@ const eventHandlers = (socket) => {
 //   // { auth: true/false }
 // }
 
-if (process.env.AUTH_METHOD === 'auth0') {
+if (process.env.AUTH_METHOD === 'jwt') {
   const secret = process.env.PUBKEY_AUTH0 || '';
   const cert = Buffer.from(secret, 'base64');
   io.of("/rowma").on('connection', socketioJwt.authorize({

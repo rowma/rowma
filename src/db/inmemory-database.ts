@@ -21,64 +21,71 @@ export default class InmemoryDatabase implements DatabaseInterface {
     })
   }
 
-  getAllDevices(): Array<Device> {
-    return this.deviceInmemoryDatabase;
+  getAllDevices(): Promise<Array<Device>> {
+    return new Promise<Array<Device>>((resolve, reject) => {
+      resolve(this.deviceInmemoryDatabase);
+    })
   }
 
-  findRobotByUuid(uuid: string): Robot {
+  findRobotByUuid(uuid: string): Promise<Robot> {
     const robot = _.find(this.robotInmemoryDatabase, r => {
       return _.get(r, "uuid") === uuid;
     });
 
-    return robot;
+    return new Promise((resolve, reject) => {
+      resolve(robot);
+    })
   }
 
-  saveRobot(robot: Robot): boolean {
+  saveRobot(robot: Robot): Promise<boolean> {
+    // TODO: Use then - catch in promise
     try {
       this.robotInmemoryDatabase.push(robot);
-      return true;
+      return new Promise(resolve => resolve(true));
     } catch {
-      return false;
+      return new Promise(resolve => resolve(false));
     }
   }
 
-  removeRobot(socketId: string): boolean {
+  removeRobot(socketId: string): Promise<boolean> {
+    // TODO: Use then - catch in promise
     try {
       const index = _.findIndex(this.robotInmemoryDatabase, (robot: Robot) => {
         return _.get(robot, "socketId") === socketId;
       });
       delete this.robotInmemoryDatabase[index];
       this.robotInmemoryDatabase = _.compact(this.robotInmemoryDatabase);
-      return true;
+      return new Promise(resolve => resolve(true));
     } catch {
-      return false;
+      return new Promise(resolve => resolve(false));
     }
   }
 
-  saveDevice(device): boolean {
+  saveDevice(device): Promise<boolean> {
     try {
       this.deviceInmemoryDatabase.push(device);
-      return true;
+      return new Promise(resolve => resolve(true));
     } catch {
-      return false;
+      return new Promise(resolve => resolve(false));
     }
   }
 
-  getAllDevicesByRobotUuid(uuid: string): Array<Device> {
+  getAllDevicesByRobotUuid(uuid: string): Promise<Array<Device>> {
     const devices = _.filter(this.deviceInmemoryDatabase, (device: Device) => {
       return device.robotUuid === uuid;
     });
-    return devices;
+    return new Promise(resolve => resolve(devices));
   }
 
   // TODO: Confirm if this method really work correctly
-  updateRobotRosnodes(uuid: string, rosnodes: Array<string>): boolean {
+  updateRobotRosnodes(uuid: string, rosnodes: Array<string>): Promise<boolean> {
     try {
-      const robot = this.findRobotByUuid(uuid);
-      robot.rosnodes = rosnodes;
-      return true;
+      this.findRobotByUuid(uuid).then(robot => {
+        robot.rosnodes = rosnodes;
+      })
+      return new Promise(resolve => resolve(true));
     } catch {
-      return false;
+      return new Promise(resolve => resolve(false));
     }
   }
 }
