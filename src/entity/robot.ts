@@ -8,7 +8,7 @@ export default class Robot {
   launchCommands: Array<string>;
   rosnodes: Array<string>;
   rosrunCommands: Array<string>;
-  projectName: string;
+  swarmName: string;
 
   constructor(
     uuid: string,
@@ -16,13 +16,13 @@ export default class Robot {
     launchCommands: Array<string>,
     rosnodes: Array<string>,
     rosrunCommands: Array<string>,
-    projectName: string
+    swarmName: string
   ) {
     this.uuid = uuid;
     this.socketId = socketId;
     this.launchCommands = launchCommands;
     this.rosnodes = rosnodes;
     this.rosrunCommands = rosrunCommands;
-    this.projectName = projectName;
+    this.swarmName = swarmName;
   }
 }

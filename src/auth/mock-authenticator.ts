@@ -18,7 +18,7 @@ const server = http.createServer((req, res) => {
 
   req.on("end", function() {
     res.writeHead(200, { "Content-Type": "application/json" });
-    const response = { projectName: "test" };
+    const response = { swarmName: "test" };
     res.end(JSON.stringify(response));
   });
 });

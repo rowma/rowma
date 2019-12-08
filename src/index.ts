@@ -82,7 +82,7 @@ const eventHandlers = (socket) => {
     runRosrun(db, socket, payload, ack)
   );
   socket.on("delegate", (payload: any, ack: Function = _.noop) => {
-    // const { auth } = authorizeDevice(socket.decoded_token.sub, socket.handshake.query.projectName, "delegate");
+    // const { auth } = authorizeDevice(socket.decoded_token.sub, socket.handshake.query.swarmName, "delegate");
     // if (!auth) {
     //   const msg = "You are not authorized.";
     //   const response = createErrorResponse(msg);
@@ -96,10 +96,10 @@ const eventHandlers = (socket) => {
   );
 }
 
-// TODO: Add team concept to this project
-// const authenticate = async (id: string, teamName: string) {
+// TODO: Add swarm concept to this swarm
+// const authenticate = async (id: string, swarmName: string) {
 //   const authenticator = process.env.AUTHENTICATOR || '';
-//   return await axios.get(`$authenticator}?id=${id}&team=${teamName}`);
+//   return await axios.get(`$authenticator}?id=${id}&swarm=${swarmName}`);
 //   // { auth: true/false }
 // }
 
@@ -111,11 +111,11 @@ if (process.env.AUTH_METHOD === 'jwt') {
     timeout: 15000,
     algorithms: ['RS256']
   })).on('authenticated', (socket) => {
-    // Need more authentication. If the member who sent a request is not a member of the project,
+    // Need more authentication. If the member who sent a request is not a member of the swarm,
     // it has to be denied. However, it means more time is needed. I speculate the time is 200-300ms.
-    // get the team name from console.log(socket.handshake.query)
-    // const { id, projectName } = socket.handshake.query;
-    // const { auth } = authenticateDevice(id, projectName)
+    // get the swarm name from console.log(socket.handshake.query)
+    // const { id, swarmName } = socket.handshake.query;
+    // const { auth } = authenticateDevice(id, swarmName)
     // if (!auth) {
     //   // const msg = 'unauthenticated';
     //   // socket.emit('unauthenticated', msg);

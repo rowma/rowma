@@ -6,18 +6,18 @@ const authenticateRobot = (apiKey: string): Promise<any> => {
   return axios
     .get(`${authUrl}/robots/auth?apiKey=${apiKey}`)
     .then(response => {
-      const projectName = _.get(response, "data.projectName");
-      return projectName ? { auth: true, projectName } : { auth: false };
+      const swarmName = _.get(response, "data.swarmName");
+      return swarmName ? { auth: true, swarmName } : { auth: false };
     })
     .catch(error => {
       return { auth: false , error };
     });
 };
 
-const authenticateDevice = (id: string, projectName: string): Promise<any> => {
+const authenticateDevice = (id: string, swarmName: string): Promise<any> => {
   const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
   return axios
-    .get(`${authUrl}/devices/auth/?id=${id}&project=${projectName}`)
+    .get(`${authUrl}/devices/auth/?id=${id}&swarm=${swarmName}`)
     .then(response => {
       const auth = _.get(response, "data.auth"); // boolean
       return { auth }
@@ -27,10 +27,10 @@ const authenticateDevice = (id: string, projectName: string): Promise<any> => {
     });
 }
 
-const authorizeDevice = (id: string, projectName: string, action: string): Promise<any> => {
+const authorizeDevice = (id: string, swarmName: string, action: string): Promise<any> => {
   const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
   return axios
-    .get(`${authUrl}/devices/authz/?id=${id}&project=${projectName}&action=${action}`)
+    .get(`${authUrl}/devices/authz/?id=${id}&swarm=${swarmName}&action=${action}`)
     .then(response => {
       const auth = _.get(response, "data.auth"); // boolean
       return { auth }
