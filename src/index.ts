@@ -25,8 +25,8 @@ import {
   killRosnode
 } from "./eventcallback/event-from-device";
 
-// import { authenticateDevice } from "./auth";
-// import { authorizeDevice } from "../auth";
+import { authenticateDevice } from "./auth";
+// import { authorizeDevice } from "./auth";
 
 import inmemoryDb from "./db/inmemory-database";
 const robotInmemoryDatabase: Array<Robot> = [];
@@ -58,7 +58,7 @@ app.get("/robots", async (req, res) => {
   res.end();
 });
 
-const eventHandlers = (socket) => {
+const robotEventHandlers = (socket) => {
   // From ROS
   socket.on("register_robot", (payload: any, ack: Function = _.noop) =>
     registerRobot(db, socket, payload, ack)
@@ -70,7 +70,9 @@ const eventHandlers = (socket) => {
   socket.on("topic_from_ros", (payload: any, ack: Function = _.noop) =>
     topicFromRos(db, socket, payload, ack)
   );
+}
 
+const deviceEventHandlers = (socket) => {
   // From Device
   socket.on("register_device", (payload: any, ack: Function = _.noop) =>
     registerDevice(db, socket, payload, ack)
@@ -96,6 +98,11 @@ const eventHandlers = (socket) => {
   );
 }
 
+const eventHandlers = (socket) => {
+  robotEventHandlers(socket);
+  deviceEventHandlers(socket);
+}
+
 // TODO: Add swarm concept to this swarm
 // const authenticate = async (id: string, swarmName: string) {
 //   const authenticator = process.env.AUTHENTICATOR || '';
@@ -106,29 +113,35 @@ const eventHandlers = (socket) => {
 if (process.env.AUTH_METHOD === 'jwt') {
   const secret = process.env.PUBKEY_AUTH0 || '';
   const cert = Buffer.from(secret, 'base64');
-  io.of("/rowma").on('connection', socketioJwt.authorize({
+  io.of("/rowma_device").on('connection', socketioJwt.authorize({
     secret: cert,
     timeout: 15000,
     algorithms: ['RS256']
-  })).on('authenticated', (socket) => {
+  })).on('authenticated', async (socket) => {
     // Need more authentication. If the member who sent a request is not a member of the swarm,
     // it has to be denied. However, it means more time is needed. I speculate the time is 200-300ms.
     // get the swarm name from console.log(socket.handshake.query)
-    // const { id, swarmName } = socket.handshake.query;
-    // const { auth } = authenticateDevice(id, swarmName)
-    // if (!auth) {
-    //   // const msg = 'unauthenticated';
-    //   // socket.emit('unauthenticated', msg);
-    //   // return;
-    // }
+    const { swarmName } = socket.handshake.query;
+    const id = socket.decoded_token.sub
+    const { auth, error } = await authenticateDevice(id, swarmName)
+    console.log(auth, error)
+    if (!auth) {
+      const msg = 'unauthenticated';
+      socket.emit('unauthenticated', msg);
+      return;
+    }
     console.log(socket.decoded_token.sub)
-    eventHandlers(socket)
+    deviceEventHandlers(socket)
   });
-} else {
-  io.of("/rowma").on("connection", socket => {
-    eventHandlers(socket);
+
+  io.of("/rowma_robot").on("connection", socket => {
+    robotEventHandlers(socket);
   })
 }
+
+io.of("/rowma").on("connection", socket => {
+  eventHandlers(socket);
+})
 
 // Note: https://blog.fullstacktraining.com/cannot-redeclare-block-scoped-variable-name/
 export {};

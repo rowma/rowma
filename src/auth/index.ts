@@ -17,7 +17,7 @@ const authenticateRobot = (apiKey: string): Promise<any> => {
 const authenticateDevice = (id: string, swarmName: string): Promise<any> => {
   const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
   return axios
-    .get(`${authUrl}/devices/auth/?id=${id}&swarm=${swarmName}`)
+    .get(`${authUrl}/devices/auth?id=${id}&swarm=${swarmName}`)
     .then(response => {
       const auth = _.get(response, "data.auth"); // boolean
       return { auth }
@@ -30,7 +30,7 @@ const authenticateDevice = (id: string, swarmName: string): Promise<any> => {
 const authorizeDevice = (id: string, swarmName: string, action: string): Promise<any> => {
   const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
   return axios
-    .get(`${authUrl}/devices/authz/?id=${id}&swarm=${swarmName}&action=${action}`)
+    .get(`${authUrl}/devices/authz?id=${id}&swarm=${swarmName}&action=${action}`)
     .then(response => {
       const auth = _.get(response, "data.auth"); // boolean
       return { auth }
