@@ -25,7 +25,8 @@
     "exclude": [
       "coverage/",
       ".eslintrc.js",
-      "emit-example.js"
+      "emit-example.js",
+      "tests/**/*.ts"
     ],
     "reporter": [
       "text",
