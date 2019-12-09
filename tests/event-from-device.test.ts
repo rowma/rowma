@@ -28,7 +28,7 @@ const robot1 = new Robot("abc-robot", "socket-robot", [], [], [], "test")
 
 describe('event-from-device', () => {
   describe('#registerDevice()', () => {
-    it('should register 1 device', () => {
+    it('should register 1 device', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -41,7 +41,7 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
-      registerDevice(db, socket, payload, ack)
+      await registerDevice(db, socket, payload, ack)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 1);
@@ -50,7 +50,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not register 1 device when the payload is empty', () => {
+    it('should not register 1 device when the payload is empty', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -63,7 +63,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
-      registerDevice(db, socket, payload, ack)
+      await registerDevice(db, socket, payload, ack)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
@@ -72,7 +72,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not register 1 device when the uuid is missing', () => {
+    it('should not register 1 device when the uuid is missing', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -86,7 +86,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
-      registerDevice(db, socket, payload, ack)
+      await registerDevice(db, socket, payload, ack)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
@@ -95,7 +95,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not register 1 device when the robotUuid is wrong', () => {
+    it('should not register 1 device when the robotUuid is wrong', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -108,7 +108,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.");
 
       // Act
-      registerDevice(db, socket, payload, ack)
+      await registerDevice(db, socket, payload, ack)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
@@ -116,7 +116,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should register 2 devices and each ack() is called with a success response', () => {
+    it('should register 2 devices and each ack() is called with a success response', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -136,8 +136,8 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
-      registerDevice(db, socket1, payload1, ack1)
-      registerDevice(db, socket2, payload2, ack2)
+      await registerDevice(db, socket1, payload1, ack1)
+      await registerDevice(db, socket2, payload2, ack2)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 2);
@@ -151,7 +151,7 @@ describe('event-from-device', () => {
   });
 
   describe('#runLaunch()', () => {
-    it('should emit with a payload', () => {
+    it('should emit with a payload', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -166,7 +166,7 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
-      runLaunch(db, socket, payload, ack)
+      await runLaunch(db, socket, payload, ack)
 
       // Assert
       assert.equal(socket.emit.callCount, 1);
@@ -174,7 +174,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not emit when the uuid is wrong', () => {
+    it('should not emit when the uuid is wrong', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -187,7 +187,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
-      runLaunch(db, socket, payload, ack)
+      await runLaunch(db, socket, payload, ack)
 
       // Assert
       assert.equal(socket.emit.callCount, undefined)
@@ -195,7 +195,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not emit when the payload is empty', () => {
+    it('should not emit when the payload is empty', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -208,7 +208,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
-      runLaunch(db, socket, payload, ack)
+      await runLaunch(db, socket, payload, ack)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
@@ -219,7 +219,7 @@ describe('event-from-device', () => {
   });
 
   describe('#runRosrun()', () => {
-    it('should emit with a payload', () => {
+    it('should emit with a payload', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -234,7 +234,7 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
-      runRosrun(db, socket, payload, ack)
+      await runRosrun(db, socket, payload, ack)
 
       // Assert
       assert.equal(socket.emit.callCount, 1);
@@ -242,7 +242,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not emit when the uuid is wrong', () => {
+    it('should not emit when the uuid is wrong', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -255,7 +255,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
-      runRosrun(db, socket, payload, ack)
+      await runRosrun(db, socket, payload, ack)
 
       // Assert
       assert.equal(socket.emit.callCount, undefined)
@@ -263,7 +263,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not emit when the payload is empty', () => {
+    it('should not emit when the payload is empty', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -276,7 +276,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
-      runRosrun(db, socket, payload, ack)
+      await runRosrun(db, socket, payload, ack)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
@@ -287,7 +287,7 @@ describe('event-from-device', () => {
   });
 
   describe('#delegate()', () => {
-    it('should emit with a payload', () => {
+    it('should emit with a payload', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -302,7 +302,7 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
-      delegate(db, socket, payload, ack)
+      await delegate(db, socket, payload, ack)
 
       // Assert
       // assert.equal(socket.emit.callCount, 1);
@@ -310,7 +310,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not emit when the uuid is wrong', () => {
+    it('should not emit when the uuid is wrong', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -323,7 +323,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
-      delegate(db, socket, payload, ack)
+      await delegate(db, socket, payload, ack)
 
       // Assert
       assert.equal(socket.emit.callCount, undefined)
@@ -331,7 +331,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not emit when the payload is empty', () => {
+    it('should not emit when the payload is empty', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -344,7 +344,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
-      delegate(db, socket, payload, ack)
+      await delegate(db, socket, payload, ack)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
@@ -355,7 +355,7 @@ describe('event-from-device', () => {
   });
 
   describe('#killRosnode()', () => {
-    it('should emit with a payload', () => {
+    it('should emit with a payload', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -370,7 +370,7 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
-      killRosnode(db, socket, payload, ack)
+      await killRosnode(db, socket, payload, ack)
 
       // Assert
       // assert.equal(socket.emit.callCount, 1);
@@ -378,7 +378,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not emit when the uuid is wrong', () => {
+    it('should not emit when the uuid is wrong', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -391,7 +391,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
-      killRosnode(db, socket, payload, ack)
+      await killRosnode(db, socket, payload, ack)
 
       // Assert
       assert.equal(socket.emit.callCount, undefined)
@@ -399,7 +399,7 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not emit when the payload is empty', () => {
+    it('should not emit when the payload is empty', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
@@ -412,7 +412,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
-      killRosnode(db, socket, payload, ack)
+      await killRosnode(db, socket, payload, ack)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
