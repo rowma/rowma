@@ -47,7 +47,7 @@ const registerRobot = async (
   socket.emit("robot_registered", { uuid });
 
   let swarmName = "default";
-  // Authenticat api_key from rowma_ros
+  Authenticat api_key from rowma_ros
   const apiKey = parsedPayload["api_key"];
   if (apiKey) {
     const authResult = await authenticateRobot(apiKey);
@@ -93,7 +93,8 @@ const topicFromRos = (
   db: DatabaseInterface,
   socket: any,
   payload: string,
-  ack: any
+  ack: any,
+  deviceNsp: any
 ): void => {
   const parsedPayload = JSON.parse(payload);
   const robotUuid = _.get(parsedPayload, "robotUuid");
@@ -101,7 +102,7 @@ const topicFromRos = (
   _.each(devices, device => {
     _.each(_.get(parsedPayload, "deviceUuids"), parsedPayloadDeviceUuid => {
       if (device.uuid == parsedPayloadDeviceUuid) {
-        socket.to(device.socketId).emit("topic_to_device", parsedPayload);
+        deviceNsp.to(device.socketId).emit("topic_to_device", parsedPayload);
       }
     });
   });

@@ -166,7 +166,7 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
-      await runLaunch(db, socket, payload, ack)
+      await runLaunch(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(socket.emit.callCount, 1);
@@ -187,7 +187,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
-      await runLaunch(db, socket, payload, ack)
+      await runLaunch(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(socket.emit.callCount, undefined)
@@ -208,7 +208,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
-      await runLaunch(db, socket, payload, ack)
+      await runLaunch(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
@@ -234,7 +234,7 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
-      await runRosrun(db, socket, payload, ack)
+      await runRosrun(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(socket.emit.callCount, 1);
@@ -255,7 +255,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
-      await runRosrun(db, socket, payload, ack)
+      await runRosrun(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(socket.emit.callCount, undefined)
@@ -276,7 +276,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
-      await runRosrun(db, socket, payload, ack)
+      await runRosrun(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
@@ -302,7 +302,7 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
-      await delegate(db, socket, payload, ack)
+      await delegate(db, socket, payload, ack, socket)
 
       // Assert
       // assert.equal(socket.emit.callCount, 1);
@@ -323,7 +323,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
-      await delegate(db, socket, payload, ack)
+      await delegate(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(socket.emit.callCount, undefined)
@@ -344,7 +344,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
-      await delegate(db, socket, payload, ack)
+      await delegate(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);
@@ -370,7 +370,7 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
-      await killRosnode(db, socket, payload, ack)
+      await killRosnode(db, socket, payload, ack, socket)
 
       // Assert
       // assert.equal(socket.emit.callCount, 1);
@@ -391,7 +391,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
-      await killRosnode(db, socket, payload, ack)
+      await killRosnode(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(socket.emit.callCount, undefined)
@@ -412,7 +412,7 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
-      await killRosnode(db, socket, payload, ack)
+      await killRosnode(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(deviceInmemoryDatabase.length, 0);

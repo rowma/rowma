@@ -48,7 +48,8 @@ const runLaunch = async (
   db: DatabaseInterface,
   socket: any,
   payload: any,
-  ack: any
+  ack: any,
+  robotNsp: any
 ): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
@@ -65,7 +66,7 @@ const runLaunch = async (
     return;
   }
 
-  socket
+  robotNsp
     .to(robot.socketId)
     .emit("run_launch", { socketId: robot.socketId, command: _.get(payload, 'command') });
 
@@ -77,7 +78,8 @@ const runRosrun = async (
   db: DatabaseInterface,
   socket: any,
   payload: any,
-  ack: any
+  ack: any,
+  robotNsp: any
 ): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
@@ -94,7 +96,7 @@ const runRosrun = async (
     return;
   }
 
-  socket.to(robot.socketId).emit("run_rosrun", {
+  robotNsp.to(robot.socketId).emit("run_rosrun", {
     socketId: robot.socketId,
     command: _.get(payload, 'command'),
     args: _.get(payload, 'args')
@@ -109,7 +111,8 @@ const delegate = async (
   db: DatabaseInterface,
   socket: any,
   payload: any,
-  ack: any
+  ack: any,
+  robotNsp: any
 ): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
@@ -127,7 +130,7 @@ const delegate = async (
     return;
   }
 
-  socket.to(robot.socketId).emit("rostopic", _.get(payload, "msg"));
+  robotNsp.to(robot.socketId).emit("rostopic", _.get(payload, "msg"));
 
   const response = createSuccessResponse();
   ack(response);
@@ -137,7 +140,8 @@ const killRosnode = async (
   db: DatabaseInterface,
   socket: any,
   payload: any,
-  ack: any
+  ack: any,
+  robotNsp: any
 ): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
@@ -154,7 +158,7 @@ const killRosnode = async (
     return;
   }
 
-  socket.to(robot.socketId).emit("kill_rosnodes", {
+  robotNsp.to(robot.socketId).emit("kill_rosnodes", {
     socketId: robot.socketId,
     rosnodes: _.get(payload, "rosnodes")
   });

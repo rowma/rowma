@@ -9,6 +9,8 @@ const app = express();
 const server = require("http").Server(app);
 const io = socketio(server);
 
+const rowmaNsp = io.of("/rowma")
+
 import Robot from "./entity/robot";
 import Device from "./entity/device";
 
@@ -27,7 +29,7 @@ import {
 } from "./eventcallback/event-from-device";
 
 import { authenticateDevice } from "./auth";
-// import { authorizeDevice } from "./auth";
+import { authorizeDevice } from "./auth";
 
 import inmemoryDb from "./db/inmemory-database";
 const robotInmemoryDatabase: Array<Robot> = [];
@@ -60,7 +62,7 @@ app.get("/robots", async (req, res) => {
   res.end();
 });
 
-const robotEventHandlers = (socket) => {
+const robotEventHandlers = (socket, deviceNsp) => {
   // From ROS
   socket.on("register_robot", (payload: any, ack: Function = _.noop) =>
     registerRobot(db, socket, payload, ack)
@@ -70,83 +72,85 @@ const robotEventHandlers = (socket) => {
   );
   socket.on("disconnect", () => db.removeRobot(socket.id));
   socket.on("topic_from_ros", (payload: any, ack: Function = _.noop) =>
-    topicFromRos(db, socket, payload, ack)
+    topicFromRos(db, socket, payload, ack, deviceNsp)
   );
 }
 
-const deviceEventHandlers = (socket) => {
-  // From Device
-  socket.on("register_device", (payload: any, ack: Function = _.noop) =>
-    registerDevice(db, socket, payload, ack)
-  );
-  socket.on("run_launch", (payload: any, ack: Function = _.noop) =>
-    runLaunch(db, socket, payload, ack)
-  );
-  socket.on("run_rosrun", (payload: any, ack: Function = _.noop) =>
-    runRosrun(db, socket, payload, ack)
-  );
-  socket.on("delegate", (payload: any, ack: Function = _.noop) => {
-    // const { auth } = authorizeDevice(socket.decoded_token.sub, socket.handshake.query.swarmName, "delegate");
-    // if (!auth) {
-    //   const msg = "You are not authorized.";
-    //   const response = createErrorResponse(msg);
-    //   if (ack) ack(response);
-    //   return;
-    // }
-    delegate(db, socket, payload, ack)
-  });
-  socket.on("kill_rosnodes", (payload: any, ack: Function = _.noop) =>
-    killRosnode(db, socket, payload, ack)
-  );
-}
-
-const eventHandlers = (socket) => {
-  robotEventHandlers(socket);
-  deviceEventHandlers(socket);
-}
-
-// TODO: Add swarm concept to this swarm
-// const authenticate = async (id: string, swarmName: string) {
-//   const authenticator = process.env.AUTHENTICATOR || '';
-//   return await axios.get(`$authenticator}?id=${id}&swarm=${swarmName}`);
-//   // { auth: true/false }
-// }
-
-if (process.env.AUTH_METHOD === 'jwt') {
-  const secret = process.env.PUBKEY_AUTH0 || '';
-  const cert = Buffer.from(secret, 'base64');
-  io.of("/rowma_device").on('connection', socketioJwt.authorize({
-    secret: cert,
-    timeout: 15000,
-    algorithms: ['RS256']
-  })).on('authenticated', async (socket) => {
-    // Need more authentication. If the member who sent a request is not a member of the swarm,
-    // it has to be denied. However, it means more time is needed. I speculate the time is 200-300ms.
-    // get the swarm name from console.log(socket.handshake.query)
+const handlerWithAuth = (socket: socketioJwt.Socket, eventName: string, handler: Function) => {
+  socket.on(eventName, async (payload: any, ack: Function = _.noop) => {
     const { swarmName } = socket.handshake.query;
     const id = socket.decoded_token.sub
     const { auth, error } = await authenticateDevice(id, swarmName)
-    console.log(auth, error)
     if (!auth) {
       const msg = 'unauthenticated';
       socket.emit('unauthenticated', msg);
       return;
     }
-    console.log(socket.decoded_token.sub)
-    deviceEventHandlers(socket)
+
+    const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
+    if (authUrl) {
+      const { authz } = await authorizeDevice(socket.decoded_token.sub, socket.handshake.query.swarmName, eventName);
+      if (!authz) {
+        const authzMsg = "You are not authorized.";
+        socket.emit('unauthorized', authzMsg);
+        return;
+      }
+    }
+
+    handler(payload, ack)
+  });
+}
+
+const deviceEventHandlers = (socket, robotNsp) => {
+  // From Device
+  handlerWithAuth(socket, "register_device", (payload: any, ack: Function = _.noop) =>
+    registerDevice(db, socket, payload, ack)
+  );
+  handlerWithAuth(socket, "run_launch", (payload: any, ack: Function = _.noop) =>
+    runLaunch(db, socket, payload, ack, robotNsp)
+  );
+  handlerWithAuth(socket,"run_rosrun", (payload: any, ack: Function = _.noop) =>
+    runRosrun(db, socket, payload, ack, robotNsp)
+  );
+  handlerWithAuth(socket,"delegate", (payload: any, ack: Function = _.noop) =>
+    delegate(db, socket, payload, ack, robotNsp)
+  );
+  handlerWithAuth(socket, "kill_rosnodes", (payload: any, ack: Function = _.noop) =>
+    killRosnode(db, socket, payload, ack, robotNsp)
+  );
+}
+
+const eventHandlers = (socket) => {
+  robotEventHandlers(socket, rowmaNsp);
+  deviceEventHandlers(socket, rowmaNsp);
+}
+
+if (process.env.AUTH_METHOD === 'jwt') {
+  const deviceNsp = io.of("/rowma_device")
+  const robotNsp = io.of("/rowma_robot")
+
+  const secret = process.env.PUBKEY_AUTH0 || '';
+  const cert = Buffer.from(secret, 'base64');
+  deviceNsp.on('connection', socketioJwt.authorize({
+    secret: cert,
+    timeout: 15000,
+    algorithms: ['RS256']
+  })).on('authenticated', async (socket) => {
+    deviceEventHandlers(socket, robotNsp)
   });
 
-  io.of("/rowma_robot").on("connection", socket => {
-    robotEventHandlers(socket);
+  robotNsp.on("connection", socket => {
+    robotEventHandlers(socket, deviceNsp);
   })
 }
 
-io.of("/rowma").on("connection", socket => {
+rowmaNsp.on("connection", socket => {
   eventHandlers(socket);
 })
 
 server.on('close', async() => {
   console.log('Stopping ...');
+  // TODO: Consider removing device connections
   await db.removeCurrentRobotConnections();
   process.exit(1);
 });

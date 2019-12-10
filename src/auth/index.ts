@@ -32,11 +32,11 @@ const authorizeDevice = (id: string, swarmName: string, action: string): Promise
   return axios
     .get(`${authUrl}/devices/authz?id=${id}&swarm=${swarmName}&action=${action}`)
     .then(response => {
-      const auth = _.get(response, "data.auth"); // boolean
-      return { auth }
+      const authz = _.get(response, "data.auth"); // boolean
+      return { authz }
     })
     .catch(error => {
-      return { auth: false , error };
+      return { authz: false , error };
     });
 }
 
