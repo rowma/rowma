@@ -9,6 +9,7 @@ export default class Robot {
   rosnodes: Array<string>;
   rosrunCommands: Array<string>;
   swarmName: string;
+  disconnectedAt: Date | null;
 
   constructor(
     uuid: string,
@@ -24,5 +25,6 @@ export default class Robot {
     this.rosnodes = rosnodes;
     this.rosrunCommands = rosrunCommands;
     this.swarmName = swarmName;
+    this.disconnectedAt = null;
   }
 }

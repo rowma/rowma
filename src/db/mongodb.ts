@@ -14,11 +14,15 @@ export default class Mongodb implements DatabaseInterface {
   }
 
   getAllRobots(): Promise<Array<Robot>> {
-    return this.db.collections.robots.find().toArray()
+    return this.db.collections.robots.find().toArray().then(robots => {
+      return robots;
+    })
   }
 
   getAllDevices(): Promise<Array<Device>> {
-    return this.db.collections.devices.find().toArray()
+    return this.db.collections.devices.find().toArray().then(devices => {
+      return devices;
+    })
   }
 
   findRobotByUuid(uuid: string): Promise<Robot> {
@@ -34,7 +38,15 @@ export default class Mongodb implements DatabaseInterface {
   }
 
   removeRobot(socketId: string): Promise<boolean> {
-    return new Promise(resolve => resolve(true))
+    return this.db.collections.robots.findOneAndUpdate(
+      { socketId },
+      { $set: { "disconnectedAt" : new Date() } }
+    ).then(res => {
+      // TODO: More sophisticated return value
+      return true;
+    }).catch(e => {
+      return false;
+    })
   }
 
   saveDevice(device): Promise<boolean> {

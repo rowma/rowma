@@ -70,7 +70,8 @@ const registerRobot = async (
     swarmName
   );
   db.saveRobot(robot);
-  console.log("registered: ", db.getAllRobots());
+  const allRobots = await db.getAllRobots()
+  console.log("registered: ", allRobots);
 };
 
 const updateRosnodes = (

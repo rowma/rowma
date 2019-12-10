@@ -43,9 +43,10 @@ const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
 server.listen(80);
 app.use(cors());
 
-app.get("/list_connections", (req, res) => {
+app.get("/list_connections", async (req, res) => {
   res.writeHead(200);
-  res.write(JSON.stringify(db.getAllRobots()));
+  const allRobots = await db.getAllRobots()
+  res.write(JSON.stringify(allRobots));
   res.end();
 });
 
