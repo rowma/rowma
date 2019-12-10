@@ -3,6 +3,7 @@ import cors from "cors";
 import socketio from "socket.io";
 import _ from "lodash";
 import socketioJwt from "socketio-jwt";
+import process from "process";
 
 const app = express();
 const server = require("http").Server(app);
@@ -45,7 +46,7 @@ app.use(cors());
 
 app.get("/list_connections", async (req, res) => {
   res.writeHead(200);
-  const allRobots = await db.getAllRobots()
+  const allRobots = await db.getAllConnectedRobots()
   res.write(JSON.stringify(allRobots));
   res.end();
 });
@@ -143,6 +144,16 @@ if (process.env.AUTH_METHOD === 'jwt') {
 io.of("/rowma").on("connection", socket => {
   eventHandlers(socket);
 })
+
+server.on('close', async() => {
+  console.log('Stopping ...');
+  await db.removeCurrentRobotConnections();
+  process.exit(1);
+});
+
+process.on('SIGINT', function() {
+  server.close();
+});
 
 // Note: https://blog.fullstacktraining.com/cannot-redeclare-block-scoped-variable-name/
 export {};

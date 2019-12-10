@@ -13,8 +13,10 @@ export default class Mongodb implements DatabaseInterface {
     this.db = db
   }
 
-  getAllRobots(): Promise<Array<Robot>> {
-    return this.db.collections.robots.find().toArray().then(robots => {
+  getAllConnectedRobots(): Promise<Array<Robot>> {
+    return this.db.collections.robots.find(
+      { disconnectedAt: null }
+    ).toArray().then(robots => {
       return robots;
     })
   }
@@ -33,6 +35,7 @@ export default class Mongodb implements DatabaseInterface {
     return this.db.collections.robots.insertOne(robot).then(robot => {
       return true
     }).catch(err => {
+      console.log(err)
       return false
     })
   }
@@ -62,5 +65,17 @@ export default class Mongodb implements DatabaseInterface {
   // TODO: Confirm if this method really work correctly
   updateRobotRosnodes(uuid: string, rosnodes: Array<string>): Promise<boolean> {
     return new Promise(resolve => resolve(true))
+  }
+
+  removeCurrentRobotConnections(): Promise<boolean> {
+    return this.db.collections.robots.updateMany(
+      { query: { $ne: { disconnectedAt: null } } },
+      { $set: { disconnectedAt: new Date() } }
+    ).then(() => {
+      return new Promise(resolve => resolve(true))
+    }).catch(err => {
+      console.log(err)
+      return new Promise(resolve => resolve(false))
+    })
   }
 }
