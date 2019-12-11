@@ -47,7 +47,7 @@ const registerRobot = async (
   socket.emit("robot_registered", { uuid });
 
   let swarmName = "default";
-  Authenticat api_key from rowma_ros
+  // Authenticat api_key from rowma_ros
   const apiKey = parsedPayload["api_key"];
   if (apiKey) {
     const authResult = await authenticateRobot(apiKey);

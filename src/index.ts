@@ -78,15 +78,6 @@ const robotEventHandlers = (socket, deviceNsp) => {
 
 const handlerWithAuth = (socket: socketioJwt.Socket, eventName: string, handler: Function) => {
   socket.on(eventName, async (payload: any, ack: Function = _.noop) => {
-    const { swarmName } = socket.handshake.query;
-    const id = socket.decoded_token.sub
-    const { auth, error } = await authenticateDevice(id, swarmName)
-    if (!auth) {
-      const msg = 'unauthenticated';
-      socket.emit('unauthenticated', msg);
-      return;
-    }
-
     const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
     if (authUrl) {
       const { authz } = await authorizeDevice(socket.decoded_token.sub, socket.handshake.query.swarmName, eventName);
@@ -125,24 +116,35 @@ const eventHandlers = (socket) => {
   deviceEventHandlers(socket, rowmaNsp);
 }
 
-if (process.env.AUTH_METHOD === 'jwt') {
-  const deviceNsp = io.of("/rowma_device")
-  const robotNsp = io.of("/rowma_robot")
+const deviceNsp = io.of("/rowma_device")
+const robotNsp = io.of("/rowma_robot")
 
-  const secret = process.env.PUBKEY_AUTH0 || '';
-  const cert = Buffer.from(secret, 'base64');
-  deviceNsp.on('connection', socketioJwt.authorize({
-    secret: cert,
-    timeout: 15000,
-    algorithms: ['RS256']
-  })).on('authenticated', async (socket) => {
-    deviceEventHandlers(socket, robotNsp)
-  });
-
-  robotNsp.on("connection", socket => {
-    robotEventHandlers(socket, deviceNsp);
+const secret = process.env.PUBKEY_AUTH0 || '';
+const cert = Buffer.from(secret, 'base64');
+deviceNsp.on('connection', socketioJwt.authorize({
+  secret: cert,
+  timeout: 15000,
+  algorithms: ['RS256']
+})).on('authenticated', async (socket) => {
+  socket.use(async (packeg, next) => {
+    // TODO: Check if AUTH_URL exists
+    const { swarmName } = socket.handshake.query;
+    const id = socket.decoded_token.sub
+    const { auth, error } = await authenticateDevice(id, swarmName)
+    if (!auth) {
+      const msg = 'unauthenticated';
+      socket.emit('unauthenticated', msg);
+    } else {
+      next();
+    }
   })
-}
+
+  deviceEventHandlers(socket, robotNsp)
+});
+
+robotNsp.on("connection", socket => {
+  robotEventHandlers(socket, deviceNsp);
+})
 
 rowmaNsp.on("connection", socket => {
   eventHandlers(socket);
