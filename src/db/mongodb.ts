@@ -31,6 +31,10 @@ export default class Mongodb implements DatabaseInterface {
     return this.db.collections.robots.findOne({uuid: uuid})
   }
 
+  findDeviceByUuid(uuid: string): Promise<Robot> {
+    return this.db.collections.devices.findOne({uuid: uuid})
+  }
+
   saveRobot(robot: Robot): Promise<boolean> {
     return this.db.collections.robots.insertOne(robot).then(robot => {
       return true

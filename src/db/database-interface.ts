@@ -5,6 +5,7 @@ export default interface DatabaseInterface {
   getAllConnectedRobots(): Promise<Array<Robot>>;
   getAllDevices(): Promise<Array<Device>>;
   findRobotByUuid(uuid: string): Promise<Robot>;
+  findDeviceByUuid(uuid: string): Promise<Robot>;
   saveRobot(robot: Robot): Promise<boolean>;
   removeRobot(socketId: string): Promise<boolean>;
   saveDevice(device: Device): Promise<boolean>;

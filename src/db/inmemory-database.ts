@@ -37,6 +37,16 @@ export default class InmemoryDatabase implements DatabaseInterface {
     })
   }
 
+  findDeviceByUuid(uuid: string): Promise<Robot> {
+    const robot = _.find(this.deviceInmemoryDatabase, r => {
+      return _.get(r, "uuid") === uuid;
+    });
+
+    return new Promise((resolve, reject) => {
+      resolve(robot);
+    })
+  }
+
   saveRobot(robot: Robot): Promise<boolean> {
     // TODO: Use then - catch in promise
     try {

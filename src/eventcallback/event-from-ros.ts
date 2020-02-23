@@ -89,23 +89,21 @@ const updateRosnodes = (
   console.log("registered: ", db.getAllConnectedRobots());
 };
 
-const topicFromRos = (
+const topicFromRos = async (
   db: DatabaseInterface,
   socket: any,
   payload: string,
   ack: any,
-  deviceNsp: any
-): void => {
-  // source, destination
+  nsp: any
+): Promise<void> => {
   const parsedPayload = JSON.parse(payload);
-  const robotUuid = _.get(parsedPayload, "robotUuid");
-  const devices = db.getAllDevicesByUuids(robotUuid);
-  _.each(devices, device => {
-    _.each(_.get(parsedPayload, "deviceUuids"), parsedPayloadDeviceUuid => {
-      if (device.uuid == parsedPayloadDeviceUuid) {
-        deviceNsp.to(device.socketId).emit("topic_to_device", parsedPayload);
-      }
-    });
+  const topicDestination = _.get(parsedPayload, "topicDestination");
+  const destType = topicDestination["type"]
+  const destination = destType === "robot" ? await db.findRobotByUuid(topicDestination) : await db.findDeviceByUuid(topicDestination)
+  _.each(_.get(parsedPayload, "destUuids"), parsedPayloadDeviceUuid => {
+    if (destination.uuid == parsedPayloadDeviceUuid) {
+      nsp.to(destination.socketId).emit("topic_to_device", parsedPayload);
+    }
   });
 
   const response = createSuccessResponse();
