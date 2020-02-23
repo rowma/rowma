@@ -8,7 +8,7 @@ export default interface DatabaseInterface {
   saveRobot(robot: Robot): Promise<boolean>;
   removeRobot(socketId: string): Promise<boolean>;
   saveDevice(device: Device): Promise<boolean>;
-  getAllDevicesByRobotUuid(uuid: string): Promise<Array<Device>>;
+  getAllDevicesByUuids(uuids: Array<string>): Promise<Array<Device>>;
   updateRobotRosnodes(uuid: string, rosnodes: Array<string>): Promise<boolean>;
   removeCurrentRobotConnections (): Promise<boolean>;
 }

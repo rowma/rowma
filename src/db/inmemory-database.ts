@@ -70,9 +70,9 @@ export default class InmemoryDatabase implements DatabaseInterface {
     }
   }
 
-  getAllDevicesByRobotUuid(uuid: string): Promise<Array<Device>> {
+  getAllDevicesByUuids(uuids: Array<string>): Promise<Array<Device>> {
     const devices = _.filter(this.deviceInmemoryDatabase, (device: Device) => {
-      return device.robotUuid === uuid;
+      return _.includes(uuids, device.uuid);
     });
     return new Promise(resolve => resolve(devices));
   }

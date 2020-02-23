@@ -27,15 +27,7 @@ const registerDevice = async (
     if (ack) ack(response);
     return;
   }
-  const robotUuid = _.get(payload, "robotUuid");
-  const robot = await db.findRobotByUuid(robotUuid);
-
-  if (!robot) { // TODO some handling
-    const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
-    if (ack) ack(response);
-    return;
-  }
-  const device = new Device(payload["deviceUuid"], socket.id, robot.uuid);
+  const device = new Device(payload["deviceUuid"], socket.id);
   db.saveDevice(device);
 
   console.log(db.getAllDevices());
@@ -57,7 +49,8 @@ const runLaunch = async (
     return;
   }
 
-  const robotUuid = _.get(payload, "uuid");
+  const destination = _.get(payload, "destination");
+  const robotUuid = _.get(destination, "uuid");
   const robot = await db.findRobotByUuid(robotUuid);
 
   if (!robot) {
@@ -87,7 +80,8 @@ const runRosrun = async (
     return;
   }
 
-  const robotUuid = _.get(payload, "uuid");
+  const destination = _.get(payload, "destination");
+  const robotUuid = _.get(destination, "uuid");
   const robot = await db.findRobotByUuid(robotUuid);
 
   if (!robot) {
@@ -120,8 +114,8 @@ const delegate = async (
     return;
   }
 
-  // TODO: Change the key name from robotUuid to uuid
-  const robotUuid = _.get(payload, "robotUuid");
+  const destination = _.get(payload, "destination");
+  const robotUuid = _.get(destination, "uuid");
   const robot = await db.findRobotByUuid(robotUuid);
 
   if (!robot) {
@@ -149,7 +143,8 @@ const killRosnode = async (
     return;
   }
 
-  const robotUuid = _.get(payload, "uuid");
+  const destination = _.get(payload, "destination");
+  const robotUuid = _.get(destination, "uuid");
   const robot = await db.findRobotByUuid(robotUuid);
 
   if (!robot) {

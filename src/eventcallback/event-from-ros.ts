@@ -34,7 +34,7 @@ const registerRobot = async (
   let uuid = genUuid();
   const parsedPayloadUuid = parsedPayload["uuid"];
   if (parsedPayloadUuid) {
-    const robot = db.findRobotByUuid(parsedPayloadUuid);
+    const robot = await db.findRobotByUuid(parsedPayloadUuid);
     if (robot) {
       const msg = "The UUID is already in use";
       const response = createErrorResponse(msg);
@@ -96,9 +96,10 @@ const topicFromRos = (
   ack: any,
   deviceNsp: any
 ): void => {
+  // source, destination
   const parsedPayload = JSON.parse(payload);
   const robotUuid = _.get(parsedPayload, "robotUuid");
-  const devices = db.getAllDevicesByRobotUuid(robotUuid);
+  const devices = db.getAllDevicesByUuids(robotUuid);
   _.each(devices, device => {
     _.each(_.get(parsedPayload, "deviceUuids"), parsedPayloadDeviceUuid => {
       if (device.uuid == parsedPayloadDeviceUuid) {

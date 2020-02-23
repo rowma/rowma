@@ -58,8 +58,8 @@ export default class Mongodb implements DatabaseInterface {
     })
   }
 
-  getAllDevicesByRobotUuid(uuid: string): Promise<Array<Device>> {
-    return this.db.collections.devicesrobots.find({robotUuid: uuid})
+  getAllDevicesByUuids(uuids: Array<string>): Promise<Array<Device>> {
+    return this.db.collections.devicesrobots.find({robotUuid: uuids})
   }
 
   // TODO: Confirm if this method really work correctly
