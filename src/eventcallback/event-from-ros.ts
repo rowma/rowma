@@ -99,12 +99,11 @@ const topicFromRos = async (
   const parsedPayload = JSON.parse(payload);
   const topicDestination = _.get(parsedPayload, "topicDestination");
   const destType = topicDestination["type"]
-  const destination = destType === "robot" ? await db.findRobotByUuid(topicDestination) : await db.findDeviceByUuid(topicDestination)
-  _.each(_.get(parsedPayload, "destUuids"), parsedPayloadDeviceUuid => {
-    if (destination.uuid == parsedPayloadDeviceUuid) {
-      nsp.to(destination.socketId).emit("topic_to_device", parsedPayload);
-    }
-  });
+  const isDestRobot = destType === "robot"
+  const destination = isDestRobot ? await db.findRobotByUuid(topicDestination["uuid"]) : await db.findDeviceByUuid(topicDestination["uuid"])
+  const eventName = isDestRobot ? "rostopic" : "topic_to_device"
+  // Have to implement the event on your own application
+  nsp.to(destination.socketId).emit(eventName, parsedPayload);
 
   const response = createSuccessResponse();
   ack(response);
