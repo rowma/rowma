@@ -72,50 +72,6 @@ describe('event-from-device', () => {
       assert(ack.calledWith(response))
     });
 
-    it('should not register 1 device when the uuid is missing', async () => {
-      // Arrange
-      const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
-
-      const socket = createMockSocket();
-      socket.setId("socket-id");
-      const payload = { deviceUuid: "abc-device" }
-      const ack = sinon.fake();
-
-      const response = createErrorResponse("The robot is not found.")
-
-      // Act
-      await registerDevice(db, socket, payload, ack)
-
-      // Assert
-      assert.equal(deviceInmemoryDatabase.length, 0);
-
-      assert.equal(ack.callCount, 1);
-      assert(ack.calledWith(response))
-    });
-
-    it('should not register 1 device when the robotUuid is wrong', async () => {
-      // Arrange
-      const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
-
-      const socket = createMockSocket();
-      socket.setId("socket-id");
-      const payload = { robotUuid: "abc-robot-wrong", deviceUuid: "abc-device" }
-      const ack = sinon.fake();
-      const response = createErrorResponse("The robot is not found.");
-
-      // Act
-      await registerDevice(db, socket, payload, ack)
-
-      // Assert
-      assert.equal(deviceInmemoryDatabase.length, 0);
-      assert.equal(ack.callCount, 1);
-      assert(ack.calledWith(response))
-    });
-
     it('should register 2 devices and each ack() is called with a success response', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
@@ -159,7 +115,8 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot", command: "pkg command" }
+      const destination = { type: 'robot', uuid: 'abc-robot' }
+      const payload = { destination, command: "pkg command" }
       const ack = sinon.fake();
       socket.emit = sinon.fake();
 
@@ -182,7 +139,8 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot-2", command: "pkg command" }
+      const destination = { type: 'robot', uuid: 'abc-robot-2' }
+      const payload = { destination, command: "pkg command" }
       const ack = sinon.fake();
       const response = createErrorResponse("The robot is not found.")
 
@@ -227,7 +185,8 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot", command: "pkg command" }
+      const destination = { type: 'robot', uuid: 'abc-robot' }
+      const payload = { destination, command: "pkg command" }
       const ack = sinon.fake();
       socket.emit = sinon.fake();
 
@@ -250,7 +209,8 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot-2", command: "pkg command" }
+      const destination = { type: 'robot', uuid: 'abc-robot-2' }
+      const payload = { destination, command: "pkg command" }
       const ack = sinon.fake();
       const response = createErrorResponse("The robot is not found.")
 
@@ -295,7 +255,8 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { robotUuid: "abc-robot", msg: "msg" }
+      const destination = { type: 'robot', uuid: 'abc-robot' }
+      const payload = { destination, msg: "msg" }
       const ack = sinon.fake();
       socket.emit = sinon.fake();
 
@@ -318,7 +279,8 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { robotUuid: "abc-robot-2", msg: "msg" }
+      const destination = { type: 'robot', uuid: 'abc-robot-2' }
+      const payload = { destination, msg: "msg" }
       const ack = sinon.fake();
       const response = createErrorResponse("The robot is not found.")
 
@@ -363,7 +325,8 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot", rosnodes: ["/test"] }
+      const destination = { type: 'robot', uuid: 'abc-robot' }
+      const payload = { destination, rosnodes: ["/test"] }
       const ack = sinon.fake();
       socket.emit = sinon.fake();
 
@@ -386,7 +349,8 @@ describe('event-from-device', () => {
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { uuid: "abc-robot-2", rosnodes: ["/test"] }
+      const destination = { type: 'robot', uuid: 'abc-robot-2' }
+      const payload = { destination, rosnodes: ["/test"] }
       const ack = sinon.fake();
       const response = createErrorResponse("The robot is not found.")
 
