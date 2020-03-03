@@ -1,12 +1,10 @@
-<p align="center">
-  <img width="660" src="/logo.png">
-</p>
-
----
-
 # Rowma
 [![Coverage Status](https://coveralls.io/repos/github/asmsuechan/rowma_connection_manager/badge.svg?branch=master)](https://coveralls.io/github/asmsuechan/rowma_connection_manager?branch=master)
 [![Build Status](https://travis-ci.com/asmsuechan/rowma_connection_manager.svg?branch=master)](https://travis-ci.com/asmsuechan/rowma_connection_manager)
+
+<p align="center">
+  <img width="660" src="/logo.png">
+</p>
 
 This repository is ConnectionManager's repository.
 
