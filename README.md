@@ -1,17 +1,16 @@
-# ConnectionManager
+<p align="center">
+  <img width="660" src="/logo.png">
+</p>
+
+---
+
+# Rowma
 [![Coverage Status](https://coveralls.io/repos/github/asmsuechan/rowma_connection_manager/badge.svg?branch=master)](https://coveralls.io/github/asmsuechan/rowma_connection_manager?branch=master)
 [![Build Status](https://travis-ci.com/asmsuechan/rowma_connection_manager.svg?branch=master)](https://travis-ci.com/asmsuechan/rowma_connection_manager)
 
-<p align="center">
-  <img width="460" src="/logo.png">
-</p>
+This repository is ConnectionManager's repository.
 
-ConnectionManager is a WebSocket server for rowma.
-
-I host a ConnectionManager at `http://18.176.1.219`, it is used by default.
-
-## rowma repository
-Check [the rowma main repository](https://github.com/asmsuechan/rowma) for more information to utilize rowma.
+Further information about Rowma, please check our [documentation](https://rowma.github.io/documentation/en/getting-started).
 
 ## Run on your environment
 First you need to clone this repository to your local environment:
@@ -39,9 +38,7 @@ $ docker run -p 80:80 rowma -d
 ```
 
 ## Contribution
-Feel free to open issues anytime!
+Feel free to open any issue anytime! Please have a look at the contribution guidelines first.
 
-## TODO
-* Log related things
-* More error handlings
-* Testing
+## License
+The GPL License (GPL) 2020 - rowma.io. Please have a look at the LICENSE.md for more details.
