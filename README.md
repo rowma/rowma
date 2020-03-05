@@ -1,6 +1,6 @@
 # Rowma
-[![Coverage Status](https://coveralls.io/repos/github/asmsuechan/rowma_connection_manager/badge.svg?branch=master)](https://coveralls.io/github/asmsuechan/rowma_connection_manager?branch=master)
-[![Build Status](https://travis-ci.com/asmsuechan/rowma_connection_manager.svg?branch=master)](https://travis-ci.com/asmsuechan/rowma_connection_manager)
+[![Coverage Status](https://coveralls.io/repos/github/rowma/rowma/badge.svg?branch=master)](https://coveralls.io/github/rowma/rowma?branch=master)
+[![Build Status](https://travis-ci.com/rowma/rowma.svg?branch=master)](https://travis-ci.com/rowma/rowma)
 
 <p align="center">
   <img width="660" src="/logo.png">
