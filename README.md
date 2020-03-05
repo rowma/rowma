@@ -10,30 +10,35 @@ This repository is ConnectionManager's repository.
 
 Further information about Rowma, please check our [documentation](https://rowma.github.io/documentation/en/getting-started).
 
-## Run on your environment
-First you need to clone this repository to your local environment:
+### Prerequisites
+You need to install Node.js and npm in your computer.
+
+### Installing
+Clone this repository and install dependencies.
 
 ```
-$ git@github.com:asmsuechan/rowma_connection_manager.git
-```
-
-If you need your own environment, check the commands bellow:
-
-```
+$ git clone https://github.com/rowma/rowma
+$ cd rowma
 $ npm i
-$ npm run build
-$ sudo npm run start
 ```
 
-The default port of ConnectionManager is 80, so you will probably need root privilege when the server starts.
+Then run the server (pleases make sure you have a right to open port 80).
 
-## Use Docker
-Also docker is supported.
+```
+$ npm run dev:watch
+```
+
+Finally, you successfully started your own ConnectionManager if you get any response from `curl localhost/list_connections`.
+
+### Docker Support
+Also docker environment is supported.
 
 ```
 $ docker build -t rowma .
 $ docker run -p 80:80 rowma -d
 ```
+
+That's it!
 
 ## Contribution
 Feel free to open any issue anytime! Please have a look at the contribution guidelines first.
