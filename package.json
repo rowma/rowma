@@ -1,7 +1,7 @@
 {
   "name": "rowma",
   "version": "0.0.1",
-  "description": "A WebSocket server for Rowma to collect local robot connections",
+  "description": "Rowma ConnectionManager",
   "main": "dist/src/index.js",
   "repository": "https://github.com/rowma",
   "author": "asmsuechan",
