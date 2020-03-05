@@ -43,7 +43,8 @@ const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
 //   db = new mongodb(mongodbConnection);
 // })
 
-server.listen(80);
+const PORT = process.env.PORT || 3000;
+server.listen(PORT);
 app.use(cors());
 
 app.get("/list_connections", async (req, res) => {
