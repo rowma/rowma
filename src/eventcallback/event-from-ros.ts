@@ -30,6 +30,14 @@ const registerRobot = async (
     return;
   }
 
+  const REQUIRED_ROWMA_ROS_VERSION = "0.0.0" // TODO: Move this variable to constant
+  if (REQUIRED_ROWMA_ROS_VERSION > parsedPayload["rowma_ros_version"]) {
+    const msg = "You need to update version " + REQUIRED_ROWMA_ROS_VERSION;
+    const response = createErrorResponse(msg);
+    socket.emit("err", response);
+    return;
+  }
+
   // generate uuid
   let uuid = genUuid();
   const parsedPayloadUuid = parsedPayload["uuid"];

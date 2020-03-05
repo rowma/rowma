@@ -1,11 +1,11 @@
 {
-  "name": "connection_manager",
-  "version": "1.0.0",
+  "name": "rowma",
+  "version": "0.0.1",
   "description": "A WebSocket server for Rowma to collect local robot connections",
   "main": "dist/src/index.js",
   "repository": "https://github.com/rowma",
   "author": "asmsuechan",
-  "license": "MIT",
+  "license": "GPL",
   "scripts": {
     "dev:watch": "ts-node-dev src/index.ts",
     "clean": "rimraf dist/*",
