@@ -10,8 +10,11 @@ This repository is ConnectionManager's repository.
 
 Further information about Rowma, please check our [documentation](https://rowma.github.io/documentation/en/getting-started).
 
+## Getting Started
+You can start your own ConnectionManager on your environment.
+
 ### Prerequisites
-You need to install Node.js and npm in your computer.
+You need to install Node.js and npm on your computer.
 
 ### Installing
 Clone this repository and install dependencies.
