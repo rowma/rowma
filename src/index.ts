@@ -42,6 +42,7 @@ import {
   NETWORK_TYPE,
   NETWORK_LOCATION,
   NETWORK_OWNER,
+  ROWMA_VERSION,
   DATABASE,
   PORT
 } from "./lib/settings";
@@ -57,6 +58,15 @@ if (DATABASE === "inmemory") {
     db = new mongodb(mongodbConnection);
   });
 }
+
+const information = {
+  name: NETWORK_NAME,
+  type: NETWORK_TYPE,
+  location: NETWORK_LOCATION,
+  owner: NETWORK_OWNER,
+  version: ROWMA_VERSION
+};
+const network = new NetworkInformation(information);
 
 server.listen(PORT);
 app.use(cors());
@@ -78,13 +88,6 @@ app.get("/robots", async (req, res) => {
 });
 
 app.get("/network_information", (req, res) => {
-  const information = {
-    name: NETWORK_NAME,
-    type: NETWORK_TYPE,
-    location: NETWORK_LOCATION,
-    owner: NETWORK_OWNER
-  };
-  const network = new NetworkInformation(information);
   res.writeHead(200);
   res.write(JSON.stringify(network || {}));
   res.end();
