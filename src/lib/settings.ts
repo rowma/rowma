@@ -6,7 +6,7 @@ const NETWORK_OWNER = process.env.ROWMA_NETWORK_OWNER || "";
 const ROWMA_VERSION = process.env.npm_package_version || "";
 
 const DATABASE: string = process.env.ROWMA_DB || "inmemory";
-const PORT: number = Number(process.env.ROWMA_PORT) || 3000;
+const PORT: number = Number(process.env.PORT) || 3000;
 
 export {
   NETWORK_NAME,
