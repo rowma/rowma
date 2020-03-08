@@ -13,6 +13,7 @@ const rowmaNsp = io.of("/rowma");
 
 import Robot from "./entity/robot";
 import Device from "./entity/device";
+import NetworkInformation from "./entity/network-information";
 
 import {
   registerRobot,
@@ -36,7 +37,14 @@ import inmemoryDb from "./db/inmemory-database";
 import mongodb from "./db/mongodb";
 import * as mongodbConnection from "./lib/mongo-connection";
 
-import { DATABASE, PORT } from "./lib/settings";
+import {
+  NETWORK_NAME,
+  NETWORK_TYPE,
+  NETWORK_LOCATION,
+  NETWORK_OWNER,
+  DATABASE,
+  PORT
+} from "./lib/settings";
 
 let db: DatabaseInterface;
 
@@ -66,6 +74,19 @@ app.get("/robots", async (req, res) => {
 
   res.writeHead(200);
   res.write(JSON.stringify(robot || {}));
+  res.end();
+});
+
+app.get("/network_information", (req, res) => {
+  const information = {
+    name: NETWORK_NAME,
+    type: NETWORK_TYPE,
+    location: NETWORK_LOCATION,
+    owner: NETWORK_OWNER
+  };
+  const network = new NetworkInformation(information);
+  res.writeHead(200);
+  res.write(JSON.stringify(network || {}));
   res.end();
 });
 
