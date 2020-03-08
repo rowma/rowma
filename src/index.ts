@@ -36,7 +36,7 @@ import inmemoryDb from "./db/inmemory-database";
 import mongodb from "./db/mongodb";
 import * as mongodbConnection from "./lib/mongo-connection";
 
-const DATABASE = process.env.ROWMA_DB || "inmemory";
+import { DATABASE, PORT } from "./lib/settings";
 
 let db: DatabaseInterface;
 
@@ -50,7 +50,6 @@ if (DATABASE === "inmemory") {
   });
 }
 
-const PORT = process.env.PORT || 3000;
 server.listen(PORT);
 app.use(cors());
 
