@@ -31,17 +31,24 @@ import {
 import { authenticateDevice } from "./auth";
 import { authorizeDevice } from "./auth";
 
+import DatabaseInterface from "./db/database-interface";
 import inmemoryDb from "./db/inmemory-database";
-const robotInmemoryDatabase: Array<Robot> = [];
-const deviceInmemoryDatabase: Array<Device> = [];
-const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+import mongodb from "./db/mongodb";
+import * as mongodbConnection from './lib/mongo-connection';
 
-// import mongodb from "./db/mongodb";
-// import * as mongodbConnection from './lib/mongo-connection';
-// let db;
-// mongodbConnection.connect().then(() => {
-//   db = new mongodb(mongodbConnection);
-// })
+const DATABASE = process.env.ROWMA_DB || 'inmemory'
+
+let db: DatabaseInterface;
+
+if (DATABASE === 'inmemory') {
+  const robotInmemoryDatabase: Array<Robot> = [];
+  const deviceInmemoryDatabase: Array<Device> = [];
+  db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+} else {
+ mongodbConnection.connect().then(() => {
+   db = new mongodb(mongodbConnection);
+ })
+}
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT);
