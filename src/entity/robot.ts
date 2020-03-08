@@ -1,8 +1,8 @@
-import { ObjectId } from 'mongodb'
+import { ObjectId } from "mongodb";
 import Device from "./device";
 
 export default class Robot {
-  _id?: ObjectId
+  _id?: ObjectId;
   uuid: string;
   socketId: string;
   launchCommands: Array<string>;

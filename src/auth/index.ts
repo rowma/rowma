@@ -10,7 +10,7 @@ const authenticateRobot = (apiKey: string): Promise<any> => {
       return swarmName ? { auth: true, swarmName } : { auth: false };
     })
     .catch(error => {
-      return { auth: false , error };
+      return { auth: false, error };
     });
 };
 
@@ -20,24 +20,30 @@ const authenticateDevice = (id: string, swarmName: string): Promise<any> => {
     .get(`${authUrl}/devices/auth?id=${id}&swarm=${swarmName}`)
     .then(response => {
       const auth = _.get(response, "data.auth"); // boolean
-      return { auth }
+      return { auth };
     })
     .catch(error => {
-      return { auth: false , error };
+      return { auth: false, error };
     });
-}
+};
 
-const authorizeDevice = (id: string, swarmName: string, action: string): Promise<any> => {
+const authorizeDevice = (
+  id: string,
+  swarmName: string,
+  action: string
+): Promise<any> => {
   const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
   return axios
-    .get(`${authUrl}/devices/authz?id=${id}&swarm=${swarmName}&action=${action}`)
+    .get(
+      `${authUrl}/devices/authz?id=${id}&swarm=${swarmName}&action=${action}`
+    )
     .then(response => {
       const authz = _.get(response, "data.auth"); // boolean
-      return { authz }
+      return { authz };
     })
     .catch(error => {
-      return { authz: false , error };
+      return { authz: false, error };
     });
-}
+};
 
 export { authenticateRobot, authenticateDevice, authorizeDevice };

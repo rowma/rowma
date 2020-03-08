@@ -8,7 +8,4 @@ const createErrorResponse = (error = ""): WSResponse => {
   return new WSResponse("failed", "", error);
 };
 
-export {
-  createSuccessResponse,
-  createErrorResponse
-}
+export { createSuccessResponse, createErrorResponse };

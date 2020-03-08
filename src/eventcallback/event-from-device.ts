@@ -4,17 +4,14 @@
 import Robot from "../entity/robot";
 import Device from "../entity/device";
 
-import {
-  createSuccessResponse,
-  createErrorResponse
-} from "../lib/response";
+import { createSuccessResponse, createErrorResponse } from "../lib/response";
 
 import DatabaseInterface from "../db/database-interface";
 
 import _ from "lodash";
 
-const ROBOT_NOT_FOUND_MSG = "The robot is not found."
-const PAYLOAD_NOT_FOUND_MSG = "Payload must be included."
+const ROBOT_NOT_FOUND_MSG = "The robot is not found.";
+const PAYLOAD_NOT_FOUND_MSG = "Payload must be included.";
 
 const registerDevice = async (
   db: DatabaseInterface,
@@ -59,9 +56,10 @@ const runLaunch = async (
     return;
   }
 
-  robotNsp
-    .to(robot.socketId)
-    .emit("run_launch", { socketId: robot.socketId, command: _.get(payload, 'command') });
+  robotNsp.to(robot.socketId).emit("run_launch", {
+    socketId: robot.socketId,
+    command: _.get(payload, "command")
+  });
 
   const response = createSuccessResponse();
   ack(response);
@@ -92,8 +90,8 @@ const runRosrun = async (
 
   robotNsp.to(robot.socketId).emit("run_rosrun", {
     socketId: robot.socketId,
-    command: _.get(payload, 'command'),
-    args: _.get(payload, 'args')
+    command: _.get(payload, "command"),
+    args: _.get(payload, "args")
   });
 
   const response = createSuccessResponse();

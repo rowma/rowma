@@ -3,10 +3,7 @@
 
 import Robot from "../entity/robot";
 
-import {
-  createSuccessResponse,
-  createErrorResponse
-} from "../lib/response";
+import { createSuccessResponse, createErrorResponse } from "../lib/response";
 
 import DatabaseInterface from "../db/database-interface";
 
@@ -30,7 +27,7 @@ const registerRobot = async (
     return;
   }
 
-  const REQUIRED_ROWMA_ROS_VERSION = "0.0.0" // TODO: Move this variable to constant
+  const REQUIRED_ROWMA_ROS_VERSION = "0.0.0"; // TODO: Move this variable to constant
   if (REQUIRED_ROWMA_ROS_VERSION > parsedPayload["rowma_ros_version"]) {
     const msg = "You need to update version " + REQUIRED_ROWMA_ROS_VERSION;
     const response = createErrorResponse(msg);
@@ -78,7 +75,7 @@ const registerRobot = async (
     swarmName
   );
   db.saveRobot(robot);
-  const allRobots = await db.getAllConnectedRobots()
+  const allRobots = await db.getAllConnectedRobots();
   console.log("registered: ", allRobots);
 };
 
@@ -106,10 +103,12 @@ const topicFromRos = async (
 ): Promise<void> => {
   const parsedPayload = JSON.parse(payload);
   const topicDestination = _.get(parsedPayload, "topicDestination");
-  const destType = topicDestination["type"]
-  const isDestRobot = destType === "robot"
-  const destination = isDestRobot ? await db.findRobotByUuid(topicDestination["uuid"]) : await db.findDeviceByUuid(topicDestination["uuid"])
-  const eventName = isDestRobot ? "rostopic" : "topic_to_device"
+  const destType = topicDestination["type"];
+  const isDestRobot = destType === "robot";
+  const destination = isDestRobot
+    ? await db.findRobotByUuid(topicDestination["uuid"])
+    : await db.findDeviceByUuid(topicDestination["uuid"]);
+  const eventName = isDestRobot ? "rostopic" : "topic_to_device";
   // Have to implement the event on your own application
   nsp.to(destination.socketId).emit(eventName, parsedPayload);
 

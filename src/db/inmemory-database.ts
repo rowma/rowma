@@ -18,13 +18,13 @@ export default class InmemoryDatabase implements DatabaseInterface {
   getAllConnectedRobots(): Promise<Array<Robot>> {
     return new Promise<Array<Robot>>((resolve, reject) => {
       resolve(_.filter(this.robotInmemoryDatabase, { disconnectedAt: null }));
-    })
+    });
   }
 
   getAllDevices(): Promise<Array<Device>> {
     return new Promise<Array<Device>>((resolve, reject) => {
       resolve(this.deviceInmemoryDatabase);
-    })
+    });
   }
 
   findRobotByUuid(uuid: string): Promise<Robot> {
@@ -34,7 +34,7 @@ export default class InmemoryDatabase implements DatabaseInterface {
 
     return new Promise((resolve, reject) => {
       resolve(robot);
-    })
+    });
   }
 
   findDeviceByUuid(uuid: string): Promise<Robot> {
@@ -44,7 +44,7 @@ export default class InmemoryDatabase implements DatabaseInterface {
 
     return new Promise((resolve, reject) => {
       resolve(robot);
-    })
+    });
   }
 
   saveRobot(robot: Robot): Promise<boolean> {
@@ -92,7 +92,7 @@ export default class InmemoryDatabase implements DatabaseInterface {
     try {
       this.findRobotByUuid(uuid).then(robot => {
         robot.rosnodes = rosnodes;
-      })
+      });
       return new Promise(resolve => resolve(true));
     } catch {
       return new Promise(resolve => resolve(false));
@@ -100,6 +100,6 @@ export default class InmemoryDatabase implements DatabaseInterface {
   }
 
   removeCurrentRobotConnections(): Promise<boolean> {
-    return new Promise(resolve => resolve(true))
+    return new Promise(resolve => resolve(true));
   }
 }

@@ -11,5 +11,5 @@ export default interface DatabaseInterface {
   saveDevice(device: Device): Promise<boolean>;
   getAllDevicesByUuids(uuids: Array<string>): Promise<Array<Device>>;
   updateRobotRosnodes(uuid: string, rosnodes: Array<string>): Promise<boolean>;
-  removeCurrentRobotConnections (): Promise<boolean>;
+  removeCurrentRobotConnections(): Promise<boolean>;
 }

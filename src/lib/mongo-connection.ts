@@ -1,25 +1,28 @@
-import { MongoClient, Collection, ObjectId } from 'mongodb'
+import { MongoClient, Collection, ObjectId } from "mongodb";
 
 import Robot from "../entity/robot";
 import Device from "../entity/device";
 
-const MONGODB_URI = 'mongodb://root:root@localhost:27017'
+const MONGODB_URI = "mongodb://root:root@localhost:27017";
 
 type CollectionsType = {
-  robots: Collection<Robot> | null,
-  devices: Collection<Device> | null
-}
+  robots: Collection<Robot> | null;
+  devices: Collection<Device> | null;
+};
 
-const collections: CollectionsType = { robots: null, devices: null }
-export { collections }
+const collections: CollectionsType = { robots: null, devices: null };
+export { collections };
 
 const connect = async () => {
-  const client = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  const db = client.db()
+  const client = await MongoClient.connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+  const db = client.db();
 
-  collections.robots = db.collection<Robot>('robots')
-  collections.devices = db.collection<Device>('devices')
-  return { client, db }
-}
+  collections.robots = db.collection<Robot>("robots");
+  collections.devices = db.collection<Device>("devices");
+  return { client, db };
+};
 
-export { connect }
+export { connect };
