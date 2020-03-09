@@ -74,7 +74,8 @@ export default class Mongodb implements DatabaseInterface {
   }
 
   // TODO: Confirm if this method really work correctly
-  updateRobotRosnodes(uuid: string, rosnodes: Array<string>): Promise<boolean> {
+  // TODO: Implement.
+  updateRobotRosnodes(uuid: string, rosnodes: Array<string>, rostopics: Array<string>): Promise<boolean> {
     return new Promise(resolve => resolve(true));
   }
 

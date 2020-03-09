@@ -88,10 +88,12 @@ export default class InmemoryDatabase implements DatabaseInterface {
   }
 
   // TODO: Confirm if this method really work correctly
-  updateRobotRosnodes(uuid: string, rosnodes: Array<string>): Promise<boolean> {
+  // TODO: Change interface like updateRobotRosnodes(uuid: string, newRobot: Robot)
+  updateRobotRosnodes(uuid: string, rosnodes: Array<string>, rostopics: Array<string>): Promise<boolean> {
     try {
       this.findRobotByUuid(uuid).then(robot => {
         robot.rosnodes = rosnodes;
+        robot.rostopics = rostopics;
       });
       return new Promise(resolve => resolve(true));
     } catch {

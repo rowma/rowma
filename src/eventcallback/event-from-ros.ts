@@ -89,8 +89,9 @@ const updateRosnodes = (
   if (!parsedPayload) return;
   const robotUuid = _.get(parsedPayload, "uuid");
   const robot = db.findRobotByUuid(robotUuid);
-  const rosnodes = _.get(parsedPayload, "rosnodes") || [];
-  db.updateRobotRosnodes(robotUuid, rosnodes);
+  const rosnodes = _.get(parsedPayload, "rosnodes") || robot.rosnodes;
+  const rostopics = _.get(parsedPayload, "rostopics") || robot.rostopics;
+  db.updateRobotRosnodes(robotUuid, rosnodes, rostopics);
 
   console.log("registered: ", db.getAllConnectedRobots());
 };
