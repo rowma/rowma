@@ -80,15 +80,15 @@ const registerRobot = async (
   console.log("registered: ", allRobots);
 };
 
-const updateRosnodes = (
+const updateRosnodes = async (
   db: DatabaseInterface,
   payload: string,
   ack: any
-): void => {
+): Promise<any> => {
   const parsedPayload = JSON.parse(payload);
   if (!parsedPayload) return;
   const robotUuid = _.get(parsedPayload, "uuid");
-  const robot = db.findRobotByUuid(robotUuid);
+  const robot = await db.findRobotByUuid(robotUuid);
   const rosnodes = _.get(parsedPayload, "rosnodes") || robot.rosnodes;
   const rostopics = _.get(parsedPayload, "rostopics") || robot.rostopics;
   db.updateRobotRosnodes(robotUuid, rosnodes, rostopics);
