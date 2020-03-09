@@ -24,7 +24,7 @@ const createMockSocket = (): MockSocket => {
   return new MockSocket();
 }
 
-const robot1 = new Robot("abc-robot", "socket-robot", [], [], [], "test")
+const robot1 = new Robot("abc-robot", "socket-robot", [], [], [], [], "test")
 
 describe('event-from-device', () => {
   describe('#registerDevice()', () => {

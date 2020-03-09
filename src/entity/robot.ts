@@ -8,6 +8,7 @@ export default class Robot {
   launchCommands: Array<string>;
   rosnodes: Array<string>;
   rosrunCommands: Array<string>;
+  rostopics: Array<string>;
   swarmName: string;
   disconnectedAt: Date | null;
 
@@ -17,6 +18,7 @@ export default class Robot {
     launchCommands: Array<string>,
     rosnodes: Array<string>,
     rosrunCommands: Array<string>,
+    rostopics: Array<string>,
     swarmName: string
   ) {
     this.uuid = uuid;
@@ -24,6 +26,7 @@ export default class Robot {
     this.launchCommands = launchCommands;
     this.rosnodes = rosnodes;
     this.rosrunCommands = rosrunCommands;
+    this.rostopics = rostopics;
     this.swarmName = swarmName;
     this.disconnectedAt = null;
   }

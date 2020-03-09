@@ -72,6 +72,7 @@ const registerRobot = async (
     parsedPayload["launch_commands"],
     parsedPayload["rosnodes"],
     parsedPayload["rosrun_commands"],
+    parsedPayload["rostopics"],
     swarmName
   );
   db.saveRobot(robot);
