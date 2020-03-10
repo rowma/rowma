@@ -26,7 +26,8 @@ import {
   runLaunch,
   runRosrun,
   delegate,
-  killRosnode
+  killRosnode,
+  unsubscribeRostopic,
 } from "./eventcallback/event-from-device";
 
 import { authenticateDevice } from "./auth";
@@ -160,6 +161,13 @@ const deviceEventHandlers = (socket, robotNsp) => {
     (payload: any, ack: Function = _.noop) =>
       killRosnode(db, socket, payload, ack, robotNsp)
   );
+  handlerWithAuth(
+    socket,
+    "unsubscribe_rostopic",
+    (payload: any, ack: Function = _.noop) =>
+      unsubscribeRostopic(db, socket, payload, ack, robotNsp)
+  );
+
 };
 
 const eventHandlers = socket => {

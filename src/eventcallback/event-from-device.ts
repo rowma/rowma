@@ -160,4 +160,36 @@ const killRosnode = async (
   ack(response);
 };
 
-export { registerDevice, runLaunch, runRosrun, delegate, killRosnode };
+const unsubscribeRostopic = async (
+  db: DatabaseInterface,
+  socket: any,
+  payload: any,
+  ack: any,
+  robotNsp: any
+): Promise<void> => {
+  if (_.isEmpty(payload)) {
+    const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
+
+  const destination = _.get(payload, "destination");
+  const robotUuid = _.get(destination, "uuid");
+  const robot = await db.findRobotByUuid(robotUuid);
+
+  if (!robot) {
+    const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
+
+  robotNsp.to(robot.socketId).emit("unsubscribe_rostopic", {
+    socketId: robot.socketId,
+    topic: _.get(payload, "topic")
+  });
+
+  const response = createSuccessResponse();
+  ack(response);
+};
+
+export { registerDevice, runLaunch, runRosrun, delegate, killRosnode, unsubscribeRostopic };
