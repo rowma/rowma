@@ -41,6 +41,8 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await registerDevice(db, socket, payload, ack)
 
       // Assert
@@ -63,6 +65,8 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await registerDevice(db, socket, payload, ack)
 
       // Assert
@@ -92,7 +96,11 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await registerDevice(db, socket1, payload1, ack1)
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await registerDevice(db, socket2, payload2, ack2)
 
       // Assert
@@ -123,6 +131,8 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await runLaunch(db, socket, payload, ack, socket)
 
       // Assert
@@ -145,6 +155,8 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await runLaunch(db, socket, payload, ack, socket)
 
       // Assert
@@ -166,6 +178,8 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await runLaunch(db, socket, payload, ack, socket)
 
       // Assert
@@ -193,6 +207,8 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await runRosrun(db, socket, payload, ack, socket)
 
       // Assert
@@ -215,6 +231,8 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await runRosrun(db, socket, payload, ack, socket)
 
       // Assert
@@ -236,6 +254,8 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await runRosrun(db, socket, payload, ack, socket)
 
       // Assert
@@ -263,6 +283,8 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await delegate(db, socket, payload, ack, socket)
 
       // Assert
@@ -285,6 +307,8 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await delegate(db, socket, payload, ack, socket)
 
       // Assert
@@ -306,6 +330,8 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await delegate(db, socket, payload, ack, socket)
 
       // Assert
@@ -333,6 +359,8 @@ describe('event-from-device', () => {
       const response = createSuccessResponse();
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await killRosnode(db, socket, payload, ack, socket)
 
       // Assert
@@ -355,6 +383,8 @@ describe('event-from-device', () => {
       const response = createErrorResponse("The robot is not found.")
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await killRosnode(db, socket, payload, ack, socket)
 
       // Assert
@@ -376,6 +406,8 @@ describe('event-from-device', () => {
       const response = createErrorResponse("Payload must be included.");
 
       // Act
+      // ts-ignore because original MockSocket is used.
+      // @ts-ignore
       await killRosnode(db, socket, payload, ack, socket)
 
       // Assert

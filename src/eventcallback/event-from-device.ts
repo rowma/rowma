@@ -4,6 +4,8 @@
 import Robot from "../entity/robot";
 import Device from "../entity/device";
 
+import * as socketio from "socket.io";
+
 import { createSuccessResponse, createErrorResponse } from "../lib/response";
 
 import DatabaseInterface from "../db/database-interface";
@@ -15,9 +17,9 @@ const PAYLOAD_NOT_FOUND_MSG = "Payload must be included.";
 
 const registerDevice = async (
   db: DatabaseInterface,
-  socket: any,
+  socket: socketio.Socket,
   payload: any,
-  ack: any
+  ack: Function
 ): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
@@ -35,10 +37,10 @@ const registerDevice = async (
 
 const runLaunch = async (
   db: DatabaseInterface,
-  socket: any,
+  socket: socketio.Socket,
   payload: any,
-  ack: any,
-  robotNsp: any
+  ack: Function,
+  robotNsp: socketio.Socket
 ): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
@@ -67,10 +69,10 @@ const runLaunch = async (
 
 const runRosrun = async (
   db: DatabaseInterface,
-  socket: any,
+  socket: socketio.Socket,
   payload: any,
-  ack: any,
-  robotNsp: any
+  ack: Function,
+  robotNsp: socketio.Socket
 ): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
@@ -101,10 +103,10 @@ const runRosrun = async (
 // TODO: Change name
 const delegate = async (
   db: DatabaseInterface,
-  socket: any,
+  socket: socketio.Socket,
   payload: any,
-  ack: any,
-  robotNsp: any
+  ack: Function,
+  robotNsp: socketio.Socket
 ): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
@@ -122,6 +124,7 @@ const delegate = async (
     return;
   }
 
+  // TODO: Remove unnecessary values
   robotNsp.to(robot.socketId).emit("rostopic", _.get(payload, "msg"));
 
   const response = createSuccessResponse();
@@ -130,10 +133,10 @@ const delegate = async (
 
 const killRosnode = async (
   db: DatabaseInterface,
-  socket: any,
+  socket: socketio.Socket,
   payload: any,
-  ack: any,
-  robotNsp: any
+  ack: Function,
+  robotNsp: socketio.Socket
 ): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
@@ -162,10 +165,10 @@ const killRosnode = async (
 
 const unsubscribeRostopic = async (
   db: DatabaseInterface,
-  socket: any,
+  socket: socketio.Socket,
   payload: any,
-  ack: any,
-  robotNsp: any
+  ack: Function,
+  robotNsp: socketio.Socket
 ): Promise<void> => {
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
