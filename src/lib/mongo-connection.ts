@@ -3,7 +3,7 @@ import { MongoClient, Collection, ObjectId } from "mongodb";
 import Robot from "../entity/robot";
 import Device from "../entity/device";
 
-const MONGODB_URI = "mongodb://root:root@localhost:27017";
+import { MONGODB_URI } from "./lib/settings";
 
 type CollectionsType = {
   robots: Collection<Robot> | null;

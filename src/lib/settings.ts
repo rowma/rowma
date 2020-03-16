@@ -8,6 +8,8 @@ const ROWMA_VERSION = process.env.npm_package_version || "";
 const DATABASE: string = process.env.ROWMA_DB || "inmemory";
 const PORT: number = Number(process.env.PORT) || 3000;
 
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://root:root@localhost:27017";
+
 export {
   NETWORK_NAME,
   NETWORK_TYPE,
@@ -15,5 +17,6 @@ export {
   NETWORK_OWNER,
   ROWMA_VERSION,
   DATABASE,
-  PORT
+  PORT,
+  MONGODB_URI
 };
