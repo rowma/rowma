@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import socketio from "socket.io";
 import _ from "lodash";
-import socketioJwt from "socketio-jwt";
 import process from "process";
 
 const app = express();
@@ -109,7 +108,7 @@ const robotEventHandlers = (socket, deviceNsp) => {
 };
 
 const handlerWithAuth = (
-  socket: socketioJwt.Socket,
+  socket: socketio.Socket,
   eventName: string,
   handler: Function
 ) => {
@@ -117,8 +116,8 @@ const handlerWithAuth = (
     const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
     if (authUrl) {
       const { authz } = await authorizeDevice(
-        socket.decoded_token.sub,
-        socket.handshake.query.swarmName,
+        socket.handshake.headers['authorization'],
+        socket.handshake.headers['networkid'],
         eventName
       );
       if (!authz) {
@@ -178,33 +177,10 @@ const eventHandlers = socket => {
 const deviceNsp = io.of("/rowma_device");
 const robotNsp = io.of("/rowma_robot");
 
-const secret = process.env.PUBKEY_AUTH0 || "";
-const cert = Buffer.from(secret, "base64");
-deviceNsp
-  .on(
-    "connection",
-    socketioJwt.authorize({
-      secret: cert,
-      timeout: 15000,
-      algorithms: ["RS256"]
-    })
-  )
-  .on("authenticated", async socket => {
-    socket.use(async (packeg, next) => {
-      // TODO: Check if AUTH_URL exists
-      const { swarmName } = socket.handshake.query;
-      const id = socket.decoded_token.sub;
-      const { auth, error } = await authenticateDevice(id, swarmName);
-      if (!auth) {
-        const msg = "unauthenticated";
-        socket.emit("unauthenticated", msg);
-      } else {
-        next();
-      }
-    });
-
-    deviceEventHandlers(socket, robotNsp);
-  });
+deviceNsp.on("connection", socket => {
+  console.log('connected')
+  deviceEventHandlers(socket, robotNsp);
+});
 
 robotNsp.on("connection", socket => {
   robotEventHandlers(socket, deviceNsp);

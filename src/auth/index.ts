@@ -28,14 +28,15 @@ const authenticateDevice = (id: string, swarmName: string): Promise<any> => {
 };
 
 const authorizeDevice = (
-  id: string,
-  swarmName: string,
+  jwt: string,
+  networkid: string,
   action: string
 ): Promise<any> => {
   const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
   return axios
-    .get(
-      `${authUrl}/devices/authz?id=${id}&swarm=${swarmName}&action=${action}`
+    .post(
+      `${authUrl}/applications/authorize`,
+      { jwt, networkid }
     )
     .then(response => {
       const authz = _.get(response, "data.auth"); // boolean
