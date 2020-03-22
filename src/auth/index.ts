@@ -6,8 +6,8 @@ const authenticateRobot = (apiKey: string): Promise<any> => {
   return axios
     .post(`${authUrl}/robots/authenticate`, { token: apiKey })
     .then(response => {
-      const { auth, network_name: networkName } = response.data
-      return { auth, networkName }
+      const { auth, network_uuid: networkUuid } = response.data
+      return { auth, networkUuid }
     })
     .catch(error => {
       return { auth: false, error };

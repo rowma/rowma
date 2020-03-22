@@ -9,7 +9,7 @@ export default class Robot {
   rosnodes: Array<string>;
   rosrunCommands: Array<string>;
   rostopics: Array<string>;
-  networkName: string;
+  networkUuid: string;
   disconnectedAt: Date | null;
 
   constructor(
@@ -19,7 +19,7 @@ export default class Robot {
     rosnodes: Array<string>,
     rosrunCommands: Array<string>,
     rostopics: Array<string>,
-    networkName: string
+    networkUuid: string
   ) {
     this.uuid = uuid;
     this.socketId = socketId;
@@ -27,7 +27,7 @@ export default class Robot {
     this.rosnodes = rosnodes;
     this.rosrunCommands = rosrunCommands;
     this.rostopics = rostopics;
-    this.networkName = networkName;
+    this.networkUuid= networkUuid;
     this.disconnectedAt = null;
   }
 }

@@ -13,9 +13,9 @@ export default class Mongodb implements DatabaseInterface {
     this.db = db;
   }
 
-  getAllConnectedRobots(networkName: string): Promise<Array<Robot>> {
+  getAllConnectedRobots(networkUuid: string): Promise<Array<Robot>> {
     return this.db.collections.robots
-      .find({ networkName, disconnectedAt: null })
+      .find({ networkUuid, disconnectedAt: null })
       .toArray()
       .then(robots => {
         return robots;

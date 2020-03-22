@@ -15,9 +15,9 @@ export default class InmemoryDatabase implements DatabaseInterface {
     this.deviceInmemoryDatabase = deviceDb;
   }
 
-  getAllConnectedRobots(networkName: string): Promise<Array<Robot>> {
+  getAllConnectedRobots(networkUuid: string): Promise<Array<Robot>> {
     return new Promise<Array<Robot>>((resolve, reject) => {
-      resolve(_.filter(this.robotInmemoryDatabase, { networkName, disconnectedAt: null }));
+      resolve(_.filter(this.robotInmemoryDatabase, { networkUuid, disconnectedAt: null }));
     });
   }
 

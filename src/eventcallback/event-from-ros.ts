@@ -51,13 +51,13 @@ const registerRobot = async (
   }
   socket.emit("robot_registered", { uuid });
 
-  let networkName = "default";
+  let networkUuid = "default";
   // Authenticat api_key from rowma_ros
   const apiKey = parsedPayload["api_key"];
   if (apiKey) {
     const authResult = await authenticateRobot(apiKey);
     if (authResult.auth) {
-      networkName = authResult.networkName;
+      networkUuid = authResult.networkUuid;
     } else {
       const msg = "Wrong API_KEY";
       const response = createErrorResponse(msg);
@@ -73,10 +73,10 @@ const registerRobot = async (
     parsedPayload["rosnodes"],
     parsedPayload["rosrun_commands"],
     parsedPayload["rostopics"],
-    networkName
+    networkUuid
   );
   db.saveRobot(robot);
-  const allRobots = await db.getAllConnectedRobots(networkName);
+  const allRobots = await db.getAllConnectedRobots(networkUuid);
   console.log("registered: ", allRobots);
 };
 
@@ -93,7 +93,7 @@ const updateRosnodes = async (
   const rostopics = _.get(parsedPayload, "rostopics") || robot.rostopics;
   db.updateRobotRosnodes(robotUuid, rosnodes, rostopics);
 
-  console.log("registered: ", db.getAllConnectedRobots(robot.networkName));
+  console.log("registered: ", db.getAllConnectedRobots(robot.networkUuid));
 };
 
 const topicFromRos = async (
