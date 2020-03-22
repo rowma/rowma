@@ -82,6 +82,20 @@ server.listen(PORT);
 app.use(cors());
 
 app.get("/list_connections", async (req, res) => {
+  const action = "list_connections"
+  const { authz } = await authorizeDevice(
+    req.headers['authorization'],
+    req.query.uuid,
+    action
+  );
+
+  if (!authz) {
+    res.writeHead(403);
+    res.write(JSON.stringify({msg: "You cannot execute the action."}));
+    res.end();
+    return;
+  }
+
   res.writeHead(200);
   const networkUuid = req.query.uuid || "default";
   const allRobots = await db.getAllConnectedRobots(networkUuid);
