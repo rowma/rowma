@@ -76,7 +76,7 @@ const registerRobot = async (
     networkName
   );
   db.saveRobot(robot);
-  const allRobots = await db.getAllConnectedRobots();
+  const allRobots = await db.getAllConnectedRobots(networkName);
   console.log("registered: ", allRobots);
 };
 
@@ -93,7 +93,7 @@ const updateRosnodes = async (
   const rostopics = _.get(parsedPayload, "rostopics") || robot.rostopics;
   db.updateRobotRosnodes(robotUuid, rosnodes, rostopics);
 
-  console.log("registered: ", db.getAllConnectedRobots());
+  console.log("registered: ", db.getAllConnectedRobots(robot.networkName));
 };
 
 const topicFromRos = async (

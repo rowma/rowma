@@ -2,7 +2,7 @@ import Robot from "../entity/robot";
 import Device from "../entity/device";
 
 export default interface DatabaseInterface {
-  getAllConnectedRobots(): Promise<Array<Robot>>;
+  getAllConnectedRobots(networkName: string): Promise<Array<Robot>>;
   getAllDevices(): Promise<Array<Device>>;
   findRobotByUuid(uuid: string): Promise<Robot>;
   findDeviceByUuid(uuid: string): Promise<Robot>;

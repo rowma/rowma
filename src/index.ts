@@ -83,7 +83,8 @@ app.use(cors());
 
 app.get("/list_connections", async (req, res) => {
   res.writeHead(200);
-  const allRobots = await db.getAllConnectedRobots();
+  const networkName = req.query.name || "default";
+  const allRobots = await db.getAllConnectedRobots(networkName);
   res.write(JSON.stringify(allRobots));
   res.end();
 });
