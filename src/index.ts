@@ -104,6 +104,20 @@ app.get("/list_connections", async (req, res) => {
 });
 
 app.get("/robots", async (req, res) => {
+  const action = "robots"
+  const { authz } = await authorizeDevice(
+    req.headers['authorization'],
+    req.query.uuid,
+    action
+  );
+
+  if (!authz) {
+    res.writeHead(403);
+    res.write(JSON.stringify({msg: "You cannot execute the action."}));
+    res.end();
+    return;
+  }
+
   const robotUuid = _.get(req, "query.uuid");
   const robot = await db.findRobotByUuid(robotUuid);
 
