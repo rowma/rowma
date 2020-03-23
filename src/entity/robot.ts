@@ -11,6 +11,7 @@ export default class Robot {
   rostopics: Array<string>;
   networkUuid: string;
   disconnectedAt: Date | null;
+  createdAt: Date;
 
   constructor(
     uuid: string,
@@ -29,5 +30,6 @@ export default class Robot {
     this.rostopics = rostopics;
     this.networkUuid= networkUuid;
     this.disconnectedAt = null;
+    this.createdAt = new Date();
   }
 }
