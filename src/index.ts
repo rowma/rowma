@@ -132,6 +132,12 @@ app.get("/network_information", (req, res) => {
   res.end();
 });
 
+app.get("/", async (_req, res) => {
+  res.writeHead(200);
+  res.write(JSON.stringify({msg: "success!"}));
+  res.end();
+});
+
 const robotEventHandlers = (socket, deviceNsp) => {
   // From ROS
   socket.on("register_robot", (payload: any, ack: Function = _.noop) =>
