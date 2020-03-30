@@ -98,7 +98,7 @@ app.get("/list_connections", async (req, res) => {
 
   res.writeHead(200);
   const networkUuid = req.query.uuid || "default";
-  const allRobots = await db.getAllConnectedRobots(networkUuid);
+  const allRobots = await db.getAllRobots(networkUuid);
   res.write(JSON.stringify(allRobots));
   res.end();
 });

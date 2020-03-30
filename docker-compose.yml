@@ -1,7 +1,7 @@
 version: '3.5'
 
 volumes:
-  volume-mysql:
+  volume-mongo:
 
 services:
   mongo:

@@ -15,7 +15,7 @@ export default class InmemoryDatabase implements DatabaseInterface {
     this.deviceInmemoryDatabase = deviceDb;
   }
 
-  getAllConnectedRobots(networkUuid: string): Promise<Array<Robot>> {
+  getAllRobots(networkUuid: string): Promise<Array<Robot>> {
     return new Promise<Array<Robot>>((resolve, reject) => {
       resolve(_.filter(this.robotInmemoryDatabase, { networkUuid, disconnectedAt: null }));
     });
@@ -47,7 +47,7 @@ export default class InmemoryDatabase implements DatabaseInterface {
     });
   }
 
-  saveRobot(robot: Robot): Promise<boolean> {
+  upsertRobot(robot: Robot): Promise<boolean> {
     // TODO: Use then - catch in promise
     try {
       this.robotInmemoryDatabase.push(robot);

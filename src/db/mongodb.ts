@@ -13,9 +13,9 @@ export default class Mongodb implements DatabaseInterface {
     this.db = db;
   }
 
-  getAllConnectedRobots(networkUuid: string): Promise<Array<Robot>> {
+  getAllRobots(networkUuid: string): Promise<Array<Robot>> {
     return this.db.collections.robots
-      .find({ networkUuid, disconnectedAt: null })
+      .find({ networkUuid })
       .toArray()
       .then(robots => {
         return robots;
@@ -39,16 +39,14 @@ export default class Mongodb implements DatabaseInterface {
     return this.db.collections.devices.findOne({ uuid: uuid });
   }
 
-  saveRobot(robot: Robot): Promise<boolean> {
-    return this.db.collections.robots
-      .insertOne(robot)
-      .then(robot => {
-        return true;
-      })
-      .catch(err => {
-        console.log(err);
-        return false;
-      });
+  upsertRobot(robot: Robot): Promise<boolean> {
+    // Insert if a robot of robot.uuid does not exists
+    // Update if a robot of robot.uuid exists
+    return this.db.collections.robots.updateOne(
+      { uuid: robot.uuid },
+      { $set: { ...robot, disconnectedAt: null } },
+      { upsert: true }
+    )
   }
 
   removeRobot(socketId: string): Promise<boolean> {

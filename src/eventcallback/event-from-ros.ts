@@ -40,7 +40,7 @@ const registerRobot = async (
   const parsedPayloadUuid = parsedPayload["uuid"];
   if (parsedPayloadUuid) {
     const robot = await db.findRobotByUuid(parsedPayloadUuid);
-    if (robot) {
+    if (robot && robot.disconnectedAt === null) {
       const msg = "The UUID is already in use";
       const response = createErrorResponse(msg);
       socket.emit("err", response);
@@ -75,8 +75,8 @@ const registerRobot = async (
     parsedPayload["rostopics"],
     networkUuid
   );
-  db.saveRobot(robot);
-  const allRobots = await db.getAllConnectedRobots(networkUuid);
+  await db.upsertRobot(robot);
+  const allRobots = await db.getAllRobots(networkUuid);
   console.log("registered: ", allRobots);
 };
 
@@ -93,7 +93,7 @@ const updateRosnodes = async (
   const rostopics = _.get(parsedPayload, "rostopics") || robot.rostopics;
   db.updateRobotRosnodes(robotUuid, rosnodes, rostopics);
 
-  console.log("registered: ", db.getAllConnectedRobots(robot.networkUuid));
+  console.log("registered: ", db.getAllRobots(robot.networkUuid));
 };
 
 const topicFromRos = async (
