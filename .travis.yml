@@ -3,6 +3,11 @@ node_js:
 - 11.4.0
 - 10.16.0
 script: npm run test:coverage && cat ./coverage/lcov.info | npm run coveralls
+deploy:
+  provider: script
+  script: bash docker_push
+  on:
+    branch: master
 env:
   global:
     - DOCKER_USERNAME=rowma
