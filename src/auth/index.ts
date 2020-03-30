@@ -29,14 +29,14 @@ const authenticateDevice = (id: string, networkName: string): Promise<any> => {
 
 const authorizeDevice = (
   jwt: string,
-  networkid: string,
+  networkUuid: string,
   action: string
 ): Promise<any> => {
   const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
   return axios
     .post(
       `${authUrl}/applications/authorize`,
-      { jwt, networkid }
+      { jwt, networkUuid, action }
     )
     .then(response => {
       const authz = _.get(response, "data.auth"); // boolean
