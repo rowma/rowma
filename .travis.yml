@@ -2,6 +2,8 @@ language: node_js
 node_js:
 - 11.4.0
 script: npm run test:coverage && cat ./coverage/lcov.info | npm run coveralls
+before_install:
+  - docker build -t rowma/rowma .
 deploy:
   provider: script
   script: bash docker_push
