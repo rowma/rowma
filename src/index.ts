@@ -107,7 +107,7 @@ app.get("/robots", async (req, res) => {
   const action = "robots"
   const { authz } = await authorizeDevice(
     req.headers['authorization'],
-    req.query.uuid,
+    req.query.networkUuid,
     action
   );
 
