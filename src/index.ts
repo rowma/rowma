@@ -162,7 +162,7 @@ const handlerWithAuth = (
     if (authUrl) {
       const { authz } = await authorizeDevice(
         socket.handshake.headers['authorization'],
-        socket.handshake.headers['networkuuid'],
+        socket.handshake.headers['networkid'],
         eventName
       );
       if (!authz) {
