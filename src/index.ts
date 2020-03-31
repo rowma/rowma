@@ -86,7 +86,7 @@ app.get("/list_connections", async (req, res) => {
   const { authz } = await authorizeDevice(
     req.headers['authorization'],
     req.query.uuid,
-    action
+    action.split("?").shift()
   );
 
   if (!authz) {
@@ -108,7 +108,7 @@ app.get("/robots", async (req, res) => {
   const { authz } = await authorizeDevice(
     req.headers['authorization'],
     req.query.uuid,
-    action
+    action.split("?").shift()
   );
 
   if (!authz) {
