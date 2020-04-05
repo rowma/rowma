@@ -60,7 +60,7 @@ const registerRobot = async (
       networkUuid = authResult.networkUuid;
     } else {
       const msg = "Wrong API_KEY";
-      const response = createErrorResponse(msg);
+      const response = createErrorResponse(`${msg}: ${authResult.msg}`);
       socket.emit("err", response);
       return;
     }

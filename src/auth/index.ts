@@ -6,8 +6,8 @@ const authenticateRobot = (apiKey: string): Promise<any> => {
   return axios
     .post(`${authUrl}/robots/authenticate`, { token: apiKey })
     .then(response => {
-      const { auth, network_uuid: networkUuid } = response.data
-      return { auth, networkUuid }
+      const { auth, network_uuid: networkUuid, msg } = response.data
+      return { auth, networkUuid, msg }
     })
     .catch(error => {
       return { auth: false, error };
@@ -28,7 +28,8 @@ const authenticateDevice = (id: string, networkName: string): Promise<any> => {
 };
 
 const authorizeDevice = (
-  jwt: string,
+  jwt: string = "",
+  apiKey: string = "",
   networkUuid: string,
   action: string
 ): Promise<any> => {
@@ -36,7 +37,7 @@ const authorizeDevice = (
   return axios
     .post(
       `${authUrl}/applications/authorize`,
-      { jwt, networkUuid, action }
+      { jwt, apiKey, networkUuid, action }
     )
     .then(response => {
       const authz = _.get(response, "data.auth"); // boolean

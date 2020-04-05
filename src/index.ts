@@ -85,6 +85,7 @@ app.get("/list_connections", async (req, res) => {
   const action = "list_connections"
   const { authz } = await authorizeDevice(
     req.headers['authorization'],
+    req.headers['apikey'],
     req.query.uuid,
     action
   );
@@ -107,6 +108,7 @@ app.get("/robots", async (req, res) => {
   const action = "robots"
   const { authz } = await authorizeDevice(
     req.headers['authorization'],
+    req.headers['apikey'],
     req.query.networkUuid,
     action
   );
@@ -162,6 +164,7 @@ const handlerWithAuth = (
     if (authUrl) {
       const { authz } = await authorizeDevice(
         socket.handshake.headers['authorization'],
+        socket.handshake.headers['apikey'],
         socket.handshake.headers['networkid'],
         eventName
       );
