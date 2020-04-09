@@ -9,7 +9,7 @@ const server = require("http").Server(app);
 const io = socketio(server, {
   handlePreflightRequest: (req, res) => {
     const headers = {
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization, networkId',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, networkId, networkUuid, apiKey',
       'Access-Control-Allow-Origin': req.headers.origin,
       'Access-Control-Allow-Credentials': true
     };
