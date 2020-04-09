@@ -128,6 +128,29 @@ app.get("/robots", async (req, res) => {
   res.end();
 });
 
+app.delete("/robots/:uuid", async (req, res) => {
+  const action = "delete_robot"
+  const { authz } = await authorizeDevice(
+    req.headers['authorization'],
+    req.headers['apikey'],
+    req.query.networkUuid,
+    action
+  );
+
+  if (!authz) {
+    res.writeHead(403);
+    res.write(JSON.stringify({msg: "You cannot execute the action."}));
+    res.end();
+    return;
+  }
+
+  const robotUuid = _.get(req, "params.uuid");
+  await db.deleteRobot(robotUuid);
+
+  res.writeHead(200);
+  res.end();
+});
+
 app.get("/network_information", (req, res) => {
   res.writeHead(200);
   res.write(JSON.stringify(network || {}));

@@ -91,4 +91,16 @@ export default class Mongodb implements DatabaseInterface {
         return new Promise(resolve => resolve(false));
       });
   }
+
+  deleteRobot(uuid: string): Promise<boolean> {
+    return this.db.collections.robots
+      .deleteOne(
+        { uuid }
+      ).then(() => {
+        return new Promise(resolve => resolve(true));
+      })
+      .catch(err => {
+        return new Promise(resolve => resolve(false));
+      })
+  }
 }
