@@ -16,6 +16,9 @@ You can start your own ConnectionManager on your environment.
 ### Prerequisites
 You need to install Node.js and npm on your computer.
 
+* Node.js
+* npm
+
 ### Installing
 Clone this repository and install dependencies.
 
@@ -28,7 +31,7 @@ $ npm i
 Then run the server (pleases make sure you have a right to open port 80).
 
 ```
-$ npm run dev:watch
+$ npm run build && npm start
 ```
 
 Finally, you successfully started your own ConnectionManager if you get any response from `curl localhost/list_connections`.
@@ -38,7 +41,7 @@ Also docker environment is supported.
 
 ```
 $ docker build -t rowma .
-$ docker run -p 80:80 rowma -d
+$ docker run -p 3000:3000 rowma -d
 ```
 
 That's it!
