@@ -2,6 +2,8 @@
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 docker push rowma/rowma
 
+pip install --user awscli
+export PATH=$PATH:$HOME/.local/bin
 sudo apt-get update
 sudo apt-get install jq -y
 
