@@ -3,3 +3,7 @@ dist/
 coverage/
 .nyc_output/
 mongo-volume/
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
