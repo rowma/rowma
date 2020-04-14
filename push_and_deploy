@@ -11,4 +11,4 @@ curl https://raw.githubusercontent.com/silinternational/ecs-deploy/master/ecs-de
   sudo tee -a /usr/bin/ecs-deploy
 sudo chmod +x /usr/bin/ecs-deploy
 
-ecs-deploy -c rowma-connection-manager-cluster -n rowma-connection-manager-service -i rowma/rowma:latest
+ecs-deploy -t 900 -c rowma-connection-manager-cluster -n rowma-connection-manager-service -i rowma/rowma:latest
