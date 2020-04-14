@@ -2,6 +2,7 @@ import axios from "axios";
 import _ from "lodash";
 
 import { AUTHENTICATOR_URL } from "../lib/settings";
+
 const authenticateRobot = (apiKey: string): Promise<any> => {
   return axios
     .post(`${AUTHENTICATOR_URL}/robots/authenticate`, { token: apiKey })
