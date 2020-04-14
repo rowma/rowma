@@ -6,8 +6,6 @@ before_install:
   - docker build -t rowma/rowma .
 deploy:
   provider: script
-  script:
-    - bash docker_push
-    - bash fargate-deploy
+  script: bash push_and_deploy
   on:
     branch: master
