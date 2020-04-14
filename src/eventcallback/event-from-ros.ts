@@ -40,7 +40,11 @@ const registerRobot = async (
   const parsedPayloadUuid = parsedPayload["uuid"];
   if (parsedPayloadUuid) {
     const robot = await db.findRobotByUuid(parsedPayloadUuid);
-    if (!parsedPayload["reconnection"] && robot && robot.disconnectedAt === null) {
+    if (
+      !parsedPayload["reconnection"] &&
+      robot &&
+      robot.disconnectedAt === null
+    ) {
       const msg = "The UUID is already in use";
       const response = createErrorResponse(msg);
       socket.emit("err", response);

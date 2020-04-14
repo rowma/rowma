@@ -1,13 +1,13 @@
 import axios from "axios";
 import _ from "lodash";
 
+import { AUTHENTICATOR_URL } from "../lib/settings";
 const authenticateRobot = (apiKey: string): Promise<any> => {
-  const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
   return axios
-    .post(`${authUrl}/robots/authenticate`, { token: apiKey })
+    .post(`${AUTHENTICATOR_URL}/robots/authenticate`, { token: apiKey })
     .then(response => {
-      const { auth, network_uuid: networkUuid, msg } = response.data
-      return { auth, networkUuid, msg }
+      const { auth, network_uuid: networkUuid, msg } = response.data;
+      return { auth, networkUuid, msg };
     })
     .catch(error => {
       return { auth: false, error };
@@ -15,9 +15,8 @@ const authenticateRobot = (apiKey: string): Promise<any> => {
 };
 
 const authenticateDevice = (id: string, networkName: string): Promise<any> => {
-  const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
   return axios
-    .get(`${authUrl}/devices/auth?id=${id}&network=${networkName}`)
+    .get(`${AUTHENTICATOR_URL}/devices/auth?id=${id}&network=${networkName}`)
     .then(response => {
       const auth = _.get(response, "data.auth"); // boolean
       return { auth };
@@ -28,17 +27,18 @@ const authenticateDevice = (id: string, networkName: string): Promise<any> => {
 };
 
 const authorizeDevice = (
-  jwt: string = "",
-  apiKey: string = "",
+  jwt = "",
+  apiKey = "",
   networkUuid: string,
   action: string
 ): Promise<any> => {
-  const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
   return axios
-    .post(
-      `${authUrl}/applications/authorize`,
-      { jwt, apiKey, networkUuid, action }
-    )
+    .post(`${AUTHENTICATOR_URL}/applications/authorize`, {
+      jwt,
+      apiKey,
+      networkUuid,
+      action
+    })
     .then(response => {
       const authz = _.get(response, "data.auth"); // boolean
       return { authz };

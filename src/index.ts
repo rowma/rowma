@@ -9,9 +9,10 @@ const server = require("http").Server(app);
 const io = socketio(server, {
   handlePreflightRequest: (req, res) => {
     const headers = {
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization, networkId, networkUuid, apiKey',
-      'Access-Control-Allow-Origin': req.headers.origin,
-      'Access-Control-Allow-Credentials': true
+      "Access-Control-Allow-Headers":
+        "Content-Type, Authorization, networkId, networkUuid, apiKey",
+      "Access-Control-Allow-Origin": req.headers.origin,
+      "Access-Control-Allow-Credentials": true
     };
     res.writeHead(200, headers);
     res.end();
@@ -36,7 +37,7 @@ import {
   runRosrun,
   delegate,
   killRosnode,
-  unsubscribeRostopic,
+  unsubscribeRostopic
 } from "./eventcallback/event-from-device";
 
 import { authenticateDevice } from "./auth";
@@ -54,7 +55,8 @@ import {
   NETWORK_OWNER,
   ROWMA_VERSION,
   DATABASE,
-  PORT
+  PORT,
+  AUTHENTICATOR_URL
 } from "./lib/settings";
 
 let db: DatabaseInterface;
@@ -82,19 +84,21 @@ server.listen(PORT);
 app.use(cors());
 
 app.get("/list_connections", async (req, res) => {
-  const action = "list_connections"
-  const { authz } = await authorizeDevice(
-    req.headers['authorization'],
-    req.headers['apikey'],
-    req.query.uuid,
-    action
-  );
+  const action = "list_connections";
+  if (AUTHENTICATOR_URL) {
+    const { authz } = await authorizeDevice(
+      req.headers["authorization"],
+      req.headers["apikey"],
+      req.query.uuid,
+      action
+    );
 
-  if (!authz) {
-    res.writeHead(403);
-    res.write(JSON.stringify({msg: "You cannot execute the action."}));
-    res.end();
-    return;
+    if (!authz) {
+      res.writeHead(403);
+      res.write(JSON.stringify({ msg: "You cannot execute the action." }));
+      res.end();
+      return;
+    }
   }
 
   res.writeHead(200);
@@ -105,19 +109,21 @@ app.get("/list_connections", async (req, res) => {
 });
 
 app.get("/robots", async (req, res) => {
-  const action = "robots"
-  const { authz } = await authorizeDevice(
-    req.headers['authorization'],
-    req.headers['apikey'],
-    req.query.networkUuid,
-    action
-  );
+  const action = "robots";
+  if (AUTHENTICATOR_URL) {
+    const { authz } = await authorizeDevice(
+      req.headers["authorization"],
+      req.headers["apikey"],
+      req.query.networkUuid,
+      action
+    );
 
-  if (!authz) {
-    res.writeHead(403);
-    res.write(JSON.stringify({msg: "You cannot execute the action."}));
-    res.end();
-    return;
+    if (!authz) {
+      res.writeHead(403);
+      res.write(JSON.stringify({ msg: "You cannot execute the action." }));
+      res.end();
+      return;
+    }
   }
 
   const robotUuid = _.get(req, "query.uuid");
@@ -129,19 +135,21 @@ app.get("/robots", async (req, res) => {
 });
 
 app.delete("/robots/:uuid", async (req, res) => {
-  const action = "delete_robot"
-  const { authz } = await authorizeDevice(
-    req.headers['authorization'],
-    req.headers['apikey'],
-    req.query.networkUuid,
-    action
-  );
+  const action = "delete_robot";
+  if (AUTHENTICATOR_URL) {
+    const { authz } = await authorizeDevice(
+      req.headers["authorization"],
+      req.headers["apikey"],
+      req.query.networkUuid,
+      action
+    );
 
-  if (!authz) {
-    res.writeHead(403);
-    res.write(JSON.stringify({msg: "You cannot execute the action."}));
-    res.end();
-    return;
+    if (!authz) {
+      res.writeHead(403);
+      res.write(JSON.stringify({ msg: "You cannot execute the action." }));
+      res.end();
+      return;
+    }
   }
 
   const robotUuid = _.get(req, "params.uuid");
@@ -159,7 +167,7 @@ app.get("/network_information", (req, res) => {
 
 app.get("/", async (_req, res) => {
   res.writeHead(200);
-  res.write(JSON.stringify({msg: "success!"}));
+  res.write(JSON.stringify({ msg: "success!" }));
   res.end();
 });
 
@@ -183,12 +191,11 @@ const handlerWithAuth = (
   handler: Function
 ) => {
   socket.on(eventName, async (payload: any, ack: Function = _.noop) => {
-    const authUrl = _.get(process.env, "AUTHENTICATOR_URL");
-    if (authUrl) {
+    if (AUTHENTICATOR_URL) {
       const { authz } = await authorizeDevice(
-        socket.handshake.headers['authorization'],
-        socket.handshake.headers['apikey'],
-        socket.handshake.headers['networkuuid'],
+        socket.handshake.headers["authorization"],
+        socket.handshake.headers["apikey"],
+        socket.handshake.headers["networkuuid"],
         eventName
       );
       if (!authz) {
@@ -237,7 +244,6 @@ const deviceEventHandlers = (socket, robotNsp) => {
     (payload: any, ack: Function = _.noop) =>
       unsubscribeRostopic(db, socket, payload, ack, robotNsp)
   );
-
 };
 
 const eventHandlers = socket => {
@@ -249,7 +255,7 @@ const deviceNsp = io.of("/rowma_device");
 const robotNsp = io.of("/rowma_robot");
 
 deviceNsp.on("connection", socket => {
-  console.log('connected')
+  console.log("connected");
   deviceEventHandlers(socket, robotNsp);
 });
 

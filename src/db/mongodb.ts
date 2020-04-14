@@ -46,7 +46,7 @@ export default class Mongodb implements DatabaseInterface {
       { uuid: robot.uuid },
       { $set: { ...robot, disconnectedAt: null } },
       { upsert: true }
-    )
+    );
   }
 
   removeRobot(socketId: string): Promise<boolean> {
@@ -73,7 +73,11 @@ export default class Mongodb implements DatabaseInterface {
 
   // TODO: Confirm if this method really work correctly
   // TODO: Implement.
-  updateRobotRosnodes(uuid: string, rosnodes: Array<string>, rostopics: Array<string>): Promise<boolean> {
+  updateRobotRosnodes(
+    uuid: string,
+    rosnodes: Array<string>,
+    rostopics: Array<string>
+  ): Promise<boolean> {
     return new Promise(resolve => resolve(true));
   }
 
@@ -94,13 +98,12 @@ export default class Mongodb implements DatabaseInterface {
 
   deleteRobot(uuid: string): Promise<boolean> {
     return this.db.collections.robots
-      .deleteOne(
-        { uuid }
-      ).then(() => {
+      .deleteOne({ uuid })
+      .then(() => {
         return new Promise(resolve => resolve(true));
       })
       .catch(err => {
         return new Promise(resolve => resolve(false));
-      })
+      });
   }
 }

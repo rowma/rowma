@@ -17,7 +17,12 @@ export default class InmemoryDatabase implements DatabaseInterface {
 
   getAllRobots(networkUuid: string): Promise<Array<Robot>> {
     return new Promise<Array<Robot>>((resolve, reject) => {
-      resolve(_.filter(this.robotInmemoryDatabase, { networkUuid, disconnectedAt: null }));
+      resolve(
+        _.filter(this.robotInmemoryDatabase, {
+          networkUuid,
+          disconnectedAt: null
+        })
+      );
     });
   }
 
@@ -89,7 +94,11 @@ export default class InmemoryDatabase implements DatabaseInterface {
 
   // TODO: Confirm if this method really work correctly
   // TODO: Change interface like updateRobotRosnodes(uuid: string, newRobot: Robot)
-  updateRobotRosnodes(uuid: string, rosnodes: Array<string>, rostopics: Array<string>): Promise<boolean> {
+  updateRobotRosnodes(
+    uuid: string,
+    rosnodes: Array<string>,
+    rostopics: Array<string>
+  ): Promise<boolean> {
     try {
       this.findRobotByUuid(uuid).then(robot => {
         robot.rosnodes = rosnodes;
@@ -108,13 +117,16 @@ export default class InmemoryDatabase implements DatabaseInterface {
   deleteRobot(uuid: string): Promise<boolean> {
     return new Promise(resolve => {
       try {
-        this.robotInmemoryDatabase = _.remove(this.robotInmemoryDatabase, (robot: Robot) => {
-          return robot.uuid === uuid;
-        })
+        this.robotInmemoryDatabase = _.remove(
+          this.robotInmemoryDatabase,
+          (robot: Robot) => {
+            return robot.uuid === uuid;
+          }
+        );
         return resolve(true);
       } catch {
         return resolve(false);
       }
-    })
+    });
   }
 }

@@ -28,7 +28,7 @@ export default class Robot {
     this.rosnodes = rosnodes;
     this.rosrunCommands = rosrunCommands;
     this.rostopics = rostopics;
-    this.networkUuid= networkUuid;
+    this.networkUuid = networkUuid;
     this.disconnectedAt = null;
     this.createdAt = new Date();
   }

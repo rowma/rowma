@@ -195,4 +195,11 @@ const unsubscribeRostopic = async (
   ack(response);
 };
 
-export { registerDevice, runLaunch, runRosrun, delegate, killRosnode, unsubscribeRostopic };
+export {
+  registerDevice,
+  runLaunch,
+  runRosrun,
+  delegate,
+  killRosnode,
+  unsubscribeRostopic
+};
