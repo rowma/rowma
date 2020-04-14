@@ -242,7 +242,7 @@ const deviceEventHandlers = (socket, robotNsp) => {
     socket,
     "unsubscribe_rostopic",
     (payload: any, ack: Function = _.noop) =>
-      unsubscribeRostopic(db, socket, payload, ack, robotNsp);
+      unsubscribeRostopic(db, socket, payload, ack, robotNsp)
   );
 };
 
