@@ -16,11 +16,6 @@ variable "az_count" {
   default     = "2"
 }
 
-variable "app_image" {
-  description = "Docker image to run in the ECS cluster"
-  default     = "724385454919.dkr.ecr.ap-northeast-1.amazonaws.com/rowmaio-connection-manager:latest"
-}
-
 variable "app_port" {
   description = "Port exposed by the docker image to redirect traffic to"
   default     = 3000
@@ -28,7 +23,7 @@ variable "app_port" {
 
 variable "app_count" {
   description = "Number of docker containers to run"
-  default     = 2
+  default     = 1
 }
 
 variable "fargate_cpu" {
