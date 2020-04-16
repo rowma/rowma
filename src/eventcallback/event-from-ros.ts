@@ -2,6 +2,7 @@
 // for response (ack() function). So keep in your mind that when I write code.
 
 import Robot from "../entity/robot";
+import Device from "../entity/device";
 
 import { createSuccessResponse, createErrorResponse } from "../lib/response";
 
@@ -117,6 +118,23 @@ const topicFromRos = async (
   const eventName = isDestRobot ? "rostopic" : "topic_to_device";
   // Have to implement the event on your own application
   nsp.to(destination.socketId).emit(eventName, parsedPayload);
+
+  const response = createSuccessResponse();
+  ack(response);
+};
+
+const roslaunchLog = async (
+  db: DatabaseInterface,
+  socket: any,
+  payload: string,
+  ack: any,
+  nsp: any
+): Promise<void> => {
+  const parsedPayload = JSON.parse(payload);
+  const applications = await db.findApplicationsByNetworkUuid(parsedPayload["networkUuid"])
+  applications.forEach((application: Device) => {
+    nsp.to(application.socketId).emit("roslaunch_log", parsedPayload);
+  })
 
   const response = createSuccessResponse();
   ack(response);

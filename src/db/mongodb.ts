@@ -68,7 +68,7 @@ export default class Mongodb implements DatabaseInterface {
   }
 
   getAllDevicesByUuids(uuids: Array<string>): Promise<Array<Device>> {
-    return this.db.collections.devicesrobots.find({ robotUuid: uuids });
+    return this.db.collections.devices.find({ robotUuid: uuids });
   }
 
   // TODO: Confirm if this method really work correctly
@@ -116,5 +116,9 @@ export default class Mongodb implements DatabaseInterface {
       .catch(err => {
         return new Promise(resolve => resolve(false));
       });
+  }
+
+  findApplicationsByNetworkUuid(networkUuid: string): Promise<Array<Device>> {
+    return this.db.collections.devices.find({ networkUuid });
   }
 }

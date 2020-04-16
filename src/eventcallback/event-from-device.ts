@@ -26,7 +26,7 @@ const registerDevice = async (
     if (ack) ack(response);
     return;
   }
-  const device = new Device(payload["deviceUuid"], socket.id);
+  const device = new Device(payload["deviceUuid"], socket.id, payload["networkUuid"]);
   db.saveDevice(device);
 
   console.log(db.getAllDevices());

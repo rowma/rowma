@@ -145,4 +145,12 @@ export default class InmemoryDatabase implements DatabaseInterface {
       }
     });
   }
+
+
+  findApplicationsByNetworkUuid(networkUuid: string): Promise<Array<Device>> {
+    const devices = _.filter(this.deviceInmemoryDatabase, (device: Device) => {
+      return device.networkUuid = networkUuid;
+    });
+    return new Promise(resolve => resolve(devices));
+  }
 }
