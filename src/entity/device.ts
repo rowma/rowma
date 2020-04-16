@@ -1,11 +1,11 @@
 export default class Device {
   uuid: string;
   socketId: string;
-  networkUuid: string;
+  robotUuid: string;
 
-  constructor(uuid: string, socketId: string, networkUuid: string) {
+  constructor(uuid: string, socketId: string, robotUuid: string) {
     this.uuid = uuid;
     this.socketId = socketId;
-    this.networkUuid = networkUuid;
+    this.robotUuid = robotUuid;
   }
 }

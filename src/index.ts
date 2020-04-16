@@ -28,7 +28,8 @@ import NetworkInformation from "./entity/network-information";
 import {
   registerRobot,
   updateRosnodes,
-  topicFromRos
+  topicFromRos,
+  roslaunchLog
 } from "./eventcallback/event-from-ros";
 
 import {
@@ -182,6 +183,9 @@ const robotEventHandlers = (socket, deviceNsp) => {
   socket.on("disconnect", () => db.removeRobot(socket.id));
   socket.on("topic_from_ros", (payload: any, ack: Function = _.noop) =>
     topicFromRos(db, socket, payload, ack, deviceNsp)
+  );
+  socket.on("roslaunch_log", (payload: any, ack: Function = _.noop) =>
+    roslaunchLog(db, socket, payload, ack, deviceNsp)
   );
 };
 

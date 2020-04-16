@@ -54,7 +54,6 @@ const registerRobot = async (
       uuid = parsedPayloadUuid;
     }
   }
-  socket.emit("robot_registered", { uuid });
 
   let networkUuid = "default";
   // Authenticat api_key from rowma_ros
@@ -81,6 +80,7 @@ const registerRobot = async (
     networkUuid
   );
   await db.upsertRobot(robot);
+  socket.emit("robot_registered", { uuid });
   // const allRobots = await db.getAllRobots(networkUuid);
   // console.log("registered: ", allRobots);
 };
@@ -131,7 +131,7 @@ const roslaunchLog = async (
   nsp: any
 ): Promise<void> => {
   const parsedPayload = JSON.parse(payload);
-  const applications = await db.findApplicationsByNetworkUuid(parsedPayload["networkUuid"])
+  const applications = await db.findApplicationsByRobotUuid(parsedPayload["robotUuid"])
   applications.forEach((application: Device) => {
     nsp.to(application.socketId).emit("roslaunch_log", parsedPayload);
   })
@@ -140,4 +140,4 @@ const roslaunchLog = async (
   ack(response);
 };
 
-export { registerRobot, updateRosnodes, topicFromRos };
+export { registerRobot, updateRosnodes, topicFromRos, roslaunchLog };

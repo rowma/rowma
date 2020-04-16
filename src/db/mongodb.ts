@@ -118,7 +118,7 @@ export default class Mongodb implements DatabaseInterface {
       });
   }
 
-  findApplicationsByNetworkUuid(networkUuid: string): Promise<Array<Device>> {
-    return this.db.collections.devices.find({ networkUuid });
+  findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Device>> {
+    return this.db.collections.devices.find({ robotUuid });
   }
 }

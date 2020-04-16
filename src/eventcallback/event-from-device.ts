@@ -26,7 +26,7 @@ const registerDevice = async (
     if (ack) ack(response);
     return;
   }
-  const device = new Device(payload["deviceUuid"], socket.id, payload["networkUuid"]);
+  const device = new Device(payload["deviceUuid"], socket.id, payload["robotUuid"]);
   db.saveDevice(device);
 
   console.log(db.getAllDevices());
