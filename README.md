@@ -13,13 +13,13 @@ Further information about Rowma, please check our [documentation](https://rowma.
 ## Getting Started
 You can start your own ConnectionManager on your environment.
 
-### Prerequisites
+## Prerequisites
 You need to install Node.js and npm on your computer.
 
 * Node.js
 * npm
 
-### Installing
+## Install
 Clone this repository and install dependencies.
 
 ```
@@ -28,6 +28,7 @@ $ cd rowma
 $ npm i
 ```
 
+## Start server
 Then run the server (pleases make sure you have a right to open port 80).
 
 ```
