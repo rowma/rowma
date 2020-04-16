@@ -106,4 +106,15 @@ export default class Mongodb implements DatabaseInterface {
         return new Promise(resolve => resolve(false));
       });
   }
+
+  deleteApplication(socketId: string): Promise<boolean> {
+    return this.db.collections.devices
+      .deleteOne({ socketId })
+      .then(() => {
+        return new Promise(resolve => resolve(true));
+      })
+      .catch(err => {
+        return new Promise(resolve => resolve(false));
+      });
+  }
 }

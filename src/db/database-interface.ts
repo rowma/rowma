@@ -17,4 +17,5 @@ export default interface DatabaseInterface {
   ): Promise<boolean>;
   removeCurrentRobotConnections(): Promise<boolean>;
   deleteRobot(uuid: string): Promise<boolean>;
+  deleteApplication(socketId: string): Promise<boolean>;
 }

@@ -244,6 +244,11 @@ const deviceEventHandlers = (socket, robotNsp) => {
     (payload: any, ack: Function = _.noop) =>
       unsubscribeRostopic(db, socket, payload, ack, robotNsp)
   );
+  handlerWithAuth(
+    socket,
+    "disconnect",
+    () => db.deleteApplication(socket.id)
+  );
 };
 
 const eventHandlers = socket => {

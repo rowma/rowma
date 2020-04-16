@@ -117,10 +117,26 @@ export default class InmemoryDatabase implements DatabaseInterface {
   deleteRobot(uuid: string): Promise<boolean> {
     return new Promise(resolve => {
       try {
-        this.robotInmemoryDatabase = _.remove(
+        _.remove(
           this.robotInmemoryDatabase,
           (robot: Robot) => {
             return robot.uuid === uuid;
+          }
+        );
+        return resolve(true);
+      } catch {
+        return resolve(false);
+      }
+    });
+  }
+
+  deleteApplication(socketId: string): Promise<boolean> {
+    return new Promise(resolve => {
+      try {
+        _.remove(
+          this.deviceInmemoryDatabase,
+          (device: Device) => {
+            return device.socketId === socketId;
           }
         );
         return resolve(true);
