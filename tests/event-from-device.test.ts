@@ -9,6 +9,7 @@ import {
 import inmemoryDb from "../src/db/inmemory-database";
 import Robot from "../src/entity/robot";
 import Device from "../src/entity/device";
+import CommandLog from "../src/entity/command-log"
 
 import {
   createSuccessResponse,
@@ -32,7 +33,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -56,7 +58,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -80,7 +83,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket1 = createMockSocket();
       socket1.setId("socket-id-1");
@@ -119,7 +123,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -145,7 +150,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -169,7 +175,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -195,7 +202,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -221,7 +229,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -245,7 +254,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -271,7 +281,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -297,7 +308,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -321,7 +333,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -347,7 +360,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -373,7 +387,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -397,7 +412,8 @@ describe('event-from-device', () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
       const deviceInmemoryDatabase: Array<Device> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+      const commandLogInmemoryDatabase: Array<CommandLog> = [];
+      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");

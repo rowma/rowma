@@ -1,5 +1,6 @@
 import Robot from "../entity/robot";
 import Device from "../entity/device";
+import CommandLog from "../entity/command-log";
 
 export default interface DatabaseInterface {
   getAllRobots(networkUuid: string): Promise<Array<Robot>>;
@@ -19,4 +20,5 @@ export default interface DatabaseInterface {
   deleteRobot(uuid: string): Promise<boolean>;
   deleteApplication(socketId: string): Promise<boolean>;
   findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Device>>;
+  saveLog(log: CommandLog): Promise<boolean>;
 }

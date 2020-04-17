@@ -24,6 +24,7 @@ const rowmaNsp = io.of("/rowma");
 import Robot from "./entity/robot";
 import Device from "./entity/device";
 import NetworkInformation from "./entity/network-information";
+import CommandLog from "./entity/command-log";
 
 import {
   registerRobot,
@@ -65,7 +66,8 @@ let db: DatabaseInterface;
 if (DATABASE === "inmemory") {
   const robotInmemoryDatabase: Array<Robot> = [];
   const deviceInmemoryDatabase: Array<Device> = [];
-  db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase);
+  const commandLogInmemoryDatabase : Array<CommandLog> = [];
+  db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
 } else {
   mongodbConnection.connect().then(() => {
     db = new mongodb(mongodbConnection);

@@ -3,6 +3,7 @@
 
 import Robot from "../entity/robot";
 import Device from "../entity/device";
+import CommandLog from "../entity/command-log";
 
 import { createSuccessResponse, createErrorResponse } from "../lib/response";
 
@@ -135,6 +136,15 @@ const roslaunchLog = async (
   applications.forEach((application: Device) => {
     nsp.to(application.socketId).emit("roslaunch_log", parsedPayload);
   })
+
+  const log = new CommandLog(
+    "roslaunch",
+    parsedPayload["cmd"],
+    parsedPayload["robotUuid"],
+    parsedPayload["log"]
+  )
+
+  await db.saveLog(log)
 
   const response = createSuccessResponse();
   ack(response);

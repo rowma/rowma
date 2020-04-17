@@ -4,6 +4,7 @@ import DatabaseInterface from "./database-interface";
 
 import Robot from "../entity/robot";
 import Device from "../entity/device";
+import CommandLog from "../entity/command-log";
 
 export default class Mongodb implements DatabaseInterface {
   db: any;
@@ -120,5 +121,11 @@ export default class Mongodb implements DatabaseInterface {
 
   findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Device>> {
     return this.db.collections.devices.find({ robotUuid });
+  }
+
+  saveLog(log: CommandLog): Promise<boolean> {
+    return this.db.collections.commandLogs.insertOne(log).then(res => {
+      return new Promise(resolve => resolve(true));
+    });
   }
 }

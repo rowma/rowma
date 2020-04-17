@@ -4,15 +4,18 @@ import DatabaseInterface from "./database-interface";
 
 import Robot from "../entity/robot";
 import Device from "../entity/device";
+import CommandLog from "../entity/command-log";
 
 export default class InmemoryDatabase implements DatabaseInterface {
   robotInmemoryDatabase: Array<Robot>;
   deviceInmemoryDatabase: Array<Device>;
+  commandLogInmemoryDatabase: Array<CommandLog>;
 
   // Initialize db (session)
-  constructor(robotDb: Array<Robot>, deviceDb: Array<Device>) {
+  constructor(robotDb: Array<Robot>, deviceDb: Array<Device>, logDb: Array<CommandLog>) {
     this.robotInmemoryDatabase = robotDb;
     this.deviceInmemoryDatabase = deviceDb;
+    this.commandLogInmemoryDatabase = logDb;
   }
 
   getAllRobots(networkUuid: string): Promise<Array<Robot>> {
@@ -152,5 +155,14 @@ export default class InmemoryDatabase implements DatabaseInterface {
       return device.robotUuid = robotUuid;
     });
     return new Promise(resolve => resolve(devices));
+  }
+
+  saveLog(log: CommandLog): Promise<boolean> {
+    try {
+      this.commandLogInmemoryDatabase.push(log);
+      return new Promise(resolve => resolve(true));
+    } catch {
+      return new Promise(resolve => resolve(false));
+    }
   }
 }
