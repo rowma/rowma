@@ -150,4 +150,30 @@ const roslaunchLog = async (
   ack(response);
 };
 
-export { registerRobot, updateRosnodes, topicFromRos, roslaunchLog };
+const rosrunLog = async (
+  db: DatabaseInterface,
+  socket: any,
+  payload: string,
+  ack: any,
+  nsp: any
+): Promise<void> => {
+  const parsedPayload = JSON.parse(payload);
+  const applications = await db.findApplicationsByRobotUuid(parsedPayload["robotUuid"])
+  applications.forEach((application: Device) => {
+    nsp.to(application.socketId).emit("rosrun_log", parsedPayload);
+  })
+
+  const log = new CommandLog(
+    "rosrun",
+    parsedPayload["cmd"],
+    parsedPayload["robotUuid"],
+    parsedPayload["log"]
+  )
+
+  await db.saveLog(log)
+
+  const response = createSuccessResponse();
+  ack(response);
+};
+
+export { registerRobot, updateRosnodes, topicFromRos, roslaunchLog, rosrunLog };

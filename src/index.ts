@@ -30,7 +30,8 @@ import {
   registerRobot,
   updateRosnodes,
   topicFromRos,
-  roslaunchLog
+  roslaunchLog,
+  rosrunLog
 } from "./eventcallback/event-from-ros";
 
 import {
@@ -188,6 +189,9 @@ const robotEventHandlers = (socket, deviceNsp) => {
   );
   socket.on("roslaunch_log", (payload: any, ack: Function = _.noop) =>
     roslaunchLog(db, socket, payload, ack, deviceNsp)
+  );
+  socket.on("rosrun_log", (payload: any, ack: Function = _.noop) =>
+    rosrunLog(db, socket, payload, ack, deviceNsp)
   );
 };
 
