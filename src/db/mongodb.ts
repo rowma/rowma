@@ -73,7 +73,7 @@ export default class Mongodb implements DatabaseInterface {
   }
 
   updateRobotRosnodes(robot: Robot): Promise<boolean> {
-    console.log("updateRobotRosnodes ", robot)
+    console.log("updateRobotRosnodes ", robot);
     return this.db.collections.robots.updateOne(
       { uuid: robot.uuid },
       { $set: robot },

@@ -12,7 +12,11 @@ export default class InmemoryDatabase implements DatabaseInterface {
   commandLogInmemoryDatabase: Array<CommandLog>;
 
   // Initialize db (session)
-  constructor(robotDb: Array<Robot>, deviceDb: Array<Device>, logDb: Array<CommandLog>) {
+  constructor(
+    robotDb: Array<Robot>,
+    deviceDb: Array<Device>,
+    logDb: Array<CommandLog>
+  ) {
     this.robotInmemoryDatabase = robotDb;
     this.deviceInmemoryDatabase = deviceDb;
     this.commandLogInmemoryDatabase = logDb;
@@ -97,7 +101,10 @@ export default class InmemoryDatabase implements DatabaseInterface {
 
   updateRobotRosnodes(robot: Robot): Promise<boolean> {
     try {
-      const index = _.findIndex(this.robotInmemoryDatabase, (r) => r.uuid == robot.uuid);
+      const index = _.findIndex(
+        this.robotInmemoryDatabase,
+        r => r.uuid == robot.uuid
+      );
       _.update(this.robotInmemoryDatabase, `[${index}]`, () => robot);
       return new Promise(resolve => resolve(true));
     } catch {
@@ -112,12 +119,9 @@ export default class InmemoryDatabase implements DatabaseInterface {
   deleteRobot(uuid: string): Promise<boolean> {
     return new Promise(resolve => {
       try {
-        _.remove(
-          this.robotInmemoryDatabase,
-          (robot: Robot) => {
-            return robot.uuid === uuid;
-          }
-        );
+        _.remove(this.robotInmemoryDatabase, (robot: Robot) => {
+          return robot.uuid === uuid;
+        });
         return resolve(true);
       } catch {
         return resolve(false);
@@ -128,12 +132,9 @@ export default class InmemoryDatabase implements DatabaseInterface {
   deleteApplication(socketId: string): Promise<boolean> {
     return new Promise(resolve => {
       try {
-        _.remove(
-          this.deviceInmemoryDatabase,
-          (device: Device) => {
-            return device.socketId === socketId;
-          }
-        );
+        _.remove(this.deviceInmemoryDatabase, (device: Device) => {
+          return device.socketId === socketId;
+        });
         return resolve(true);
       } catch {
         return resolve(false);
@@ -143,7 +144,7 @@ export default class InmemoryDatabase implements DatabaseInterface {
 
   findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Device>> {
     const devices = _.filter(this.deviceInmemoryDatabase, (device: Device) => {
-      return device.robotUuid = robotUuid;
+      return (device.robotUuid = robotUuid);
     });
     return new Promise(resolve => resolve(devices));
   }

@@ -8,12 +8,7 @@ export default class CommandLog {
   log: string;
   createdAt: Date;
 
-  constructor(
-    type: string,
-    cmd: string,
-    robotUuid: string,
-    log: string
-  ) {
+  constructor(type: string, cmd: string, robotUuid: string, log: string) {
     this.type = type;
     this.cmd = cmd;
     this.robotUuid = robotUuid;

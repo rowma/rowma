@@ -97,8 +97,9 @@ const updateRosnodes = async (
   const robot = await db.findRobotByUuid(robotUuid);
   const rosnodes = _.get(parsedPayload, "rosnodes") || robot.rosnodes;
   const rostopics = _.get(parsedPayload, "rostopics") || robot.rostopics;
-  const rosrunCommands = _.get(parsedPayload, "rosrunCommands") || robot.rosrunCommands;
-  const newRobot = { ...robot, rosnodes, rostopics, rosrunCommands }
+  const rosrunCommands =
+    _.get(parsedPayload, "rosrunCommands") || robot.rosrunCommands;
+  const newRobot = { ...robot, rosnodes, rostopics, rosrunCommands };
   db.updateRobotRosnodes(newRobot);
 };
 
@@ -132,19 +133,21 @@ const roslaunchLog = async (
   nsp: any
 ): Promise<void> => {
   const parsedPayload = JSON.parse(payload);
-  const applications = await db.findApplicationsByRobotUuid(parsedPayload["robotUuid"])
+  const applications = await db.findApplicationsByRobotUuid(
+    parsedPayload["robotUuid"]
+  );
   applications.forEach((application: Device) => {
     nsp.to(application.socketId).emit("roslaunch_log", parsedPayload);
-  })
+  });
 
   const log = new CommandLog(
     "roslaunch",
     parsedPayload["cmd"],
     parsedPayload["robotUuid"],
     parsedPayload["log"]
-  )
+  );
 
-  await db.saveLog(log)
+  await db.saveLog(log);
 
   const response = createSuccessResponse();
   ack(response);
@@ -158,19 +161,21 @@ const rosrunLog = async (
   nsp: any
 ): Promise<void> => {
   const parsedPayload = JSON.parse(payload);
-  const applications = await db.findApplicationsByRobotUuid(parsedPayload["robotUuid"])
+  const applications = await db.findApplicationsByRobotUuid(
+    parsedPayload["robotUuid"]
+  );
   applications.forEach((application: Device) => {
     nsp.to(application.socketId).emit("rosrun_log", parsedPayload);
-  })
+  });
 
   const log = new CommandLog(
     "rosrun",
     parsedPayload["cmd"],
     parsedPayload["robotUuid"],
     parsedPayload["log"]
-  )
+  );
 
-  await db.saveLog(log)
+  await db.saveLog(log);
 
   const response = createSuccessResponse();
   ack(response);

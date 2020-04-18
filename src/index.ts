@@ -68,8 +68,12 @@ let db: DatabaseInterface;
 if (DATABASE === "inmemory") {
   const robotInmemoryDatabase: Array<Robot> = [];
   const deviceInmemoryDatabase: Array<Device> = [];
-  const commandLogInmemoryDatabase : Array<CommandLog> = [];
-  db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+  const commandLogInmemoryDatabase: Array<CommandLog> = [];
+  db = new inmemoryDb(
+    robotInmemoryDatabase,
+    deviceInmemoryDatabase,
+    commandLogInmemoryDatabase
+  );
 } else {
   mongodbConnection.connect().then(() => {
     db = new mongodb(mongodbConnection);
@@ -255,11 +259,7 @@ const deviceEventHandlers = (socket, robotNsp) => {
     (payload: any, ack: Function = _.noop) =>
       unsubscribeRostopic(db, socket, payload, ack, robotNsp)
   );
-  handlerWithAuth(
-    socket,
-    "disconnect",
-    () => db.deleteApplication(socket.id)
-  );
+  handlerWithAuth(socket, "disconnect", () => db.deleteApplication(socket.id));
   handlerWithAuth(
     socket,
     "add_script",
