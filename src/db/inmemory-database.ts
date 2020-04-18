@@ -95,18 +95,10 @@ export default class InmemoryDatabase implements DatabaseInterface {
     return new Promise(resolve => resolve(devices));
   }
 
-  // TODO: Confirm if this method really work correctly
-  // TODO: Change interface like updateRobotRosnodes(uuid: string, newRobot: Robot)
-  updateRobotRosnodes(
-    uuid: string,
-    rosnodes: Array<string>,
-    rostopics: Array<string>
-  ): Promise<boolean> {
+  updateRobotRosnodes(robot: Robot): Promise<boolean> {
     try {
-      this.findRobotByUuid(uuid).then(robot => {
-        robot.rosnodes = rosnodes;
-        robot.rostopics = rostopics;
-      });
+      const index = _.findIndex(this.robotInmemoryDatabase, (r) => r.uuid == robot.uuid);
+      _.update(this.robotInmemoryDatabase, `[${index}]`, () => robot);
       return new Promise(resolve => resolve(true));
     } catch {
       return new Promise(resolve => resolve(false));
@@ -148,7 +140,6 @@ export default class InmemoryDatabase implements DatabaseInterface {
       }
     });
   }
-
 
   findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Device>> {
     const devices = _.filter(this.deviceInmemoryDatabase, (device: Device) => {

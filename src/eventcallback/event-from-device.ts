@@ -195,11 +195,45 @@ const unsubscribeRostopic = async (
   ack(response);
 };
 
+const addScript = async (
+  db: DatabaseInterface,
+  socket: socketio.Socket,
+  payload: any,
+  ack: Function,
+  robotNsp: socketio.Socket
+): Promise<void> => {
+  if (_.isEmpty(payload)) {
+    const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
+
+  const destination = _.get(payload, "destination");
+  const robotUuid = _.get(destination, "uuid");
+  const robot = await db.findRobotByUuid(robotUuid);
+
+  if (!robot) {
+    const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
+
+  robotNsp.to(robot.socketId).emit("add_script", {
+    socketId: robot.socketId,
+    script: _.get(payload, "script"),
+    name: _.get(payload, "name")
+  });
+
+  const response = createSuccessResponse();
+  ack(response);
+};
+
 export {
   registerDevice,
   runLaunch,
   runRosrun,
   delegate,
   killRosnode,
-  unsubscribeRostopic
+  unsubscribeRostopic,
+  addScript
 };

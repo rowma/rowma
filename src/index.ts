@@ -40,7 +40,8 @@ import {
   runRosrun,
   delegate,
   killRosnode,
-  unsubscribeRostopic
+  unsubscribeRostopic,
+  addScript
 } from "./eventcallback/event-from-device";
 
 import { authenticateDevice } from "./auth";
@@ -258,6 +259,12 @@ const deviceEventHandlers = (socket, robotNsp) => {
     socket,
     "disconnect",
     () => db.deleteApplication(socket.id)
+  );
+  handlerWithAuth(
+    socket,
+    "add_script",
+    (payload: any, ack: Function = _.noop) =>
+      addScript(db, socket, payload, ack, robotNsp)
   );
 };
 

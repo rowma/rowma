@@ -11,11 +11,7 @@ export default interface DatabaseInterface {
   removeRobot(socketId: string): Promise<boolean>;
   saveDevice(device: Device): Promise<boolean>;
   getAllDevicesByUuids(uuids: Array<string>): Promise<Array<Device>>;
-  updateRobotRosnodes(
-    uuid: string,
-    rosnodes: Array<string>,
-    rostopics: Array<string>
-  ): Promise<boolean>;
+  updateRobotRosnodes(robot: Robot): Promise<boolean>;
   removeCurrentRobotConnections(): Promise<boolean>;
   deleteRobot(uuid: string): Promise<boolean>;
   deleteApplication(socketId: string): Promise<boolean>;

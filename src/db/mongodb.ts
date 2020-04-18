@@ -72,14 +72,13 @@ export default class Mongodb implements DatabaseInterface {
     return this.db.collections.devices.find({ robotUuid: uuids });
   }
 
-  // TODO: Confirm if this method really work correctly
-  // TODO: Implement.
-  updateRobotRosnodes(
-    uuid: string,
-    rosnodes: Array<string>,
-    rostopics: Array<string>
-  ): Promise<boolean> {
-    return new Promise(resolve => resolve(true));
+  updateRobotRosnodes(robot: Robot): Promise<boolean> {
+    console.log("updateRobotRosnodes ", robot)
+    return this.db.collections.robots.updateOne(
+      { uuid: robot.uuid },
+      { $set: robot },
+      { upsert: true }
+    );
   }
 
   removeCurrentRobotConnections(): Promise<boolean> {

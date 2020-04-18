@@ -97,9 +97,9 @@ const updateRosnodes = async (
   const robot = await db.findRobotByUuid(robotUuid);
   const rosnodes = _.get(parsedPayload, "rosnodes") || robot.rosnodes;
   const rostopics = _.get(parsedPayload, "rostopics") || robot.rostopics;
-  db.updateRobotRosnodes(robotUuid, rosnodes, rostopics);
-
-  console.log("registered: ", db.getAllRobots(robot.networkUuid));
+  const rosrunCommands = _.get(parsedPayload, "rosrunCommands") || robot.rosrunCommands;
+  const newRobot = { ...robot, rosnodes, rostopics, rosrunCommands }
+  db.updateRobotRosnodes(newRobot);
 };
 
 const topicFromRos = async (
