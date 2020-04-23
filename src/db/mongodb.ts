@@ -32,12 +32,30 @@ export default class Mongodb implements DatabaseInterface {
       });
   }
 
-  findRobotByUuid(uuid: string): Promise<Robot> {
+  findOneRobotByUuid(uuid: string): Promise<Robot> {
     return this.db.collections.robots.findOne({ uuid: uuid });
   }
 
-  findDeviceByUuid(uuid: string): Promise<Robot> {
+
+  findRobotsByUuidRegx(uuid: string): Promise<Array<Robot>> {
+    return this.db.collections.robots
+      .find(
+        {"uuid": {$regex: uuid, $options:"i"}}
+      )
+      .toArray();
+  }
+
+  findDeviceByUuid(uuid: string): Promise<Device> {
     return this.db.collections.devices.findOne({ uuid: uuid });
+  }
+
+
+  findDeviceByUuidRegx(uuid: string): Promise<Array<Device>> {
+    return this.db.collections.devices
+      .find(
+        {"uuid": {$regex: uuid, $options:"i"}}
+      )
+      .toArray();
   }
 
   upsertRobot(robot: Robot): Promise<boolean> {

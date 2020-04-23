@@ -39,7 +39,7 @@ export default class InmemoryDatabase implements DatabaseInterface {
     });
   }
 
-  findRobotByUuid(uuid: string): Promise<Robot> {
+  findOneRobotByUuid(uuid: string): Promise<Robot> {
     const robot = _.find(this.robotInmemoryDatabase, r => {
       return _.get(r, "uuid") === uuid;
     });
@@ -49,13 +49,31 @@ export default class InmemoryDatabase implements DatabaseInterface {
     });
   }
 
-  findDeviceByUuid(uuid: string): Promise<Robot> {
-    const robot = _.find(this.deviceInmemoryDatabase, r => {
+  findRobotsByUuidRegx(uuid: string): Promise<Array<Robot>> {
+    const uuidRegex = new RegExp(uuid);
+    const robots = this.robotInmemoryDatabase.filter(robot => uuidRegex.test(robot.uuid));
+
+    return new Promise((resolve, reject) => {
+      resolve(robots);
+    });
+  }
+
+  findDeviceByUuid(uuid: string): Promise<Device> {
+    const device = _.find(this.deviceInmemoryDatabase, r => {
       return _.get(r, "uuid") === uuid;
     });
 
     return new Promise((resolve, reject) => {
-      resolve(robot);
+      resolve(device);
+    });
+  }
+
+  findDeviceByUuidRegx(uuid: string): Promise<Array<Device>> {
+    const uuidRegex = new RegExp(uuid);
+    const devices = this.deviceInmemoryDatabase.filter(device => uuidRegex.test(device.uuid));
+
+    return new Promise((resolve, reject) => {
+      resolve(devices);
     });
   }
 

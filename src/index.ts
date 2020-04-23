@@ -136,7 +136,7 @@ app.get("/robots", async (req, res) => {
   }
 
   const robotUuid = _.get(req, "query.uuid");
-  const robot = await db.findRobotByUuid(robotUuid);
+  const robot = await db.findOneRobotByUuid(robotUuid);
 
   res.writeHead(200);
   res.write(JSON.stringify(robot || {}));

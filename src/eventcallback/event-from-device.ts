@@ -54,18 +54,20 @@ const runLaunch = async (
 
   const destination = _.get(payload, "destination");
   const robotUuid = _.get(destination, "uuid");
-  const robot = await db.findRobotByUuid(robotUuid);
+  const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robot) {
+  if (!robots) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
 
-  robotNsp.to(robot.socketId).emit("run_launch", {
-    socketId: robot.socketId,
-    command: _.get(payload, "command")
-  });
+  robots.forEach((robot: Robot) => {
+    robotNsp.to(robot.socketId).emit("run_launch", {
+      socketId: robot.socketId,
+      command: _.get(payload, "command")
+    });
+  })
 
   const response = createSuccessResponse();
   ack(response);
@@ -86,19 +88,21 @@ const runRosrun = async (
 
   const destination = _.get(payload, "destination");
   const robotUuid = _.get(destination, "uuid");
-  const robot = await db.findRobotByUuid(robotUuid);
+  const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robot) {
+  if (!robots) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
 
-  robotNsp.to(robot.socketId).emit("run_rosrun", {
-    socketId: robot.socketId,
-    command: _.get(payload, "command"),
-    args: _.get(payload, "args")
-  });
+  robots.forEach((robot: Robot) => {
+    robotNsp.to(robot.socketId).emit("run_rosrun", {
+      socketId: robot.socketId,
+      command: _.get(payload, "command"),
+      args: _.get(payload, "args")
+    });
+  })
 
   const response = createSuccessResponse();
   ack(response);
@@ -120,16 +124,18 @@ const delegate = async (
 
   const destination = _.get(payload, "destination");
   const robotUuid = _.get(destination, "uuid");
-  const robot = await db.findRobotByUuid(robotUuid);
+  const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robot) {
+  if (!robots) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
 
-  // TODO: Remove unnecessary values
-  robotNsp.to(robot.socketId).emit("rostopic", _.get(payload, "msg"));
+  robots.forEach((robot: Robot) => {
+    // TODO: Remove unnecessary values
+    robotNsp.to(robot.socketId).emit("rostopic", _.get(payload, "msg"));
+  })
 
   const response = createSuccessResponse();
   ack(response);
@@ -150,18 +156,20 @@ const killRosnode = async (
 
   const destination = _.get(payload, "destination");
   const robotUuid = _.get(destination, "uuid");
-  const robot = await db.findRobotByUuid(robotUuid);
+  const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robot) {
+  if (!robots) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
 
-  robotNsp.to(robot.socketId).emit("kill_rosnodes", {
-    socketId: robot.socketId,
-    rosnodes: _.get(payload, "rosnodes")
-  });
+  robots.forEach((robot: Robot) => {
+    robotNsp.to(robot.socketId).emit("kill_rosnodes", {
+      socketId: robot.socketId,
+      rosnodes: _.get(payload, "rosnodes")
+    });
+  })
 
   const response = createSuccessResponse();
   ack(response);
@@ -182,18 +190,20 @@ const unsubscribeRostopic = async (
 
   const destination = _.get(payload, "destination");
   const robotUuid = _.get(destination, "uuid");
-  const robot = await db.findRobotByUuid(robotUuid);
+  const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robot) {
+  if (!robots) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
 
-  robotNsp.to(robot.socketId).emit("unsubscribe_rostopic", {
-    socketId: robot.socketId,
-    topic: _.get(payload, "topic")
-  });
+  robots.forEach((robot: Robot) => {
+    robotNsp.to(robot.socketId).emit("unsubscribe_rostopic", {
+      socketId: robot.socketId,
+      topic: _.get(payload, "topic")
+    });
+  })
 
   const response = createSuccessResponse();
   ack(response);
@@ -214,19 +224,21 @@ const addScript = async (
 
   const destination = _.get(payload, "destination");
   const robotUuid = _.get(destination, "uuid");
-  const robot = await db.findRobotByUuid(robotUuid);
+  const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robot) {
+  if (!robots) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
   }
 
-  robotNsp.to(robot.socketId).emit("add_script", {
-    socketId: robot.socketId,
-    script: _.get(payload, "script"),
-    name: _.get(payload, "name")
-  });
+  robots.forEach((robot: Robot) => {
+    robotNsp.to(robot.socketId).emit("add_script", {
+      socketId: robot.socketId,
+      script: _.get(payload, "script"),
+      name: _.get(payload, "name")
+    });
+  })
 
   const response = createSuccessResponse();
   ack(response);

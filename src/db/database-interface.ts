@@ -5,8 +5,10 @@ import CommandLog from "../entity/command-log";
 export default interface DatabaseInterface {
   getAllRobots(networkUuid: string): Promise<Array<Robot>>;
   getAllDevices(): Promise<Array<Device>>;
-  findRobotByUuid(uuid: string): Promise<Robot>;
-  findDeviceByUuid(uuid: string): Promise<Robot>;
+  findRobotsByUuidRegx(uuid: string): Promise<Array<Robot>>;
+  findOneRobotByUuid(uuid: string): Promise<Robot>;
+  findDeviceByUuid(uuid: string): Promise<Device>;
+  findDeviceByUuidRegx(uuid: string): Promise<Array<Device>>;
   upsertRobot(robot: Robot): Promise<boolean>;
   removeRobot(socketId: string): Promise<boolean>;
   saveDevice(device: Device): Promise<boolean>;

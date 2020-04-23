@@ -41,7 +41,7 @@ const registerRobot = async (
   let uuid = genUuid();
   const parsedPayloadUuid = parsedPayload["uuid"];
   if (parsedPayloadUuid) {
-    const robot = await db.findRobotByUuid(parsedPayloadUuid);
+    const robot = await db.findOneRobotByUuid(parsedPayloadUuid);
     if (
       !parsedPayload["reconnection"] &&
       robot &&
@@ -94,7 +94,7 @@ const updateRosnodes = async (
   const parsedPayload = JSON.parse(payload);
   if (!parsedPayload) return;
   const robotUuid = _.get(parsedPayload, "uuid");
-  const robot = await db.findRobotByUuid(robotUuid);
+  const robot = await db.findOneRobotByUuid(robotUuid);
   const rosnodes = _.get(parsedPayload, "rosnodes") || robot.rosnodes;
   const rostopics = _.get(parsedPayload, "rostopics") || robot.rostopics;
   const rosrunCommands =
@@ -114,12 +114,13 @@ const topicFromRos = async (
   const topicDestination = _.get(parsedPayload, "topicDestination");
   const destType = topicDestination["type"];
   const isDestRobot = destType === "robot";
-  const destination = isDestRobot
-    ? await db.findRobotByUuid(topicDestination["uuid"])
-    : await db.findDeviceByUuid(topicDestination["uuid"]);
+  const destinations = isDestRobot
+    ? await db.findRobotsByUuidRegx(topicDestination["uuid"])
+    : await db.findDeviceByUuidRegx(topicDestination["uuid"]);
   const eventName = isDestRobot ? "rostopic" : "topic_to_device";
-  // Have to implement the event on your own application
-  nsp.to(destination.socketId).emit(eventName, parsedPayload);
+  destinations.forEach((destination: Robot|Device) => {
+    nsp.to(destination.socketId).emit(eventName, parsedPayload);
+  })
 
   const response = createSuccessResponse();
   ack(response);
