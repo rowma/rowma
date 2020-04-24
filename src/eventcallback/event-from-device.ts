@@ -56,7 +56,7 @@ const runLaunch = async (
   const robotUuid = _.get(destination, "uuid");
   const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robots) {
+  if (robots.length === 0) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
@@ -90,7 +90,7 @@ const runRosrun = async (
   const robotUuid = _.get(destination, "uuid");
   const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robots) {
+  if (robots.length === 0) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
@@ -126,7 +126,7 @@ const delegate = async (
   const robotUuid = _.get(destination, "uuid");
   const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robots) {
+  if (robots.length === 0) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
@@ -158,7 +158,7 @@ const killRosnode = async (
   const robotUuid = _.get(destination, "uuid");
   const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robots) {
+  if (robots.length === 0) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
@@ -192,7 +192,7 @@ const unsubscribeRostopic = async (
   const robotUuid = _.get(destination, "uuid");
   const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robots) {
+  if (robots.length === 0) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
@@ -226,7 +226,7 @@ const addScript = async (
   const robotUuid = _.get(destination, "uuid");
   const robots = await db.findRobotsByUuidRegx(robotUuid);
 
-  if (!robots) {
+  if (robots.length === 0) {
     const response = createErrorResponse(ROBOT_NOT_FOUND_MSG);
     if (ack) ack(response);
     return;
