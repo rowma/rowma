@@ -118,8 +118,15 @@ const topicFromRos = async (
     ? await db.findRobotsByUuidRegx(topicDestination["uuid"])
     : await db.findDeviceByUuidRegx(topicDestination["uuid"]);
   const eventName = isDestRobot ? "rostopic" : "topic_to_device";
+
+  const packet = {
+    msg: parsedPayload["msg"],
+    op: parsedPayload["op"],
+    sourceUuid: parsedPayload["sourceUuid"],
+    topic: parsedPayload["topic"]
+  }
   destinations.forEach((destination: Robot|Device) => {
-    nsp.to(destination.socketId).emit(eventName, parsedPayload);
+    nsp.to(destination.socketId).emit(eventName, packet);
   })
 
   const response = createSuccessResponse();
