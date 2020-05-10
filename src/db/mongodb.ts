@@ -145,4 +145,16 @@ export default class Mongodb implements DatabaseInterface {
       return new Promise(resolve => resolve(true));
     });
   }
+
+  updateApplication(application: Device): Promise<boolean> {
+    return this.db.collections.devices.updateOne(
+      { uuid: application.uuid },
+      { $set: { ...application } }
+    ).then(() => {
+      return new Promise(resolve => resolve(true));
+    })
+    .catch(err => {
+      return new Promise(resolve => resolve(false));
+    });
+  }
 }

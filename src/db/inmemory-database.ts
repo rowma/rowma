@@ -175,4 +175,12 @@ export default class InmemoryDatabase implements DatabaseInterface {
       return new Promise(resolve => resolve(false));
     }
   }
+
+  updateApplication(application: Device): Promise<boolean> {
+    const index = _.findIndex(this.deviceInmemoryDatabase, (device: Device) => {
+      return _.get(device, "uuid") === application.uuid;
+    });
+    this.deviceInmemoryDatabase[index] = application;
+    return new Promise(resolve => resolve(true));
+  }
 }

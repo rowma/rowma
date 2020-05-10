@@ -19,4 +19,5 @@ export default interface DatabaseInterface {
   deleteApplication(socketId: string): Promise<boolean>;
   findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Device>>;
   saveLog(log: CommandLog): Promise<boolean>;
+  updateApplication(application: Device): Promise<boolean>;
 }

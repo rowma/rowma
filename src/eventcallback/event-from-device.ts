@@ -244,6 +244,25 @@ const addScript = async (
   ack(response);
 };
 
+const updateApplication = async (
+  db: DatabaseInterface,
+  socket: socketio.Socket,
+  payload: any,
+  ack: Function
+): Promise<void> => {
+  if (_.isEmpty(payload)) {
+    const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
+    if (ack) ack(response);
+    return;
+  }
+  const device = await db.findDeviceByUuid(payload["uuid"])
+  const newDevice = new Device(payload["uuid"], device.socketId, payload["robotUuid"])
+  db.updateApplication(newDevice)
+
+  const response = createSuccessResponse();
+  ack(response);
+};
+
 export {
   registerDevice,
   runLaunch,
@@ -251,5 +270,6 @@ export {
   delegate,
   killRosnode,
   unsubscribeRostopic,
-  addScript
+  addScript,
+  updateApplication
 };
