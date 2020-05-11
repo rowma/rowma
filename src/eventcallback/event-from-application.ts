@@ -109,7 +109,7 @@ const runRosrun = async (
 };
 
 // TODO: Change name
-const delegate = async (
+const topicTransfer = async (
   db: DatabaseInterface,
   socket: socketio.Socket,
   payload: any,
@@ -267,7 +267,7 @@ export {
   registerApplication,
   runLaunch,
   runRosrun,
-  delegate,
+  topicTransfer,
   killRosnode,
   unsubscribeRostopic,
   addScript,

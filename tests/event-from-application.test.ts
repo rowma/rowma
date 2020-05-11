@@ -2,7 +2,7 @@ import {
   registerApplication,
   runLaunch,
   runRosrun,
-  delegate,
+  topicTransfer,
   killRosnode
 } from "../src/eventcallback/event-from-application";
 
@@ -276,7 +276,7 @@ describe('event-from-application', () => {
     });
   });
 
-  describe('#delegate()', () => {
+  describe('#topicTransfer()', () => {
     it('should emit with a payload', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
@@ -296,7 +296,7 @@ describe('event-from-application', () => {
       // Act
       // ts-ignore because original MockSocket is used.
       // @ts-ignore
-      await delegate(db, socket, payload, ack, socket)
+      await topicTransfer(db, socket, payload, ack, socket)
 
       // Assert
       // assert.equal(socket.emit.callCount, 1);
@@ -321,7 +321,7 @@ describe('event-from-application', () => {
       // Act
       // ts-ignore because original MockSocket is used.
       // @ts-ignore
-      await delegate(db, socket, payload, ack, socket)
+      await topicTransfer(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(socket.emit.callCount, undefined)
@@ -345,7 +345,7 @@ describe('event-from-application', () => {
       // Act
       // ts-ignore because original MockSocket is used.
       // @ts-ignore
-      await delegate(db, socket, payload, ack, socket)
+      await topicTransfer(db, socket, payload, ack, socket)
 
       // Assert
       assert.equal(applicationInmemoryDatabase.length, 0);

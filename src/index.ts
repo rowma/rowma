@@ -38,7 +38,7 @@ import {
   registerApplication,
   runLaunch,
   runRosrun,
-  delegate,
+  topicTransfer,
   killRosnode,
   unsubscribeRostopic,
   addScript,
@@ -245,8 +245,8 @@ const applicationEventHandlers = (socket, robotNsp) => {
     (payload: any, ack: Function = _.noop) =>
       runRosrun(db, socket, payload, ack, robotNsp)
   );
-  handlerWithAuth(socket, "delegate", (payload: any, ack: Function = _.noop) =>
-    delegate(db, socket, payload, ack, robotNsp)
+  handlerWithAuth(socket, "topic_transfer", (payload: any, ack: Function = _.noop) =>
+    topicTransfer(db, socket, payload, ack, robotNsp)
   );
   handlerWithAuth(
     socket,
