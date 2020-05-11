@@ -1,6 +1,6 @@
 {
   "name": "rowma",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Rowma ConnectionManager",
   "main": "dist/src/index.js",
   "repository": "https://github.com/rowma",
