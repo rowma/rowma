@@ -2,7 +2,7 @@
 // for response (ack() function). So keep in your mind that when code.
 
 import Robot from "../entity/robot";
-import Device from "../entity/device";
+import Application from "../entity/application";
 
 import * as socketio from "socket.io";
 
@@ -15,7 +15,7 @@ import _ from "lodash";
 const ROBOT_NOT_FOUND_MSG = "The robot is not found.";
 const PAYLOAD_NOT_FOUND_MSG = "Payload must be included.";
 
-const registerDevice = async (
+const registerApplication = async (
   db: DatabaseInterface,
   socket: socketio.Socket,
   payload: any,
@@ -26,14 +26,14 @@ const registerDevice = async (
     if (ack) ack(response);
     return;
   }
-  const device = new Device(
-    payload["deviceUuid"],
+  const application = new Application(
+    payload["applicationUuid"],
     socket.id,
     payload["robotUuid"]
   );
-  db.saveDevice(device);
+  db.saveApplication(application);
 
-  console.log(db.getAllDevices());
+  console.log(db.getAllApplications());
 
   const response = createSuccessResponse();
   ack(response);
@@ -255,16 +255,16 @@ const updateApplication = async (
     if (ack) ack(response);
     return;
   }
-  const device = await db.findDeviceByUuid(payload["uuid"])
-  const newDevice = new Device(payload["uuid"], device.socketId, payload["robotUuid"])
-  db.updateApplication(newDevice)
+  const application = await db.findApplicationByUuid(payload["uuid"])
+  const newApplication = new Application(payload["uuid"], application.socketId, payload["robotUuid"])
+  db.updateApplication(newApplication)
 
   const response = createSuccessResponse();
   ack(response);
 };
 
 export {
-  registerDevice,
+  registerApplication,
   runLaunch,
   runRosrun,
   delegate,

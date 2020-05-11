@@ -3,22 +3,22 @@ import _ from "lodash";
 import DatabaseInterface from "./database-interface";
 
 import Robot from "../entity/robot";
-import Device from "../entity/device";
+import Application from "../entity/application";
 import CommandLog from "../entity/command-log";
 
 export default class InmemoryDatabase implements DatabaseInterface {
   robotInmemoryDatabase: Array<Robot>;
-  deviceInmemoryDatabase: Array<Device>;
+  applicationInmemoryDatabase: Array<Application>;
   commandLogInmemoryDatabase: Array<CommandLog>;
 
   // Initialize db (session)
   constructor(
     robotDb: Array<Robot>,
-    deviceDb: Array<Device>,
+    applicationDb: Array<Application>,
     logDb: Array<CommandLog>
   ) {
     this.robotInmemoryDatabase = robotDb;
-    this.deviceInmemoryDatabase = deviceDb;
+    this.applicationInmemoryDatabase = applicationDb;
     this.commandLogInmemoryDatabase = logDb;
   }
 
@@ -33,9 +33,9 @@ export default class InmemoryDatabase implements DatabaseInterface {
     });
   }
 
-  getAllDevices(): Promise<Array<Device>> {
-    return new Promise<Array<Device>>((resolve, reject) => {
-      resolve(this.deviceInmemoryDatabase);
+  getAllApplications(): Promise<Array<Application>> {
+    return new Promise<Array<Application>>((resolve, reject) => {
+      resolve(this.applicationInmemoryDatabase);
     });
   }
 
@@ -58,22 +58,22 @@ export default class InmemoryDatabase implements DatabaseInterface {
     });
   }
 
-  findDeviceByUuid(uuid: string): Promise<Device> {
-    const device = _.find(this.deviceInmemoryDatabase, r => {
+  findApplicationByUuid(uuid: string): Promise<Application> {
+    const application = _.find(this.applicationInmemoryDatabase, r => {
       return _.get(r, "uuid") === uuid;
     });
 
     return new Promise((resolve, reject) => {
-      resolve(device);
+      resolve(application);
     });
   }
 
-  findDeviceByUuidRegx(uuid: string): Promise<Array<Device>> {
+  findApplicationByUuidRegx(uuid: string): Promise<Array<Application>> {
     const uuidRegex = new RegExp(uuid);
-    const devices = this.deviceInmemoryDatabase.filter(device => uuidRegex.test(device.uuid));
+    const applications = this.applicationInmemoryDatabase.filter(application => uuidRegex.test(application.uuid));
 
     return new Promise((resolve, reject) => {
-      resolve(devices);
+      resolve(applications);
     });
   }
 
@@ -101,20 +101,20 @@ export default class InmemoryDatabase implements DatabaseInterface {
     }
   }
 
-  saveDevice(device): Promise<boolean> {
+  saveApplication(application): Promise<boolean> {
     try {
-      this.deviceInmemoryDatabase.push(device);
+      this.applicationInmemoryDatabase.push(application);
       return new Promise(resolve => resolve(true));
     } catch {
       return new Promise(resolve => resolve(false));
     }
   }
 
-  getAllDevicesByUuids(uuids: Array<string>): Promise<Array<Device>> {
-    const devices = _.filter(this.deviceInmemoryDatabase, (device: Device) => {
-      return _.includes(uuids, device.uuid);
+  getAllApplicationsByUuids(uuids: Array<string>): Promise<Array<Application>> {
+    const applications = _.filter(this.applicationInmemoryDatabase, (application: Application) => {
+      return _.includes(uuids, application.uuid);
     });
-    return new Promise(resolve => resolve(devices));
+    return new Promise(resolve => resolve(applications));
   }
 
   updateRobotRosnodes(robot: Robot): Promise<boolean> {
@@ -150,8 +150,8 @@ export default class InmemoryDatabase implements DatabaseInterface {
   deleteApplication(socketId: string): Promise<boolean> {
     return new Promise(resolve => {
       try {
-        _.remove(this.deviceInmemoryDatabase, (device: Device) => {
-          return device.socketId === socketId;
+        _.remove(this.applicationInmemoryDatabase, (application: Application) => {
+          return application.socketId === socketId;
         });
         return resolve(true);
       } catch {
@@ -160,11 +160,11 @@ export default class InmemoryDatabase implements DatabaseInterface {
     });
   }
 
-  findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Device>> {
-    const devices = _.filter(this.deviceInmemoryDatabase, (device: Device) => {
-      return (device.robotUuid = robotUuid);
+  findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Application>> {
+    const applications = _.filter(this.applicationInmemoryDatabase, (application: Application) => {
+      return (application.robotUuid = robotUuid);
     });
-    return new Promise(resolve => resolve(devices));
+    return new Promise(resolve => resolve(applications));
   }
 
   saveLog(log: CommandLog): Promise<boolean> {
@@ -176,11 +176,11 @@ export default class InmemoryDatabase implements DatabaseInterface {
     }
   }
 
-  updateApplication(application: Device): Promise<boolean> {
-    const index = _.findIndex(this.deviceInmemoryDatabase, (device: Device) => {
-      return _.get(device, "uuid") === application.uuid;
+  updateApplication(application: Application): Promise<boolean> {
+    const index = _.findIndex(this.applicationInmemoryDatabase, (application: Application) => {
+      return _.get(application, "uuid") === application.uuid;
     });
-    this.deviceInmemoryDatabase[index] = application;
+    this.applicationInmemoryDatabase[index] = application;
     return new Promise(resolve => resolve(true));
   }
 }

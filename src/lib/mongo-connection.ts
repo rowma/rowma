@@ -1,16 +1,16 @@
 import { MongoClient, Collection, ObjectId } from "mongodb";
 
 import Robot from "../entity/robot";
-import Device from "../entity/device";
+import Application from "../entity/application";
 
 import { MONGODB_URI } from "./settings";
 
 type CollectionsType = {
   robots: Collection<Robot> | null;
-  devices: Collection<Device> | null;
+  applications: Collection<Application> | null;
 };
 
-const collections: CollectionsType = { robots: null, devices: null };
+const collections: CollectionsType = { robots: null, applications: null };
 export { collections };
 
 const connect = async () => {
@@ -21,7 +21,7 @@ const connect = async () => {
   const db = client.db();
 
   collections.robots = db.collection<Robot>("robots");
-  collections.devices = db.collection<Device>("devices");
+  collections.applications = db.collection<Application>("applications");
   return { client, db };
 };
 

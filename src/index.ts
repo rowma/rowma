@@ -22,7 +22,7 @@ const io = socketio(server, {
 const rowmaNsp = io.of("/rowma");
 
 import Robot from "./entity/robot";
-import Device from "./entity/device";
+import Application from "./entity/application";
 import NetworkInformation from "./entity/network-information";
 import CommandLog from "./entity/command-log";
 
@@ -35,7 +35,7 @@ import {
 } from "./eventcallback/event-from-ros";
 
 import {
-  registerDevice,
+  registerApplication,
   runLaunch,
   runRosrun,
   delegate,
@@ -43,10 +43,10 @@ import {
   unsubscribeRostopic,
   addScript,
   updateApplication
-} from "./eventcallback/event-from-device";
+} from "./eventcallback/event-from-application";
 
-import { authenticateDevice } from "./auth";
-import { authorizeDevice } from "./auth";
+import { authenticateApplication } from "./auth";
+import { authorizeApplication } from "./auth";
 
 import DatabaseInterface from "./db/database-interface";
 import inmemoryDb from "./db/inmemory-database";
@@ -68,11 +68,11 @@ let db: DatabaseInterface;
 
 if (DATABASE === "inmemory") {
   const robotInmemoryDatabase: Array<Robot> = [];
-  const deviceInmemoryDatabase: Array<Device> = [];
+  const applicationInmemoryDatabase: Array<Application> = [];
   const commandLogInmemoryDatabase: Array<CommandLog> = [];
   db = new inmemoryDb(
     robotInmemoryDatabase,
-    deviceInmemoryDatabase,
+    applicationInmemoryDatabase,
     commandLogInmemoryDatabase
   );
 } else {
@@ -96,7 +96,7 @@ app.use(cors());
 app.get("/list_connections", async (req, res) => {
   const action = "list_connections";
   if (AUTHENTICATOR_URL) {
-    const { authz } = await authorizeDevice(
+    const { authz } = await authorizeApplication(
       req.headers["authorization"],
       req.headers["apikey"],
       req.query.uuid,
@@ -121,7 +121,7 @@ app.get("/list_connections", async (req, res) => {
 app.get("/robots", async (req, res) => {
   const action = "robots";
   if (AUTHENTICATOR_URL) {
-    const { authz } = await authorizeDevice(
+    const { authz } = await authorizeApplication(
       req.headers["authorization"],
       req.headers["apikey"],
       req.query.networkUuid,
@@ -147,7 +147,7 @@ app.get("/robots", async (req, res) => {
 app.delete("/robots/:uuid", async (req, res) => {
   const action = "delete_robot";
   if (AUTHENTICATOR_URL) {
-    const { authz } = await authorizeDevice(
+    const { authz } = await authorizeApplication(
       req.headers["authorization"],
       req.headers["apikey"],
       req.query.networkUuid,
@@ -181,7 +181,7 @@ app.get("/", async (_req, res) => {
   res.end();
 });
 
-const robotEventHandlers = (socket, deviceNsp) => {
+const robotEventHandlers = (socket, applicationNsp) => {
   // From ROS
   socket.on("register_robot", (payload: any, ack: Function = _.noop) =>
     registerRobot(db, socket, payload, ack)
@@ -191,13 +191,13 @@ const robotEventHandlers = (socket, deviceNsp) => {
   );
   socket.on("disconnect", () => db.removeRobot(socket.id));
   socket.on("topic_from_ros", (payload: any, ack: Function = _.noop) =>
-    topicFromRos(db, socket, payload, ack, deviceNsp)
+    topicFromRos(db, socket, payload, ack, applicationNsp)
   );
   socket.on("roslaunch_log", (payload: any, ack: Function = _.noop) =>
-    roslaunchLog(db, socket, payload, ack, deviceNsp)
+    roslaunchLog(db, socket, payload, ack, applicationNsp)
   );
   socket.on("rosrun_log", (payload: any, ack: Function = _.noop) =>
-    rosrunLog(db, socket, payload, ack, deviceNsp)
+    rosrunLog(db, socket, payload, ack, applicationNsp)
   );
 };
 
@@ -208,7 +208,7 @@ const handlerWithAuth = (
 ) => {
   socket.on(eventName, async (payload: any, ack: Function = _.noop) => {
     if (AUTHENTICATOR_URL) {
-      const { authz } = await authorizeDevice(
+      const { authz } = await authorizeApplication(
         socket.handshake.headers["authorization"],
         socket.handshake.headers["apikey"],
         socket.handshake.headers["networkuuid"],
@@ -225,13 +225,13 @@ const handlerWithAuth = (
   });
 };
 
-const deviceEventHandlers = (socket, robotNsp) => {
-  // From Device
+const applicationEventHandlers = (socket, robotNsp) => {
+  // From Application
   handlerWithAuth(
     socket,
-    "register_device",
+    "register_application",
     (payload: any, ack: Function = _.noop) =>
-      registerDevice(db, socket, payload, ack)
+      registerApplication(db, socket, payload, ack)
   );
   handlerWithAuth(
     socket,
@@ -277,19 +277,19 @@ const deviceEventHandlers = (socket, robotNsp) => {
 
 const eventHandlers = socket => {
   robotEventHandlers(socket, rowmaNsp);
-  deviceEventHandlers(socket, rowmaNsp);
+  applicationEventHandlers(socket, rowmaNsp);
 };
 
-const deviceNsp = io.of("/rowma_device");
+const applicationNsp = io.of("/rowma_application");
 const robotNsp = io.of("/rowma_robot");
 
-deviceNsp.on("connection", socket => {
+applicationNsp.on("connection", socket => {
   console.log("connected");
-  deviceEventHandlers(socket, robotNsp);
+  applicationEventHandlers(socket, robotNsp);
 });
 
 robotNsp.on("connection", socket => {
-  robotEventHandlers(socket, deviceNsp);
+  robotEventHandlers(socket, applicationNsp);
 });
 
 rowmaNsp.on("connection", socket => {
@@ -298,7 +298,7 @@ rowmaNsp.on("connection", socket => {
 
 server.on("close", async () => {
   console.log("Stopping ...");
-  // TODO: Consider removing device connections
+  // TODO: Consider removing application connections
   await db.removeCurrentRobotConnections();
   process.exit(1);
 });

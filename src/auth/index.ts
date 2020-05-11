@@ -15,9 +15,9 @@ const authenticateRobot = (apiKey: string): Promise<any> => {
     });
 };
 
-const authenticateDevice = (id: string, networkName: string): Promise<any> => {
+const authenticateApplication = (id: string, networkName: string): Promise<any> => {
   return axios
-    .get(`${AUTHENTICATOR_URL}/devices/auth?id=${id}&network=${networkName}`)
+    .get(`${AUTHENTICATOR_URL}/applications/auth?id=${id}&network=${networkName}`)
     .then(response => {
       const auth = _.get(response, "data.auth"); // boolean
       return { auth };
@@ -27,7 +27,7 @@ const authenticateDevice = (id: string, networkName: string): Promise<any> => {
     });
 };
 
-const authorizeDevice = (
+const authorizeApplication = (
   jwt = "",
   apiKey = "",
   networkUuid: string,
@@ -49,4 +49,4 @@ const authorizeDevice = (
     });
 };
 
-export { authenticateRobot, authenticateDevice, authorizeDevice };
+export { authenticateRobot, authenticateApplication, authorizeApplication };

@@ -1,4 +1,4 @@
-export default class Device {
+export default class Application {
   uuid: string;
   socketId: string;
   robotUuid: string;

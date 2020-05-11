@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import Device from "./device";
+import Application from "./application";
 
 export default class Robot {
   _id?: ObjectId;

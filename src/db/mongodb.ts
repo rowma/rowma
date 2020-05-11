@@ -3,7 +3,7 @@ import _ from "lodash";
 import DatabaseInterface from "./database-interface";
 
 import Robot from "../entity/robot";
-import Device from "../entity/device";
+import Application from "../entity/application";
 import CommandLog from "../entity/command-log";
 
 export default class Mongodb implements DatabaseInterface {
@@ -23,12 +23,12 @@ export default class Mongodb implements DatabaseInterface {
       });
   }
 
-  getAllDevices(): Promise<Array<Device>> {
-    return this.db.collections.devices
+  getAllApplications(): Promise<Array<Application>> {
+    return this.db.collections.applications
       .find()
       .toArray()
-      .then(devices => {
-        return devices;
+      .then(applications => {
+        return applications;
       });
   }
 
@@ -45,13 +45,13 @@ export default class Mongodb implements DatabaseInterface {
       .toArray();
   }
 
-  findDeviceByUuid(uuid: string): Promise<Device> {
-    return this.db.collections.devices.findOne({ uuid: uuid });
+  findApplicationByUuid(uuid: string): Promise<Application> {
+    return this.db.collections.applications.findOne({ uuid: uuid });
   }
 
 
-  findDeviceByUuidRegx(uuid: string): Promise<Array<Device>> {
-    return this.db.collections.devices
+  findApplicationByUuidRegx(uuid: string): Promise<Array<Application>> {
+    return this.db.collections.applications
       .find(
         {"uuid": {$regex: uuid, $options:"i"}}
       )
@@ -80,14 +80,14 @@ export default class Mongodb implements DatabaseInterface {
       });
   }
 
-  saveDevice(device): Promise<boolean> {
-    return this.db.collections.devices.insertOne(device).then(res => {
+  saveApplication(application): Promise<boolean> {
+    return this.db.collections.applications.insertOne(application).then(res => {
       return new Promise(resolve => resolve(true));
     });
   }
 
-  getAllDevicesByUuids(uuids: Array<string>): Promise<Array<Device>> {
-    return this.db.collections.devices.find({ robotUuid: uuids });
+  getAllApplicationsByUuids(uuids: Array<string>): Promise<Array<Application>> {
+    return this.db.collections.applications.find({ robotUuid: uuids });
   }
 
   updateRobotRosnodes(robot: Robot): Promise<boolean> {
@@ -126,7 +126,7 @@ export default class Mongodb implements DatabaseInterface {
   }
 
   deleteApplication(socketId: string): Promise<boolean> {
-    return this.db.collections.devices
+    return this.db.collections.applications
       .deleteOne({ socketId })
       .then(() => {
         return new Promise(resolve => resolve(true));
@@ -136,8 +136,8 @@ export default class Mongodb implements DatabaseInterface {
       });
   }
 
-  findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Device>> {
-    return this.db.collections.devices.find({ robotUuid });
+  findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Application>> {
+    return this.db.collections.applications.find({ robotUuid });
   }
 
   saveLog(log: CommandLog): Promise<boolean> {
@@ -146,8 +146,8 @@ export default class Mongodb implements DatabaseInterface {
     });
   }
 
-  updateApplication(application: Device): Promise<boolean> {
-    return this.db.collections.devices.updateOne(
+  updateApplication(application: Application): Promise<boolean> {
+    return this.db.collections.applications.updateOne(
       { uuid: application.uuid },
       { $set: { ...application } }
     ).then(() => {

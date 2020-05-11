@@ -2,7 +2,7 @@
 // for response (ack() function). So keep in your mind that when I write code.
 
 import Robot from "../entity/robot";
-import Device from "../entity/device";
+import Application from "../entity/application";
 import CommandLog from "../entity/command-log";
 
 import { createSuccessResponse, createErrorResponse } from "../lib/response";
@@ -116,8 +116,8 @@ const topicFromRos = async (
   const isDestRobot = destType === "robot";
   const destinations = isDestRobot
     ? await db.findRobotsByUuidRegx(topicDestination["uuid"])
-    : await db.findDeviceByUuidRegx(topicDestination["uuid"]);
-  const eventName = isDestRobot ? "rostopic" : "topic_to_device";
+    : await db.findApplicationByUuidRegx(topicDestination["uuid"]);
+  const eventName = isDestRobot ? "rostopic" : "topic_to_application";
 
   const packet = {
     msg: parsedPayload["msg"],
@@ -125,7 +125,7 @@ const topicFromRos = async (
     sourceUuid: parsedPayload["sourceUuid"],
     topic: parsedPayload["topic"]
   }
-  destinations.forEach((destination: Robot|Device) => {
+  destinations.forEach((destination: Robot|Application) => {
     nsp.to(destination.socketId).emit(eventName, packet);
   })
 
@@ -144,7 +144,7 @@ const roslaunchLog = async (
   const applications = await db.findApplicationsByRobotUuid(
     parsedPayload["robotUuid"]
   );
-  applications.forEach((application: Device) => {
+  applications.forEach((application: Application) => {
     nsp.to(application.socketId).emit("roslaunch_log", parsedPayload);
   });
 
@@ -172,7 +172,7 @@ const rosrunLog = async (
   const applications = await db.findApplicationsByRobotUuid(
     parsedPayload["robotUuid"]
   );
-  applications.forEach((application: Device) => {
+  applications.forEach((application: Application) => {
     nsp.to(application.socketId).emit("rosrun_log", parsedPayload);
   });
 

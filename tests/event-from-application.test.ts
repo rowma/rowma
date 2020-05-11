@@ -1,14 +1,14 @@
 import {
-  registerDevice,
+  registerApplication,
   runLaunch,
   runRosrun,
   delegate,
   killRosnode
-} from "../src/eventcallback/event-from-device";
+} from "../src/eventcallback/event-from-application";
 
 import inmemoryDb from "../src/db/inmemory-database";
 import Robot from "../src/entity/robot";
-import Device from "../src/entity/device";
+import Application from "../src/entity/application";
 import CommandLog from "../src/entity/command-log"
 
 import {
@@ -27,39 +27,39 @@ const createMockSocket = (): MockSocket => {
 
 const robot1 = new Robot("abc-robot", "socket-robot", [], [], [], [], "test")
 
-describe('event-from-device', () => {
-  describe('#registerDevice()', () => {
-    it('should register 1 device', async () => {
+describe('event-from-application', () => {
+  describe('#registerApplication()', () => {
+    it('should register 1 application', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
-      const payload = { robotUuid: "abc-robot", deviceUuid: "abc-device" }
+      const payload = { robotUuid: "abc-robot", applicationUuid: "abc-application" }
       const ack = sinon.fake();
       const response = createSuccessResponse();
 
       // Act
       // ts-ignore because original MockSocket is used.
       // @ts-ignore
-      await registerDevice(db, socket, payload, ack)
+      await registerApplication(db, socket, payload, ack)
 
       // Assert
-      assert.equal(deviceInmemoryDatabase.length, 1);
+      assert.equal(applicationInmemoryDatabase.length, 1);
 
       assert.equal(ack.callCount, 1);
       assert(ack.calledWith(response))
     });
 
-    it('should not register 1 device when the payload is empty', async () => {
+    it('should not register 1 application when the payload is empty', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -70,29 +70,29 @@ describe('event-from-device', () => {
       // Act
       // ts-ignore because original MockSocket is used.
       // @ts-ignore
-      await registerDevice(db, socket, payload, ack)
+      await registerApplication(db, socket, payload, ack)
 
       // Assert
-      assert.equal(deviceInmemoryDatabase.length, 0);
+      assert.equal(applicationInmemoryDatabase.length, 0);
 
       assert.equal(ack.callCount, 1);
       assert(ack.calledWith(response))
     });
 
-    it('should register 2 devices and each ack() is called with a success response', async () => {
+    it('should register 2 applications and each ack() is called with a success response', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket1 = createMockSocket();
       socket1.setId("socket-id-1");
-      const payload1 = { robotUuid: "abc-robot", deviceUuid: "abc-device-1" }
+      const payload1 = { robotUuid: "abc-robot", applicationUuid: "abc-application-1" }
 
       const socket2 = createMockSocket();
       socket2.setId("socket-id-2");
-      const payload2 = { robotUuid: "abc-robot", deviceUuid: "abc-device-2" }
+      const payload2 = { robotUuid: "abc-robot", applicationUuid: "abc-application-2" }
 
       const ack1 = sinon.fake();
       const ack2 = sinon.fake();
@@ -102,13 +102,13 @@ describe('event-from-device', () => {
       // Act
       // ts-ignore because original MockSocket is used.
       // @ts-ignore
-      await registerDevice(db, socket1, payload1, ack1)
+      await registerApplication(db, socket1, payload1, ack1)
       // ts-ignore because original MockSocket is used.
       // @ts-ignore
-      await registerDevice(db, socket2, payload2, ack2)
+      await registerApplication(db, socket2, payload2, ack2)
 
       // Assert
-      assert.equal(deviceInmemoryDatabase.length, 2);
+      assert.equal(applicationInmemoryDatabase.length, 2);
 
       assert.equal(ack1.callCount, 1);
       assert.equal(ack2.callCount, 1);
@@ -122,9 +122,9 @@ describe('event-from-device', () => {
     it('should emit with a payload', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -149,9 +149,9 @@ describe('event-from-device', () => {
     it('should not emit when the uuid is wrong', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -174,9 +174,9 @@ describe('event-from-device', () => {
     it('should not emit when the payload is empty', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -190,7 +190,7 @@ describe('event-from-device', () => {
       await runLaunch(db, socket, payload, ack, socket)
 
       // Assert
-      assert.equal(deviceInmemoryDatabase.length, 0);
+      assert.equal(applicationInmemoryDatabase.length, 0);
 
       assert.equal(ack.callCount, 1);
       assert(ack.calledWith(response))
@@ -201,9 +201,9 @@ describe('event-from-device', () => {
     it('should emit with a payload', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -228,9 +228,9 @@ describe('event-from-device', () => {
     it('should not emit when the uuid is wrong', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -253,9 +253,9 @@ describe('event-from-device', () => {
     it('should not emit when the payload is empty', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -269,7 +269,7 @@ describe('event-from-device', () => {
       await runRosrun(db, socket, payload, ack, socket)
 
       // Assert
-      assert.equal(deviceInmemoryDatabase.length, 0);
+      assert.equal(applicationInmemoryDatabase.length, 0);
 
       assert.equal(ack.callCount, 1);
       assert(ack.calledWith(response))
@@ -280,9 +280,9 @@ describe('event-from-device', () => {
     it('should emit with a payload', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -307,9 +307,9 @@ describe('event-from-device', () => {
     it('should not emit when the uuid is wrong', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -332,9 +332,9 @@ describe('event-from-device', () => {
     it('should not emit when the payload is empty', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -348,7 +348,7 @@ describe('event-from-device', () => {
       await delegate(db, socket, payload, ack, socket)
 
       // Assert
-      assert.equal(deviceInmemoryDatabase.length, 0);
+      assert.equal(applicationInmemoryDatabase.length, 0);
 
       assert.equal(ack.callCount, 1);
       assert(ack.calledWith(response))
@@ -359,9 +359,9 @@ describe('event-from-device', () => {
     it('should emit with a payload', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -386,9 +386,9 @@ describe('event-from-device', () => {
     it('should not emit when the uuid is wrong', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -411,9 +411,9 @@ describe('event-from-device', () => {
     it('should not emit when the payload is empty', async () => {
       // Arrange
       const robotInmemoryDatabase: Array<Robot> = [robot1];
-      const deviceInmemoryDatabase: Array<Device> = [];
+      const applicationInmemoryDatabase: Array<Application> = [];
       const commandLogInmemoryDatabase: Array<CommandLog> = [];
-      const db = new inmemoryDb(robotInmemoryDatabase, deviceInmemoryDatabase, commandLogInmemoryDatabase);
+      const db = new inmemoryDb(robotInmemoryDatabase, applicationInmemoryDatabase, commandLogInmemoryDatabase);
 
       const socket = createMockSocket();
       socket.setId("socket-id");
@@ -427,7 +427,7 @@ describe('event-from-device', () => {
       await killRosnode(db, socket, payload, ack, socket)
 
       // Assert
-      assert.equal(deviceInmemoryDatabase.length, 0);
+      assert.equal(applicationInmemoryDatabase.length, 0);
 
       assert.equal(ack.callCount, 1);
       assert(ack.calledWith(response))
