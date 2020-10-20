@@ -245,9 +245,10 @@ const applicationEventHandlers = (socket, robotNsp) => {
     (payload: any, ack: Function = _.noop) =>
       runRosrun(db, socket, payload, ack, robotNsp)
   );
-  handlerWithAuth(socket, "topic_transfer", (payload: any, ack: Function = _.noop) =>
+  handlerWithAuth(socket, "topic_transfer", (payload: any, ack: Function = _.noop) => {
+    console.log(payload)
     topicTransfer(db, socket, payload, ack, robotNsp)
-  );
+  });
   handlerWithAuth(
     socket,
     "kill_rosnodes",
