@@ -15,9 +15,14 @@ const authenticateRobot = (apiKey: string): Promise<any> => {
     });
 };
 
-const authenticateApplication = (id: string, networkName: string): Promise<any> => {
+const authenticateApplication = (
+  id: string,
+  networkName: string
+): Promise<any> => {
   return axios
-    .get(`${AUTHENTICATOR_URL}/applications/auth?id=${id}&network=${networkName}`)
+    .get(
+      `${AUTHENTICATOR_URL}/applications/auth?id=${id}&network=${networkName}`
+    )
     .then(response => {
       const auth = _.get(response, "data.auth"); // boolean
       return { auth };

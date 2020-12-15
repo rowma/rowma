@@ -74,10 +74,10 @@ const registerRobot = async (
   const robot = new Robot(
     uuid,
     socket.id,
-    parsedPayload["launch_commands"],
-    parsedPayload["rosnodes"],
-    parsedPayload["rosrun_commands"],
-    parsedPayload["rostopics"],
+    parsedPayload["launch_commands"] || [],
+    parsedPayload["rosnodes"] || [],
+    parsedPayload["rosrun_commands"] || [],
+    parsedPayload["rostopics"] || [],
     networkUuid
   );
   await db.upsertRobot(robot);
@@ -124,10 +124,10 @@ const topicFromRos = async (
     op: parsedPayload["op"],
     sourceUuid: parsedPayload["sourceUuid"],
     topic: parsedPayload["topic"]
-  }
-  destinations.forEach((destination: Robot|Application) => {
+  };
+  destinations.forEach((destination: Robot | Application) => {
     nsp.to(destination.socketId).emit(eventName, packet);
-  })
+  });
 
   const response = createSuccessResponse();
   ack(response);

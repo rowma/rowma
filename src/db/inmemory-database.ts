@@ -51,7 +51,9 @@ export default class InmemoryDatabase implements DatabaseInterface {
 
   findRobotsByUuidRegx(uuid: string): Promise<Array<Robot>> {
     const uuidRegex = new RegExp(uuid);
-    const robots = this.robotInmemoryDatabase.filter(robot => uuidRegex.test(robot.uuid));
+    const robots = this.robotInmemoryDatabase.filter(robot =>
+      uuidRegex.test(robot.uuid)
+    );
 
     return new Promise((resolve, reject) => {
       resolve(robots);
@@ -70,7 +72,9 @@ export default class InmemoryDatabase implements DatabaseInterface {
 
   findApplicationByUuidRegx(uuid: string): Promise<Array<Application>> {
     const uuidRegex = new RegExp(uuid);
-    const applications = this.applicationInmemoryDatabase.filter(application => uuidRegex.test(application.uuid));
+    const applications = this.applicationInmemoryDatabase.filter(application =>
+      uuidRegex.test(application.uuid)
+    );
 
     return new Promise((resolve, reject) => {
       resolve(applications);
@@ -111,9 +115,12 @@ export default class InmemoryDatabase implements DatabaseInterface {
   }
 
   getAllApplicationsByUuids(uuids: Array<string>): Promise<Array<Application>> {
-    const applications = _.filter(this.applicationInmemoryDatabase, (application: Application) => {
-      return _.includes(uuids, application.uuid);
-    });
+    const applications = _.filter(
+      this.applicationInmemoryDatabase,
+      (application: Application) => {
+        return _.includes(uuids, application.uuid);
+      }
+    );
     return new Promise(resolve => resolve(applications));
   }
 
@@ -150,9 +157,12 @@ export default class InmemoryDatabase implements DatabaseInterface {
   deleteApplication(socketId: string): Promise<boolean> {
     return new Promise(resolve => {
       try {
-        _.remove(this.applicationInmemoryDatabase, (application: Application) => {
-          return application.socketId === socketId;
-        });
+        _.remove(
+          this.applicationInmemoryDatabase,
+          (application: Application) => {
+            return application.socketId === socketId;
+          }
+        );
         return resolve(true);
       } catch {
         return resolve(false);
@@ -161,9 +171,12 @@ export default class InmemoryDatabase implements DatabaseInterface {
   }
 
   findApplicationsByRobotUuid(robotUuid: string): Promise<Array<Application>> {
-    const applications = _.filter(this.applicationInmemoryDatabase, (application: Application) => {
-      return (application.robotUuid = robotUuid);
-    });
+    const applications = _.filter(
+      this.applicationInmemoryDatabase,
+      (application: Application) => {
+        return (application.robotUuid = robotUuid);
+      }
+    );
     return new Promise(resolve => resolve(applications));
   }
 
@@ -177,9 +190,12 @@ export default class InmemoryDatabase implements DatabaseInterface {
   }
 
   updateApplication(application: Application): Promise<boolean> {
-    const index = _.findIndex(this.applicationInmemoryDatabase, (application: Application) => {
-      return _.get(application, "uuid") === application.uuid;
-    });
+    const index = _.findIndex(
+      this.applicationInmemoryDatabase,
+      (application: Application) => {
+        return _.get(application, "uuid") === application.uuid;
+      }
+    );
     this.applicationInmemoryDatabase[index] = application;
     return new Promise(resolve => resolve(true));
   }

@@ -67,7 +67,7 @@ const runLaunch = async (
       socketId: robot.socketId,
       command: _.get(payload, "command")
     });
-  })
+  });
 
   const response = createSuccessResponse();
   ack(response);
@@ -102,7 +102,7 @@ const runRosrun = async (
       command: _.get(payload, "command"),
       args: _.get(payload, "args")
     });
-  })
+  });
 
   const response = createSuccessResponse();
   ack(response);
@@ -135,7 +135,7 @@ const topicTransfer = async (
   robots.forEach((robot: Robot) => {
     // TODO: Remove unnecessary values
     robotNsp.to(robot.socketId).emit("rostopic", _.get(payload, "msg"));
-  })
+  });
 
   const response = createSuccessResponse();
   ack(response);
@@ -169,7 +169,7 @@ const killRosnode = async (
       socketId: robot.socketId,
       rosnodes: _.get(payload, "rosnodes")
     });
-  })
+  });
 
   const response = createSuccessResponse();
   ack(response);
@@ -203,7 +203,7 @@ const unsubscribeRostopic = async (
       socketId: robot.socketId,
       topic: _.get(payload, "topic")
     });
-  })
+  });
 
   const response = createSuccessResponse();
   ack(response);
@@ -238,7 +238,7 @@ const addScript = async (
       script: _.get(payload, "script"),
       name: _.get(payload, "name")
     });
-  })
+  });
 
   const response = createSuccessResponse();
   ack(response);
@@ -255,9 +255,13 @@ const updateApplication = async (
     if (ack) ack(response);
     return;
   }
-  const application = await db.findApplicationByUuid(payload["uuid"])
-  const newApplication = new Application(payload["uuid"], application.socketId, payload["robotUuid"])
-  db.updateApplication(newApplication)
+  const application = await db.findApplicationByUuid(payload["uuid"]);
+  const newApplication = new Application(
+    payload["uuid"],
+    application.socketId,
+    payload["robotUuid"]
+  );
+  db.updateApplication(newApplication);
 
   const response = createSuccessResponse();
   ack(response);

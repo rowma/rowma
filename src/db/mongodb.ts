@@ -36,12 +36,9 @@ export default class Mongodb implements DatabaseInterface {
     return this.db.collections.robots.findOne({ uuid: uuid });
   }
 
-
   findRobotsByUuidRegx(uuid: string): Promise<Array<Robot>> {
     return this.db.collections.robots
-      .find(
-        {"uuid": {$regex: uuid, $options:"i"}}
-      )
+      .find({ uuid: { $regex: uuid, $options: "i" } })
       .toArray();
   }
 
@@ -49,12 +46,9 @@ export default class Mongodb implements DatabaseInterface {
     return this.db.collections.applications.findOne({ uuid: uuid });
   }
 
-
   findApplicationByUuidRegx(uuid: string): Promise<Array<Application>> {
     return this.db.collections.applications
-      .find(
-        {"uuid": {$regex: uuid, $options:"i"}}
-      )
+      .find({ uuid: { $regex: uuid, $options: "i" } })
       .toArray();
   }
 
@@ -147,14 +141,13 @@ export default class Mongodb implements DatabaseInterface {
   }
 
   updateApplication(application: Application): Promise<boolean> {
-    return this.db.collections.applications.updateOne(
-      { uuid: application.uuid },
-      { $set: { ...application } }
-    ).then(() => {
-      return new Promise(resolve => resolve(true));
-    })
-    .catch(err => {
-      return new Promise(resolve => resolve(false));
-    });
+    return this.db.collections.applications
+      .updateOne({ uuid: application.uuid }, { $set: { ...application } })
+      .then(() => {
+        return new Promise(resolve => resolve(true));
+      })
+      .catch(err => {
+        return new Promise(resolve => resolve(false));
+      });
   }
 }
