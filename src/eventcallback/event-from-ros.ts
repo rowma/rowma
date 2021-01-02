@@ -126,7 +126,9 @@ const topicFromRos = async (
     topic: parsedPayload["topic"]
   };
   destinations.forEach((destination: Robot | Application) => {
-    nsp.to(destination.socketId).emit(eventName, packet);
+    if (destination.uuid != parsedPayload["sourceUuid"]) {
+      nsp.to(destination.socketId).emit(eventName, packet);
+    }
   });
 
   const response = createSuccessResponse();
