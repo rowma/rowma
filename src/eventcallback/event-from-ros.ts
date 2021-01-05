@@ -117,7 +117,6 @@ const topicFromRos = async (
   const destinations = isDestRobot
     ? await db.findRobotsByUuidRegx(topicDestination["uuid"])
     : await db.findApplicationByUuidRegx(topicDestination["uuid"]);
-  console.log('destinations', destinations)
   const eventName = isDestRobot ? "rostopic" : "topic_to_application";
 
   const packet = {
