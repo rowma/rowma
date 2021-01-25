@@ -118,6 +118,7 @@ const topicFromRos = async (
     ? await db.findRobotsByUuidRegx(topicDestination["uuid"])
     : await db.findApplicationByUuidRegx(topicDestination["uuid"]);
   const eventName = isDestRobot ? "rostopic" : "topic_to_application";
+  console.log(eventName);
 
   const packet = {
     msg: parsedPayload["msg"],
@@ -125,11 +126,17 @@ const topicFromRos = async (
     sourceUuid: parsedPayload["sourceUuid"],
     topic: parsedPayload["topic"]
   };
+  console.log("packet:", packet);
+  console.log("topicDestination:", topicDestination);
+  console.log("destination:", destinations);
   destinations.forEach((destination: Robot | Application) => {
+    console.log(destination, parsedPayload);
     if (destination.uuid != parsedPayload["sourceUuid"]) {
+      console.log(destination);
       nsp.to(destination.socketId).emit(eventName, packet);
     }
   });
+  console.log("===============================================");
 
   const response = createSuccessResponse();
   ack(response);
