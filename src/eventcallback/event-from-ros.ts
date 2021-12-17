@@ -110,6 +110,7 @@ const topicFromRos = async (
   ack: any,
   nsp: any
 ): Promise<void> => {
+  console.info(payload)
   const parsedPayload = JSON.parse(payload);
   const topicDestination = _.get(parsedPayload, "topicDestination");
   const destType = topicDestination["type"];
