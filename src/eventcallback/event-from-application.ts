@@ -116,7 +116,7 @@ const topicTransfer = async (
   ack: Function,
   robotNsp: socketio.Socket
 ): Promise<void> => {
-  console.info(payload)
+  console.log(payload)
   if (_.isEmpty(payload)) {
     const response = createErrorResponse(PAYLOAD_NOT_FOUND_MSG);
     if (ack) ack(response);
