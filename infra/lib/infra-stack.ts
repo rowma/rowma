@@ -1,6 +1,6 @@
 import { Construct } from 'constructs'
 
-import { Stack, StackProps } from 'aws-cdk-lib'
+import { Stack, StackProps, Duration } from 'aws-cdk-lib'
 import { Vpc } from 'aws-cdk-lib/aws-ec2';
 import { ApplicationLoadBalancer } from 'aws-cdk-lib/aws-elasticloadbalancingv2';
 import { ContainerImage } from 'aws-cdk-lib/aws-ecs'
@@ -19,6 +19,7 @@ export class InfraStack extends Stack {
     const listener = lb.addListener('listener', { port: 80 });
     listener.addTargets('target', {
       port: 80,
+      stickinessCookieDuration: Duration.minutes(5),
     });
 
     new ApplicationLoadBalancedFargateService(scope, 'RowmaConnectionManager', {
