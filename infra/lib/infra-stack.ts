@@ -13,7 +13,7 @@ export class InfraStack extends Stack {
     this.defineAlbFargateService(this)
   }
 
-  private defineAlbFargateService(scope: Construct) {
+  private defineAlb(scope: Construct) {
     const vpc = new Vpc(scope, 'VPC');
     const lb = new ApplicationLoadBalancer(scope, 'lb', { vpc });
     const listener = lb.addListener('listener', { port: 80 });
@@ -21,6 +21,11 @@ export class InfraStack extends Stack {
       port: 80,
       stickinessCookieDuration: Duration.minutes(5),
     });
+    return lb
+  }
+
+  private defineAlbFargateService(scope: Construct) {
+    const lb = this.defineAlb(scope)
 
     new ApplicationLoadBalancedFargateService(scope, 'RowmaConnectionManager', {
       taskImageOptions: {
