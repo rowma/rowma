@@ -20,9 +20,6 @@
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/aws-ecs": "^1.139.0",
-    "@aws-cdk/aws-ecs-patterns": "^1.139.0",
-    "@aws-cdk/core": "^1.139.0",
     "aws-cdk-lib": "2.8.0",
     "constructs": "^10.0.0",
     "source-map-support": "^0.5.16"
