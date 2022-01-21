@@ -19,7 +19,7 @@ export class InfraStack extends Stack {
     const listener = lb.addListener('listener', { port: 80 });
     listener.addTargets('target', {
       port: 80,
-      stickinessCookieDuration: Duration.minutes(5),
+      stickinessCookieDuration: Duration.days(1),
     });
     return lb
   }
