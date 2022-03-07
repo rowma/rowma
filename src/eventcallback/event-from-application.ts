@@ -1,5 +1,5 @@
 // The role of this file is Controller in MVC architecture. These functions are responsible
-// for response (ack() function). So keep in your mind that when code.
+// for response (ack() function).
 
 import Robot from "../entity/robot";
 import Application from "../entity/application";
